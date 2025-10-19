@@ -1,0 +1,11 @@
+.custom-navbar {
+    background-color: #502314;
+    /* Reemplaza ##005187 con el color que desees */
+  }
+  
+  /*Reescribo color de encabezado de tablas*/
+  .table thead th {
+    background-color: #e66322;
+    color: white;
+    /* Color del texto del encabezado */
+  }
