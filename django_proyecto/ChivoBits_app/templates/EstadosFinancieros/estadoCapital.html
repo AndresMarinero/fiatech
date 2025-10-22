@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Estado de Capital{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #2ecc71;
+        --light-bg: #f8f9fa;
+    }
+    
+    .financial-card {
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border: none;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+    
+    .financial-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card-header-custom {
+        background: linear-gradient(135deg, var(--primary-color), #34495e);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: none;
+    }
+    
+    .period-display {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    
+    .financial-table th {
+        background-color: var(--light-bg);
+        font-weight: 600;
+        border-top: none;
+    }
+    
+    .financial-table td {
+        padding: 1rem 0.75rem;
+        vertical-align: middle;
+    }
+    
+    .debit-amount {
+        color: #e74c3c;
+        font-weight: 600;
+    }
+    
+    .credit-amount {
+        color: #27ae60;
+        font-weight: 600;
+    }
+    
+    .summary-card {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border-radius: 12px;
+    }
+    
+    .btn-period {
+        background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-period:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+    
+    .modal-content {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-color), #34495e);
+        color: white;
+        border-bottom: none;
+    }
+    
+    .account-code {
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    
+    .total-row {
+        background-color: rgba(46, 204, 113, 0.1);
+        font-weight: 600;
+        border-top: 2px solid var(--accent-color);
+    }
+    
+    .capital-results {
+        background-color: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .capital-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+</style>
+
+<div class="container py-4">
+    <!-- Encabezado principal -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-5 fw-bold mb-3" style="color: var(--primary-color);">Estado de Capital</h1>
+            <div class="d-flex justify-content-center align-items-center flex-wrap gap-3">
+                <div class="period-display bg-light text-dark px-3 py-2 rounded-pill">
+                    <i class="bi bi-calendar3 me-2"></i>
+                    <span>Del 01 de enero al 31 de diciembre de 2024</span>
+                </div>
+                <button class="btn btn-period text-white" data-bs-toggle="modal" data-bs-target="#seleccionarPeriodo">
+                    <i class="bi bi-calendar-range me-2"></i> Cambiar Período
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Tarjeta de tabla financiera -->
+            <div class="financial-card mb-4">
+                <div class="card-header-custom">
+                    <h3 class="mb-0"><i class="bi bi-table me-2"></i> Detalle de Cuentas</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover financial-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="ps-4">Código</th>
+                                    <th scope="col">Cuenta</th>
+                                    <th scope="col" class="text-end pe-4">DEBE</th>
+                                    <th scope="col" class="text-end pe-4">HABER</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="account-code ps-4">110101</td>
+                                    <td>Caja</td>
+                                    <td class="text-end debit-amount pe-4">$ 1,500.00</td>
+                                    <td class="text-end pe-4">$ -</td>
+                                </tr>
+                                <tr>
+                                    <td class="account-code ps-4">110102</td>
+                                    <td>Bancos</td>
+                                    <td class="text-end debit-amount pe-4">$ 5,250.00</td>
+                                    <td class="text-end pe-4">$ -</td>
+                                </tr>
+                                <tr>
+                                    <td class="account-code ps-4">110201</td>
+                                    <td>Cuentas por Cobrar</td>
+                                    <td class="text-end debit-amount pe-4">$ 3,800.00</td>
+                                    <td class="text-end pe-4">$ -</td>
+                                </tr>
+                                <tr>
+                                    <td class="account-code ps-4">210101</td>
+                                    <td>Proveedores</td>
+                                    <td class="text-end pe-4">$ -</td>
+                                    <td class="text-end credit-amount pe-4">$ 2,300.00</td>
+                                </tr>
+                                <tr>
+                                    <td class="account-code ps-4">210201</td>
+                                    <td>Préstamos Bancarios</td>
+                                    <td class="text-end pe-4">$ -</td>
+                                    <td class="text-end credit-amount pe-4">$ 4,500.00</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="total-row">
+                                    <td colspan="2" class="ps-4"><strong>TOTAL</strong></td>
+                                    <td class="text-end debit-amount pe-4"><strong>$ 10,550.00</strong></td>
+                                    <td class="text-end credit-amount pe-4"><strong>$ 6,800.00</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen de capital -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="capital-results h-100">
+                        <h4 class="mb-3" style="color: var(--primary-color);">
+                            <i class="bi bi-graph-up me-2"></i> Resumen de Capital
+                        </h4>
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <span>Capital Inicial:</span>
+                            <span class="capital-value">$ 15,000.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <span>Utilidad del Ejercicio:</span>
+                            <span class="capital-value text-success">$ 3,750.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <span>Reserva de Capital:</span>
+                            <span class="capital-value">$ 1,200.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center pt-2">
+                            <span class="fw-bold">Nuevo Capital:</span>
+                            <span class="capital-value" style="color: var(--accent-color);">$ 19,950.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para seleccionar período contable -->
+<div class="modal fade" id="seleccionarPeriodo" tabindex="-1" aria-labelledby="seleccionarPeriodoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="seleccionarPeriodoModalLabel">
+                    <i class="bi bi-calendar-range me-2"></i> Seleccionar Período Contable
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="selectPeriodo" class="form-label">Seleccione un período:</label>
+                        <select id="selectPeriodo" class="form-select" name="periodo" required>
+                            <option value="">Seleccionar</option>
+                            <option value="2024" selected>2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                        <div class="invalid-feedback">Por favor seleccione un período</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg me-1"></i> Seleccionar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'js/formValidacion.js' %}"></script>
+<!-- Js para hacer funcionar modal de eliminación aparte de agregarle la clase delete-btn al boton de eliminar -->
+<script type="text/javascript" src="{% static 'js/modalEliminacion.js' %}"></script>
+<!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
+title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
+<script type="text/javascript" src="{% static 'js/tooltips.js' %}"></script>
+{% endblock %}

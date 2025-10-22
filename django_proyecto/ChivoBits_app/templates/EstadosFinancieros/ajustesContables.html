@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ajustes Contables{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-1">Ajustes Contables</h1>
+            <p class="text-muted mb-0">Del 01 de enero al 31 de diciembre de 2024</p>
+        </div>
+        <div>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#agregarAjusteModal">
+                <i class="bi bi-plus-circle"></i> Agregar Ajuste
+            </button>
+            <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#seleccionarPeriodo">
+                <i class="bi bi-calendar"></i> Período
+            </button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmarCierreModal">
+                <i class="bi bi-check-circle"></i> Realizar Cierre
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabla de ajustes -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead  text-start">
+                        <tr>
+                            <th scope="col">Codigo</th>
+                            <th scope="col">Cuenta</th>
+                            <th scope="col" class="text-center">DEBE</th>
+                            <th scope="col" class="text-center">HABER</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="fs-6">
+                        <!-- Ejemplo de fila -->
+                        <tr>
+                            <td><strong>110101</strong></td>
+                            <td>Caja</td>
+                            <td class="text-center">$ 1,500.00</td>
+                            <td class="text-center">$ -</td>
+                            <td class="text-center">
+                                <a class="btn btn-success ver-btn" data-bs-t="tooltip" data-bs-placement="top"
+                                    title="Consultar" data-bs-toggle="modal" data-bs-target="#consultarAjusteModal">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="table-success">
+                        <tr>
+                            <td colspan="2" class="text-center"><strong>TOTAL</strong></td>
+                            <td class="text-center"><strong>$ 1,500.00</strong></td>
+                            <td class="text-center"><strong>$ 2,300.00</strong></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Ajuste -->
+<div class="modal fade" id="agregarAjusteModal" tabindex="-1" aria-labelledby="agregarAjusteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="agregarAjusteModalLabel">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar Ajuste
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <form method="POST" action="#" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- Columna Izquierda -->
+                        <div class="col-md-6">
+                            <!-- Cuenta -->
+                            <div class="mb-3">
+                                <label for="cuentaAjuste" class="form-label fw-bold">Cuenta:</label>
+                                <select id="cuentaAjuste" class="form-select" name="cuenta" required>
+                                    <option value="" selected disabled>Seleccionar Código</option>
+                                    <option value="110101">110101 - Caja</option>
+                                    <option value="110102">110102 - Bancos</option>
+                                    <option value="210101">210101 - Proveedores</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor seleccione una cuenta</div>
+                            </div>
+
+                            <!-- Fecha -->
+                            <div class="mb-3">
+                                <label for="fechaAjuste" class="form-label fw-bold">Fecha:</label>
+                                <input type="date" class="form-control" id="fechaAjuste" name="fecha" required>
+                                <div class="invalid-feedback">Por favor seleccione una fecha</div>
+                            </div>
+
+                            <!-- Movimiento Debe -->
+                            <div class="mb-3">
+                                <label for="movimientoDebe" class="form-label fw-bold">Movimiento (Debe):</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="movimientoDebe" name="movimiento_debe"
+                                        placeholder="0.00" step="0.01" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha -->
+                        <div class="col-md-6">
+                            <!-- Descripción -->
+                            <div class="mb-3">
+                                <label for="descripcionAjuste" class="form-label fw-bold">Descripción:</label>
+                                <textarea class="form-control" id="descripcionAjuste" name="descripcion" rows="4"
+                                    placeholder="Descripción del ajuste contable" style="resize: none;"></textarea>
+                            </div>
+
+                            <!-- Movimiento Haber -->
+                            <div class="mb-3">
+                                <label for="movimientoHaber" class="form-label fw-bold">Movimiento (Haber):</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="movimientoHaber"
+                                        name="movimiento_haber" placeholder="0.00" step="0.01" min="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>Guardar Ajuste
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Consultar Ajuste Mejorado -->
+<div class="modal fade" id="consultarAjusteModal" tabindex="-1" aria-labelledby="consultarAjusteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="consultarAjusteModalLabel">
+                    Consultar Ajuste
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Cuenta:</label>
+                            <p class="form-control-plaintext border-bottom pb-2">110101 - Caja</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Fecha:</label>
+                            <p class="form-control-plaintext border-bottom pb-2">15/06/2024</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Movimiento (Debe):</label>
+                            <p class="form-control-plaintext border-bottom pb-2">$ 1,500.00</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Descripción:</label>
+                            <p class="form-control-plaintext border-bottom pb-2">Ajuste por diferencia en arqueo de caja
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Período:</label>
+                            <p class="form-control-plaintext border-bottom pb-2">2024</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Movimiento (Haber):</label>
+                            <p class="form-control-plaintext border-bottom pb-2">$ -</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para seleccionar período contable -->
+<div class="modal fade" id="seleccionarPeriodo" tabindex="-1" aria-labelledby="seleccionarPeriodoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="seleccionarPeriodoModalLabel">Seleccionar Período Contable</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="selectPeriodo" class="form-label">Seleccione un período:</label>
+                        <select id="selectPeriodo" class="form-select" name="periodo" required>
+                            <option value="">Seleccionar</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                        <div class="invalid-feedback">Por favor seleccione un período</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Seleccionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación para Cierre Contable -->
+<div class="modal fade" id="confirmarCierreModal" tabindex="-1" aria-labelledby="confirmarCierreModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarCierreModalLabel">Confirmar Cierre Contable</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-exclamation-triangle text-warning display-4"></i>
+                    </div>
+                    <p class="text-center">¿Está seguro de realizar el cierre contable del período actual?</p>
+                    <div class="alert alert-warning" role="alert">
+                        <small>
+                            <i class="bi bi-info-circle"></i> 
+                            Esta acción no se puede deshacer. Se bloquearán todos los movimientos del período actual.
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">Confirmar Cierre</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'js/formValidacion.js' %}"></script>
+<!-- Js para hacer funcionar modal de eliminación aparte de agregarle la clase delete-btn al boton de eliminar -->
+<script type="text/javascript" src="{% static 'js/modalEliminacion.js' %}"></script>
+<!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
+title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
+<script type="text/javascript" src="{% static 'js/tooltips.js' %}"></script>
+{% endblock %}

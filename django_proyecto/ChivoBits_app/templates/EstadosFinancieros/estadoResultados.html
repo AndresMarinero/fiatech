@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Estado de resultados{% endblock %}
+
+{% block content %}
+
+<!-- Contenedor más angosto y centrado -->
+<div class="container-sm mt-4">
+    <!-- Encabezado -->
+    <div class="card border-0 mx-auto mb-4" style="max-width: 800px;">
+        <div class="card-body px-0">
+            <!-- Título centrado -->
+            <div class="text-center mb-4">
+                <h1 class="display-6 fw-bold text-dark mb-0">Estado de Resultados</h1>
+            </div>
+
+            <!-- Fila centrada -->
+            <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                <!-- Contenedor de fecha -->
+                <div class="bg-light text-dark px-3 py-2 rounded-3 border d-flex align-items-center">
+                    <i class="bi bi-calendar3 me-2"></i>
+                    <span class="fw-medium small">Del 01 de enero al 31 de diciembre de 2024</span>
+                </div>
+
+                <!-- Botón -->
+                <button class="btn btn-primary btn-sm px-3 py-2 fw-semibold d-flex align-items-center"
+                        data-bs-toggle="modal" data-bs-target="#seleccionarPeriodo">
+                    <i class="bi bi-calendar-range me-2"></i> Cambiar Período
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de estados de resultados centrada -->
+    <div class="card shadow-sm mx-auto" style="max-width: 800px;">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="thead  text-start">
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Cuenta</th>
+                            <th scope="col" class="text-center">DEBE</th>
+                            <th scope="col" class="text-center">HABER</th>
+                        </tr>
+                    </thead>
+                    <tbody class="fs-6">
+                        <tr>
+                            <td><strong>110101</strong></td>
+                            <td class="text-start">Caja</td>
+                            <td>$ 1,500.00</td>
+                            <td>$ -</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="table-success">
+                        <tr>
+                            <td colspan="2"><strong>TOTAL</strong></td>
+                            <td><strong>$ 1,500.00</strong></td>
+                            <td><strong>$ 2,300.00</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Línea divisoria -->
+            <hr class="my-4">
+
+            <!-- Sección de utilidad o pérdida -->
+            <div class="d-flex justify-content-between align-items-center p-2 border rounded mt-4 bg-light shadow-sm">
+                <h6 class="mb-0 fw-bold text-dark">Utilidad o pérdida bruta:</h6>
+                <span class="badge bg-success fs-6 px-3 py-2 text-white">$ 800.00</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para seleccionar período contable -->
+<div class="modal fade" id="seleccionarPeriodo" tabindex="-1" aria-labelledby="seleccionarPeriodoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="seleccionarPeriodoModalLabel">Seleccionar Período Contable</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="selectPeriodo" class="form-label">Seleccione un período:</label>
+                        <select id="selectPeriodo" class="form-select" name="periodo" required>
+                            <option value="">Seleccionar</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                        <div class="invalid-feedback">Por favor seleccione un período</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Seleccionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --light-bg: #f8f9fa;
+    }
+
+    .btn-period {
+        background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-period:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+    .period-display {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+</style>
+
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'js/formValidacion.js' %}"></script>
+<!-- Js para hacer funcionar modal de eliminación aparte de agregarle la clase delete-btn al boton de eliminar -->
+<script type="text/javascript" src="{% static 'js/modalEliminacion.js' %}"></script>
+<!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
+title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
+<script type="text/javascript" src="{% static 'js/tooltips.js' %}"></script>
+{% endblock %}
