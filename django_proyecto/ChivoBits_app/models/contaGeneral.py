@@ -10,13 +10,38 @@ class Cuenta(models.Model):
         ('GASTO', 'Gasto'),
     ]
     
+    NIVELES = [
+        (1, 'Grupo'),
+        (2, 'Subgrupo'),
+        (3, 'Cuenta'),
+        (4, 'Subcuenta'),
+    ]
+    
     codigo = models.CharField(max_length=10, unique=True)
     nombre = models.CharField(max_length=100)
     tipo = models.CharField(max_length=15, choices=TIPOS_CUENTA)
+    nivel = models.IntegerField(choices=NIVELES, default=3)
     saldo = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    cuenta_padre = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcuentas')
+    activa = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ['codigo']
     
     def __str__(self):
         return f"{self.codigo} - {self.nombre}"
+    
+    def save(self, *args, **kwargs):
+        # Determinar nivel automáticamente basado en la longitud del código
+        if len(self.codigo) == 1:
+            self.nivel = 1
+        elif len(self.codigo) == 2:
+            self.nivel = 2
+        elif len(self.codigo) == 4:
+            self.nivel = 3
+        else:
+            self.nivel = 4
+        super().save(*args, **kwargs)
 
 class CentroCosto(models.Model):
     codigo = models.CharField(max_length=10, unique=True)
