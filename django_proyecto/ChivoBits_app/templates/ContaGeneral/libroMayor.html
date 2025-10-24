@@ -8,10 +8,38 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
-                <h1 class="h3 mb-0">Libro Mayor</h1>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaTransaccionModal">
-                    <i class="bi bi-plus-circle me-2"></i>Nueva Transacción
-                </button>
+                <div>
+                    <h1 class="h3 mb-1">Libro Mayor</h1>
+                    {% if periodo_seleccionado %}
+                    <p class="text-muted mb-0">
+                        Periodo: {{ periodo_seleccionado.año }} 
+                        ({{ periodo_seleccionado.fecha_inicio }} al {{ periodo_seleccionado.fecha_fin }})
+                        <span class="badge {% if periodo_seleccionado.estado == 'ACTIVO' %}bg-success{% else %}bg-secondary{% endif %}">
+                            {{ periodo_seleccionado.estado }}
+                        </span>
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="d-flex gap-2">
+                    <!-- Botón Seleccionar Periodo -->
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#seleccionarPeriodoModal">
+                        <i class="bi bi-calendar me-2"></i>Seleccionar Periodo
+                    </button>
+                    
+                    <!-- Botón Nuevo Periodo (solo si no hay periodo activo) -->
+                    {% if puede_crear_periodo %}
+                    <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#nuevoPeriodoModal">
+                        <i class="bi bi-plus-circle me-2"></i>Nuevo Periodo
+                    </button>
+                    {% endif %}
+                    
+                    <!-- Botón Nueva Transacción (solo si hay periodo activo) -->
+                    {% if periodo_activo %}
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaTransaccionModal">
+                        <i class="bi bi-plus-circle me-2"></i>Nueva Transacción
+                    </button>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -22,16 +50,13 @@
             <div class="card">
                 <div class="card-body py-3">
                     <div class="row g-3 align-items-center">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label class="form-label">Cuenta:</label>
                             <select class="form-select" id="selectCuenta">
                                 <option value="todas">Todas las cuentas</option>
-                                <option value="caja">Caja</option>
-                                <option value="bancos">Bancos</option>
-                                <option value="ventas">Ventas</option>
-                                <option value="compras">Compras</option>
-                                <option value="gastos">Gastos</option>
-                                <option value="capital">Capital</option>
+                                {% for cuenta in cuentas %}
+                                <option value="{{ cuenta.codigo }}">{{ cuenta.codigo }} - {{ cuenta.nombre }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -42,7 +67,7 @@
                             <label class="form-label">Fecha hasta:</label>
                             <input type="date" class="form-control" id="fechaHasta">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">&nbsp;</label>
                             <button class="btn btn-outline-primary w-100" id="btnFiltrar">
                                 <i class="bi bi-funnel me-2"></i>Filtrar
@@ -54,17 +79,31 @@
         </div>
     </div>
 
-    <!-- Contenedor de Cuentas T -->
+    <!-- Contenedor de Cuentas -->
     <div id="contenedorCuentas">
-        <!-- Cuenta: Caja -->
-        <!-- Cuenta: Caja (Activo - Saldo en DEBE) -->
-        <div class="row mb-4 cuenta-t" data-cuenta="caja">
+        {% for resumen in resumen_cuentas %}
+        <div class="row mb-4 cuenta-t" data-cuenta="{{ resumen.cuenta.codigo }}">
             <div class="col-12">
-                <div class="card border-primary">
-                    <div class="card-header bg-primary text-white">
+                <div class="card {% if resumen.cuenta.tipo == 'ACTIVO' %}border-primary
+                                {% elif resumen.cuenta.tipo == 'PASIVO' %}border-warning
+                                {% elif resumen.cuenta.tipo == 'PATRIMONIO' %}border-info
+                                {% elif resumen.cuenta.tipo == 'INGRESO' %}border-success
+                                {% elif resumen.cuenta.tipo == 'GASTO' %}border-danger
+                                {% else %}border-secondary{% endif %}">
+                    <div class="card-header {% if resumen.cuenta.tipo == 'ACTIVO' %}bg-primary
+                                          {% elif resumen.cuenta.tipo == 'PASIVO' %}bg-warning text-dark
+                                          {% elif resumen.cuenta.tipo == 'PATRIMONIO' %}bg-info
+                                          {% elif resumen.cuenta.tipo == 'INGRESO' %}bg-success
+                                          {% elif resumen.cuenta.tipo == 'GASTO' %}bg-danger
+                                          {% else %}bg-secondary{% endif %} text-white">
                         <h5 class="card-title mb-0">
-                            <i class="bi bi-cash-coin me-2"></i>
-                            Cuenta: Caja
+                            <i class="bi {% if resumen.cuenta.tipo == 'ACTIVO' %}bi-cash-coin
+                                       {% elif resumen.cuenta.tipo == 'PASIVO' %}bi-coin
+                                       {% elif resumen.cuenta.tipo == 'PATRIMONIO' %}bi-pie-chart
+                                       {% elif resumen.cuenta.tipo == 'INGRESO' %}bi-graph-up
+                                       {% elif resumen.cuenta.tipo == 'GASTO' %}bi-graph-down
+                                       {% else %}bi-journal{% endif %} me-2"></i>
+                            Cuenta: {{ resumen.cuenta.codigo }} - {{ resumen.cuenta.nombre }}
                         </h5>
                     </div>
                     <div class="card-body p-0">
@@ -77,65 +116,41 @@
                                         <th>Descripción</th>
                                         <th width="150" class="text-end">DEBE</th>
                                         <th width="150" class="text-end">HABER</th>
-                                        <th width="100" class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for trans in transacciones %}
+                                    {% if trans.cuenta.id == resumen.cuenta.id %}
                                     <tr>
-                                        <td class="fw-bold">1</td>
-                                        <td>02/01/2024</td>
-                                        <td>Aporte de capital inicial</td>
-                                        <td class="text-end text-success fw-bold">$ 62,000.00</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-primary ver-detalle"
-                                                data-bs-toggle="tooltip" title="Ver detalle" data-bs-placement="top"
-                                                data-numero="1">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                        <td class="fw-bold">{{ trans.numero_transaccion }}</td>
+                                        <td>{{ trans.fecha|date:"d/m/Y" }}</td>
+                                        <td>{{ trans.descripcion }}</td>
+                                        <td class="text-end {% if trans.debe > 0 %}text-success fw-bold{% endif %}">
+                                            {% if trans.debe > 0 %}$ {{ trans.debe|floatformat:2 }}{% else %}-{% endif %}
+                                        </td>
+                                        <td class="text-end {% if trans.haber > 0 %}text-danger fw-bold{% endif %}">
+                                            {% if trans.haber > 0 %}$ {{ trans.haber|floatformat:2 }}{% else %}-{% endif %}
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="fw-bold">5</td>
-                                        <td>10/01/2024</td>
-                                        <td>Venta de mercancía al contado</td>
-                                        <td class="text-end text-success fw-bold">$ 24,860.00</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-primary ver-detalle"
-                                                data-bs-toggle="tooltip" title="Ver detalle" data-bs-placement="top"
-                                                data-numero="5">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">2</td>
-                                        <td>05/01/2024</td>
-                                        <td>Compra de equipo de oficina</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-end text-danger fw-bold">$ 1,977.50</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-primary ver-detalle"
-                                                data-bs-toggle="tooltip" title="Ver detalle" data-bs-placement="top"
-                                                data-numero="2">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
                                 </tbody>
                                 <tfoot class="table-active fw-bold">
                                     <tr>
                                         <td colspan="3" class="text-end">TOTALES:</td>
-                                        <td class="text-end text-success">$ 86,860.00</td>
-                                        <td class="text-end text-danger">$ 1,977.50</td>
-                                        <td></td>
+                                        <td class="text-end text-success">$ {{ resumen.total_debe|floatformat:2 }}</td>
+                                        <td class="text-end text-danger">$ {{ resumen.total_haber|floatformat:2 }}</td>
+                                        
                                     </tr>
                                     <tr class="table-warning">
-                                        <td colspan="3" class="text-end">SALDO FINAL (DEBE):</td>
-                                        <td class="text-end text-primary">$ 84,882.50</td>
-                                        <td class="text-end">-</td>
-                                        <td></td>
+                                        <td colspan="3" class="text-end">SALDO FINAL ({{ resumen.naturaleza_saldo }}):</td>
+                                        <td class="text-end {% if resumen.naturaleza_saldo == 'DEBE' %}text-primary{% endif %}">
+                                            {% if resumen.naturaleza_saldo == 'DEBE' %}$ {{ resumen.saldo_final|floatformat:2 }}{% else %}-{% endif %}
+                                        </td>
+                                        <td class="text-end {% if resumen.naturaleza_saldo == 'HABER' %}text-primary{% endif %}">
+                                            {% if resumen.naturaleza_saldo == 'HABER' %}$ {{ resumen.saldo_final|floatformat:2 }}{% else %}-{% endif %}
+                                        </td>
+                                        
                                     </tr>
                                 </tfoot>
                             </table>
@@ -144,263 +159,129 @@
                 </div>
             </div>
         </div>
-
-        <!-- Cuenta: Préstamos (Pasivo - Saldo en HABER) -->
-        <div class="row mb-4 cuenta-t" data-cuenta="prestamos">
+        {% empty %}
+        <div class="row">
             <div class="col-12">
-                <div class="card border-warning">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-coin me-2"></i>
-                            Cuenta: Préstamos Bancarios
-                        </h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th width="80">No.</th>
-                                        <th width="120">Fecha</th>
-                                        <th>Descripción</th>
-                                        <th width="150" class="text-end">DEBE</th>
-                                        <th width="150" class="text-end">HABER</th>
-                                        <th width="100" class="text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="fw-bold">9</td>
-                                        <td>15/01/2024</td>
-                                        <td>Préstamo recibido</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-end text-success fw-bold">$ 50,000.00</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-primary ver-detalle"
-                                                data-bs-toggle="tooltip" title="Ver detalle" data-bs-placement="top"
-                                                data-numero="9">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">12</td>
-                                        <td>20/01/2024</td>
-                                        <td>Pago parcial préstamo</td>
-                                        <td class="text-end text-danger fw-bold">$ 10,000.00</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-primary ver-detalle"
-                                                data-bs-toggle="tooltip" title="Ver detalle" data-bs-placement="top"
-                                                data-numero="12">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot class="table-active fw-bold">
-                                    <tr>
-                                        <td colspan="3" class="text-end">TOTALES:</td>
-                                        <td class="text-end text-danger">$ 10,000.00</td>
-                                        <td class="text-end text-success">$ 50,000.00</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr class="table-warning">
-                                        <td colspan="3" class="text-end">SALDO FINAL (HABER):</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-end text-primary">$ 40,000.00</td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-journal-x display-1 text-muted"></i>
+                        <h4 class="text-muted mt-3">No hay transacciones</h4>
+                        <p class="text-muted">No se han registrado transacciones para el periodo seleccionado.</p>
+                        {% if periodo_activo %}
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaTransaccionModal">
+                            <i class="bi bi-plus-circle me-2"></i>Crear Primera Transacción
+                        </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
+    </div>
+</div>
 
-        <!-- Cuenta: Bancos -->
-        <div class="row mb-4 cuenta-t" data-cuenta="bancos">
-            <div class="col-12">
-                <div class="card border-info">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-bank me-2"></i>
-                            Cuenta: Bancos
-                        </h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th width="80">No.</th>
-                                        <th width="120">Fecha</th>
-                                        <th>Descripción</th>
-                                        <th width="150" class="text-end">DEBE</th>
-                                        <th width="150" class="text-end">HABER</th>
-                                        <th width="150" class="text-end">SALDO</th>
-                                        <th width="100" class="text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="fw-bold">3</td>
-                                        <td>08/01/2024</td>
-                                        <td>Depósito inicial</td>
-                                        <td class="text-end text-success fw-bold">$ 50,000.00</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-end fw-bold">$ 50,000.00</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-primary ver-detalle"
-                                                data-bs-toggle="tooltip" title="Ver detalle" data-bs-placement="top"
-                                                data-numero="3">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">7</td>
-                                        <td>12/01/2024</td>
-                                        <td>Pago a proveedores</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-end text-danger fw-bold">$ 15,000.00</td>
-                                        <td class="text-end fw-bold">$ 35,000.00</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-primary ver-detalle"
-                                                data-bs-toggle="tooltip" title="Ver detalle" data-bs-placement="top"
-                                                data-numero="7">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot class="table-active fw-bold">
-                                    <tr>
-                                        <td colspan="3" class="text-end">TOTALES BANCOS:</td>
-                                        <td class="text-end text-success">$ 50,000.00</td>
-                                        <td class="text-end text-danger">$ 15,000.00</td>
-                                        <td class="text-end text-primary">$ 35,000.00</td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+<!-- Modal Seleccionar Periodo -->
+<div class="modal fade" id="seleccionarPeriodoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Seleccionar Periodo Contable</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div>
-
-        <!-- Cuenta: Ventas -->
-        <div class="row mb-4 cuenta-t" data-cuenta="ventas">
-            <div class="col-12">
-                <div class="card border-success">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-graph-up me-2"></i>
-                            Cuenta: Ventas
-                        </h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th width="80">No.</th>
-                                        <th width="120">Fecha</th>
-                                        <th>Descripción</th>
-                                        <th width="150" class="text-end">DEBE</th>
-                                        <th width="150" class="text-end">HABER</th>
-                                        <th width="150" class="text-end">SALDO</th>
-                                        <th width="100" class="text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="fw-bold">5</td>
-                                        <td>10/01/2024</td>
-                                        <td>Venta de mercancía al contado</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-end text-success fw-bold">$ 24,860.00</td>
-                                        <td class="text-end fw-bold">$ 24,860.00</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-sm btn-outline-primary ver-detalle"
-                                                data-bs-toggle="tooltip" title="Ver detalle" data-bs-placement="top"
-                                                data-numero="5">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot class="table-active fw-bold">
-                                    <tr>
-                                        <td colspan="3" class="text-end">TOTALES VENTAS:</td>
-                                        <td class="text-end">-</td>
-                                        <td class="text-end text-success">$ 24,860.00</td>
-                                        <td class="text-end text-primary">$ 24,860.00</td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+            <div class="modal-body">
+                <div class="list-group">
+                    {% for periodo in periodos %}
+                    <a href="{% url 'libro_mayor' %}?periodo_id={{ periodo.id }}" 
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Periodo {{ periodo.año }}</h6>
+                            <small class="text-muted">{{ periodo.fecha_inicio }} al {{ periodo.fecha_fin }}</small>
                         </div>
-                    </div>
+                        <span class="badge {% if periodo.estado == 'ACTIVO' %}bg-success{% else %}bg-secondary{% endif %} rounded-pill">
+                            {{ periodo.estado }}
+                        </span>
+                    </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal Nuevo Periodo -->
+<div class="modal fade" id="nuevoPeriodoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Crear Nuevo Periodo Contable</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'crear_periodo_contable' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="año" class="form-label">Año *</label>
+                        <input type="number" class="form-control" id="año" name="año" 
+                               value="{% now 'Y' %}" min="{% now 'Y' %}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_inicio" class="form-label">Fecha Inicio *</label>
+                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_fin" class="form-label">Fecha Fin *</label>
+                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Crear Periodo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Nueva Transacción -->
-<div class="modal fade" id="nuevaTransaccionModal" tabindex="-1" aria-labelledby="nuevaTransaccionModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="nuevaTransaccionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="nuevaTransaccionModalLabel">
-                    <i class="bi bi-plus-circle me-2"></i>Nueva Transacción
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                <h5 class="modal-title">Nueva Transacción</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form class="needs-validation" novalidate>
+            <form id="formTransaccion">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="fechaTransaccion" class="form-label">Fecha *</label>
                             <input type="date" class="form-control" id="fechaTransaccion" required>
-                            <div class="invalid-feedback">Por favor ingrese la fecha</div>
                         </div>
                         <div class="col-md-6">
                             <label for="numeroTransaccion" class="form-label">No. Transacción</label>
-                            <input type="text" class="form-control" id="numeroTransaccion" value="15" readonly>
+                            <input type="text" class="form-control" id="numeroTransaccion" readonly>
                         </div>
                         <div class="col-12">
                             <label for="descripcion" class="form-label">Descripción *</label>
-                            <textarea class="form-control" id="descripcion" rows="2" required
-                                placeholder="Describe la transacción..."></textarea>
-                            <div class="invalid-feedback">Por favor ingrese una descripción</div>
+                            <textarea class="form-control" id="descripcion" rows="2" required></textarea>
                         </div>
                     </div>
 
                     <hr class="my-4">
 
-                    <!-- Cuentas afectadas -->
                     <h6 class="mb-3">Cuentas Afectadas</h6>
                     <div id="cuentasContainer">
-                        <!-- Fila 1 -->
                         <div class="row g-2 mb-3 cuenta-fila">
                             <div class="col-md-5">
-                                <select class="form-select" required>
+                                <select class="form-select select-cuenta" required>
                                     <option value="">Seleccionar cuenta...</option>
-                                    <option value="caja">Caja</option>
-                                    <option value="bancos">Bancos</option>
-                                    <option value="ventas">Ventas</option>
-                                    <option value="compras">Compras</option>
-                                    <option value="gastos">Gastos</option>
-                                    <option value="capital">Capital</option>
+                                    {% for cuenta in cuentas %}
+                                    <option value="{{ cuenta.id }}" data-tipo="{{ cuenta.tipo }}">
+                                        {{ cuenta.codigo }} - {{ cuenta.nombre }}
+                                    </option>
+                                    {% endfor %}
                                 </select>
-                                <div class="invalid-feedback">Seleccione una cuenta</div>
                             </div>
                             <div class="col-md-3">
                                 <select class="form-select tipo-movimiento" required>
@@ -408,12 +289,9 @@
                                     <option value="debe">DEBE</option>
                                     <option value="haber">HABER</option>
                                 </select>
-                                <div class="invalid-feedback">Seleccione tipo</div>
                             </div>
                             <div class="col-md-3">
-                                <input type="number" class="form-control monto" step="0.01" min="0" placeholder="0.00"
-                                    required>
-                                <div class="invalid-feedback">Ingrese el monto</div>
+                                <input type="number" class="form-control monto" step="0.01" min="0" placeholder="0.00" required>
                             </div>
                             <div class="col-md-1">
                                 <button type="button" class="btn btn-outline-danger btn-sm quitar-cuenta" disabled>
@@ -429,7 +307,6 @@
 
                     <hr class="my-4">
 
-                    <!-- Resumen -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="alert alert-info mb-0">
@@ -466,31 +343,6 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Detalle Transacción -->
-<div class="modal fade" id="detalleTransaccionModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title">Detalle de Transacción #<span id="detalleNumero"></span></h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Fecha:</strong> <span id="detalleFecha"></span></p>
-                <p><strong>Descripción:</strong> <span id="detalleDescripcion"></span></p>
-
-                <h6 class="mt-4">Cuentas Afectadas:</h6>
-                <ul class="list-group" id="detalleCuentas">
-                    <!-- Se llena dinámicamente -->
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block footer_scripts %}
@@ -510,35 +362,62 @@
 
         function filtrarCuentas() {
             const cuentaSeleccionada = selectCuenta.value;
+            const fechaDesde = document.getElementById('fechaDesde').value;
+            const fechaHasta = document.getElementById('fechaHasta').value;
 
             cuentasT.forEach(cuenta => {
-                if (cuentaSeleccionada === 'todas' || cuenta.getAttribute('data-cuenta') === cuentaSeleccionada) {
-                    cuenta.style.display = 'block';
-                } else {
-                    cuenta.style.display = 'none';
-                }
+                const mostrarCuenta = cuentaSeleccionada === 'todas' || cuenta.getAttribute('data-cuenta') === cuentaSeleccionada;
+                cuenta.style.display = mostrarCuenta ? 'block' : 'none';
             });
         }
 
-        // SOLO filtrar cuando se hace click en el botón
         btnFiltrar.addEventListener('click', filtrarCuentas);
 
-        // Mostrar todas las cuentas al cargar la página
-        filtrarCuentas(); 
-
-        // Funcionalidad para ver detalle
-        const botonesDetalle = document.querySelectorAll('.ver-detalle');
-        botonesDetalle.forEach(boton => {
-            boton.addEventListener('click', function () {
-                const numeroTransaccion = this.getAttribute('data-numero');
-                // Aquí iría la lógica para mostrar el detalle de la transacción
-                console.log('Ver detalle transacción:', numeroTransaccion);
-            });
+        // Funcionalidad para ver detalle de transacción
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.ver-detalle')) {
+                const boton = e.target.closest('.ver-detalle');
+                const numeroTransaccion = boton.getAttribute('data-numero');
+                
+                fetch(`/contabilidad/detalle-transaccion/${numeroTransaccion}/?periodo_id={{ periodo_seleccionado.id }}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('detalleNumero').textContent = data.transaccion.numero;
+                            document.getElementById('detalleFecha').textContent = data.transaccion.fecha;
+                            document.getElementById('detalleDescripcion').textContent = data.transaccion.descripcion;
+                            
+                            const detalleCuentas = document.getElementById('detalleCuentas');
+                            detalleCuentas.innerHTML = '';
+                            
+                            data.transaccion.cuentas.forEach(cuenta => {
+                                const li = document.createElement('li');
+                                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                                li.innerHTML = `
+                                    <div>
+                                        <strong>${cuenta.cuenta}</strong><br>
+                                        <small class="text-muted">${cuenta.tipo}</small>
+                                    </div>
+                                    <span class="badge ${cuenta.tipo === 'DEBE' ? 'bg-success' : 'bg-danger'} rounded-pill">
+                                        $ ${parseFloat(cuenta.monto).toFixed(2)}
+                                    </span>
+                                `;
+                                detalleCuentas.appendChild(li);
+                            });
+                            
+                            new bootstrap.Modal(document.getElementById('detalleTransaccionModal')).show();
+                        }
+                    });
+            }
         });
 
         // Funcionalidad del modal de nueva transacción
         const agregarCuentaBtn = document.getElementById('agregarCuenta');
         const cuentasContainer = document.getElementById('cuentasContainer');
+        const formTransaccion = document.getElementById('formTransaccion');
+
+        // Establecer fecha actual por defecto
+        document.getElementById('fechaTransaccion').valueAsDate = new Date();
 
         if (agregarCuentaBtn && cuentasContainer) {
             agregarCuentaBtn.addEventListener('click', function () {
@@ -546,7 +425,7 @@
                 const quitarBtn = nuevaFila.querySelector('.quitar-cuenta');
                 quitarBtn.disabled = false;
 
-                nuevaFila.querySelector('select').value = '';
+                nuevaFila.querySelector('.select-cuenta').value = '';
                 nuevaFila.querySelector('.tipo-movimiento').value = '';
                 nuevaFila.querySelector('.monto').value = '';
 
@@ -564,21 +443,7 @@
                 }
             });
 
-            cuentasContainer.addEventListener('input', function (e) {
-                if (e.target.classList.contains('monto') || e.target.classList.contains('tipo-movimiento')) {
-                    actualizarTotales();
-                }
-            });
-
-            function calcularSaldo(totalDebe, totalHaber) {
-                if (totalDebe > totalHaber) {
-                    return { monto: totalDebe - totalHaber, lado: 'debe' };
-                } else if (totalHaber > totalDebe) {
-                    return { monto: totalHaber - totalDebe, lado: 'haber' };
-                } else {
-                    return { monto: 0, lado: 'balanceada' };
-                }
-            }
+            cuentasContainer.addEventListener('input', actualizarTotales);
 
             function actualizarTotales() {
                 let totalDebe = 0;
@@ -614,6 +479,57 @@
                     btnGuardar.disabled = true;
                 }
             }
+
+            // Enviar formulario de transacción
+            formTransaccion.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fecha = document.getElementById('fechaTransaccion').value;
+                const descripcion = document.getElementById('descripcion').value;
+                const cuentasAfectadas = [];
+                
+                document.querySelectorAll('.cuenta-fila').forEach(fila => {
+                    const cuentaId = fila.querySelector('.select-cuenta').value;
+                    const tipo = fila.querySelector('.tipo-movimiento').value;
+                    const monto = parseFloat(fila.querySelector('.monto').value);
+                    
+                    if (cuentaId && tipo && monto > 0) {
+                        cuentasAfectadas.push({
+                            cuenta_id: cuentaId,
+                            tipo: tipo,
+                            monto: monto
+                        });
+                    }
+                });
+
+                const data = {
+                    fecha: fecha,
+                    descripcion: descripcion,
+                    cuentas_afectadas: cuentasAfectadas
+                };
+
+                fetch('{% url "crear_transaccion" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Transacción creada exitosamente');
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert('Error al crear la transacción');
+                    console.error('Error:', error);
+                });
+            });
         }
     });
 </script>
