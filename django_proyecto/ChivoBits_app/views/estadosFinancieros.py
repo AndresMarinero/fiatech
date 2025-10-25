@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views import View
 from ChivoBits_app.models.contaGeneral import *
 from ChivoBits_app.models.estadosFinancieros import *
 from django.db import transaction
@@ -524,3 +525,144 @@ def estado_resultados(request):
     }
     
     return render(request, 'EstadosFinancieros/estadoResultados.html', context)
+
+def estado_capital(request):
+    # Obtener el período seleccionado (igual que en estado_resultados)
+    periodo_id = request.POST.get('periodo_id') or request.GET.get('periodo_id')
+    
+    if periodo_id:
+        try:
+            periodo_actual = PeriodoContable.objects.get(id=periodo_id)
+        except PeriodoContable.DoesNotExist:
+            periodo_actual = PeriodoContable.objects.filter(estado='CERRADO').first()
+            messages.warning(request, "El período seleccionado no existe.")
+    else:
+        periodo_actual = PeriodoContable.objects.filter(estado='CERRADO').first()
+
+    # Inicializar datos
+    capital_inicial = Decimal('0')
+    utilidad_bruta = Decimal('0')
+    reservas_actuales = Decimal('0')
+
+    if periodo_actual:
+        # Obtener año del período
+        año = periodo_actual.año
+        
+        # 1. OBTENER CAPITAL SOCIAL INICIAL (cuenta 3101)
+        try:
+            cuenta_capital = Cuenta.objects.get(codigo='3101')
+            transacciones_capital = Transaccion.objects.filter(
+                cuenta=cuenta_capital,
+                periodo=periodo_actual
+            ).aggregate(
+                total_debe=Sum('debe'),
+                total_haber=Sum('haber')
+            )
+            
+            # Para capital social, el saldo está en el HABER (crédito natural)
+            saldo_haber = transacciones_capital['total_haber'] or Decimal('0')
+            saldo_debe = transacciones_capital['total_debe'] or Decimal('0')
+            capital_inicial = saldo_haber - saldo_debe
+            
+        except Cuenta.DoesNotExist:
+            capital_inicial = Decimal('0')
+        
+        # 2. OBTENER RESERVAS ACTUALES (cuenta 3102)
+        try:
+            cuenta_reservas = Cuenta.objects.get(codigo='3102')
+            transacciones_reservas = Transaccion.objects.filter(
+                cuenta=cuenta_reservas,
+                periodo=periodo_actual
+            ).aggregate(
+                total_debe=Sum('debe'),
+                total_haber=Sum('haber')
+            )
+            
+            # Para reservas, el saldo está en el HABER (crédito natural)
+            saldo_haber = transacciones_reservas['total_haber'] or Decimal('0')
+            saldo_debe = transacciones_reservas['total_debe'] or Decimal('0')
+            reservas_actuales = saldo_haber - saldo_debe
+            
+        except Cuenta.DoesNotExist:
+            reservas_actuales = Decimal('0')
+        
+        # 3. OBTENER UTILIDAD BRUTA (del estado de resultados del mismo periodo)
+        # Buscar cuentas de INGRESO (grupo 51)
+        cuentas_ingresos = Cuenta.objects.filter(
+            Q(codigo__startswith='51') | Q(tipo='INGRESO')
+        )
+        
+        # Buscar cuentas de GASTO (grupos 41, 42, 43)
+        cuentas_gastos = Cuenta.objects.filter(
+            Q(codigo__startswith='41') | Q(codigo__startswith='42') | 
+            Q(codigo__startswith='43') | Q(tipo='GASTO')
+        )
+        
+        total_ingresos = Decimal('0')
+        total_gastos = Decimal('0')
+        
+        # Calcular ingresos totales
+        for cuenta in cuentas_ingresos:
+            transacciones = Transaccion.objects.filter(
+                cuenta=cuenta,
+                periodo=periodo_actual
+            ).aggregate(
+                total_haber=Sum('haber')
+            )
+            saldo_haber = transacciones['total_haber'] or Decimal('0')
+            total_ingresos += saldo_haber
+        
+        # Calcular gastos totales
+        for cuenta in cuentas_gastos:
+            transacciones = Transaccion.objects.filter(
+                cuenta=cuenta,
+                periodo=periodo_actual
+            ).aggregate(
+                total_debe=Sum('debe')
+            )
+            saldo_debe = transacciones['total_debe'] or Decimal('0')
+            total_gastos += saldo_debe
+        
+        # Calcular utilidad bruta
+        utilidad_bruta = total_ingresos - total_gastos
+        
+        # Si hay pérdida, establecer en 0
+        if utilidad_bruta < 0:
+            utilidad_bruta = Decimal('0')
+    
+    else:
+        # Si no hay período, mostrar ceros
+        año = 2024
+        capital_inicial = Decimal('0')
+        utilidad_bruta = Decimal('0')
+        reservas_actuales = Decimal('0')
+    
+    # CÁLCULOS DEL ESTADO DE CAPITAL
+    reinversion = utilidad_bruta * Decimal('0.60')  # 60% para reinversión
+    reservas_utilidad = utilidad_bruta * Decimal('0.40')  # 40% para reservas
+    
+    capital_final = capital_inicial + reinversion
+    reservas_totales = reservas_actuales + reservas_utilidad
+    
+    incremento_capital = reinversion
+    porcentaje_incremento = (incremento_capital / capital_inicial * 100) if capital_inicial > 0 else 0
+    
+    # Obtener todos los períodos disponibles
+    periodos = PeriodoContable.objects.all().order_by('-año')
+    
+    context = {
+        'año': año,
+        'capital_inicial': capital_inicial,
+        'utilidad_ejercicio': utilidad_bruta,  # Se usa utilidad_bruta del estado de resultados
+        'reinversion': reinversion,
+        'reservas_utilidad': reservas_utilidad,
+        'reservas_actuales': reservas_actuales,
+        'reservas_totales': reservas_totales,
+        'capital_final': capital_final,
+        'incremento_capital': incremento_capital,
+        'porcentaje_incremento': porcentaje_incremento,
+        'periodo_actual': periodo_actual,
+        'periodos': periodos,
+    }
+    
+    return render(request, 'EstadosFinancieros/estadoCapital.html', context)

@@ -12,5 +12,6 @@ urlpatterns = [
     path('balanceComprobacion/', estadosFinancieros.balance_comprobacion, name='balance_comprobacion'),
 
     path('estado-resultados/', estadosFinancieros.estado_resultados, name='estado_resultados'),
+    path('estado-capital/', estadosFinancieros.estado_capital, name='estado_capital'),
 
 ]

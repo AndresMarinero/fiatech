@@ -53,7 +53,7 @@ def libro_mayor(request):
         periodo_seleccionado = periodo_activo
     
     # Obtener cuentas para el filtro
-    cuentas = Cuenta.objects.filter(activa=True, nivel__in=[3, 4]).order_by('codigo')
+    cuentas = Cuenta.objects.filter(activa=True).order_by('codigo')
     
     # Obtener transacciones si hay periodo seleccionado
     transacciones = []
