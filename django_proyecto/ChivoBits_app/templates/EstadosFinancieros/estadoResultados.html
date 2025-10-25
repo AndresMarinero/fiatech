@@ -20,7 +20,13 @@
                 <!-- Contenedor de fecha -->
                 <div class="bg-light text-dark px-3 py-2 rounded-3 border d-flex align-items-center">
                     <i class="bi bi-calendar3 me-2"></i>
-                    <span class="fw-medium small">Del 01 de enero al 31 de diciembre de 2024</span>
+                    <span class="fw-medium small">
+                        {% if fecha_inicio and fecha_fin %}
+                            Del {{ fecha_inicio|date:"d/m/Y" }} al {{ fecha_fin|date:"d/m/Y" }}
+                        {% else %}
+                            Período no seleccionado
+                        {% endif %}
+                    </span>
                 </div>
 
                 <!-- Botón -->
@@ -32,43 +38,115 @@
         </div>
     </div>
 
+    <!-- Mensajes de alerta -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <!-- Tabla de estados de resultados centrada -->
     <div class="card shadow-sm mx-auto" style="max-width: 800px;">
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle text-center">
-                    <thead class="thead  text-start">
-                        <tr>
-                            <th scope="col">Código</th>
-                            <th scope="col">Cuenta</th>
-                            <th scope="col" class="text-center">DEBE</th>
-                            <th scope="col" class="text-center">HABER</th>
-                        </tr>
-                    </thead>
-                    <tbody class="fs-6">
-                        <tr>
-                            <td><strong>110101</strong></td>
-                            <td class="text-start">Caja</td>
-                            <td>$ 1,500.00</td>
-                            <td>$ -</td>
-                        </tr>
-                    </tbody>
-                    <tfoot class="table-success">
-                        <tr>
-                            <td colspan="2"><strong>TOTAL</strong></td>
-                            <td><strong>$ 1,500.00</strong></td>
-                            <td><strong>$ 2,300.00</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
+            
+            <!-- SECCIÓN DE INGRESOS -->
+            <div class="mb-4">
+                <h5 class="text-success mb-3 border-bottom pb-2">
+                    <i class="bi bi-arrow-up-circle me-2"></i>INGRESOS
+                </h5>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" width="15%">Código</th>
+                                <th scope="col">Cuenta</th>
+                                <th scope="col" width="25%" class="text-end">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ingreso in ingresos %}
+                            <tr>
+                                <td><strong>{{ ingreso.codigo }}</strong></td>
+                                <td class="text-start">{{ ingreso.nombre }}</td>
+                                <td class="text-end fw-bold fs-6 text-success">$ {{ ingreso.monto|floatformat:2 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-3">
+                                    <i class="bi bi-info-circle me-2"></i>No hay ingresos registrados
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-success">
+                            <tr>
+                                <td colspan="2" class="text-end"><strong>TOTAL INGRESOS:</strong></td>
+                                <td class="text-end"><strong>$ {{ total_ingresos|floatformat:2 }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
+
+            <!-- SECCIÓN DE GASTOS -->
+            <div class="mb-4">
+                <h5 class="text-danger mb-3 border-bottom pb-2">
+                    <i class="bi bi-arrow-down-circle me-2"></i>GASTOS
+                </h5>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" width="15%">Código</th>
+                                <th scope="col">Cuenta</th>
+                                <th scope="col" width="25%" class="text-end">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for gasto in gastos %}
+                            <tr>
+                                <td><strong>{{ gasto.codigo }}</strong></td>
+                                <td class="text-start">{{ gasto.nombre }}</td>
+                                <td class="text-end fw-bold fs-6 text-danger">$ {{ gasto.monto|floatformat:2 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-3">
+                                    <i class="bi bi-info-circle me-2"></i>No hay gastos registrados
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-danger">
+                            <tr>
+                                <td colspan="2" class="text-end"><strong>TOTAL GASTOS:</strong></td>
+                                <td class="text-end"><strong>$ {{ total_gastos|floatformat:2 }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
             <!-- Línea divisoria -->
             <hr class="my-4">
 
             <!-- Sección de utilidad o pérdida -->
-            <div class="d-flex justify-content-between align-items-center p-2 border rounded mt-4 bg-light shadow-sm">
-                <h6 class="mb-0 fw-bold text-dark">Utilidad o pérdida bruta:</h6>
-                <span class="badge bg-success fs-6 px-3 py-2 text-white">$ 800.00</span>
+            <div class="d-flex justify-content-between align-items-center p-3 border rounded mt-4 
+                        {% if utilidad_bruta >= 0 %}bg-success text-white{% else %}bg-danger text-white{% endif %} 
+                        shadow-sm">
+                <h5 class="mb-0 fw-bold">
+                    {% if utilidad_bruta >= 0 %}
+                        <i class="bi bi-graph-up-arrow me-2"></i>UTILIDAD BRUTA:
+                    {% else %}
+                        <i class="bi bi-graph-down-arrow me-2"></i>PÉRDIDA BRUTA:
+                    {% endif %}
+                </h5>
+                <span class="badge bg-light {% if utilidad_bruta >= 0 %}text-success{% else %}text-danger{% endif %} fs-6 px-3 py-2">
+                    $ {{ utilidad_bruta|floatformat:2 }}
+                </span>
             </div>
         </div>
     </div>
@@ -83,18 +161,19 @@
                 <h5 class="modal-title" id="seleccionarPeriodoModalLabel">Seleccionar Período Contable</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="#">
+            <form method="POST" action="{% url 'estado_resultados' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="selectPeriodo" class="form-label">Seleccione un período:</label>
-                        <select id="selectPeriodo" class="form-select" name="periodo" required>
+                        <select id="selectPeriodo" class="form-select" name="periodo_id" required>
                             <option value="">Seleccionar</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
-                            <option value="2020">2020</option>
+                            {% for periodo in periodos %}
+                                <option value="{{ periodo.id }}" {% if periodo.id == periodo_actual.id %}selected{% endif %}>
+                                    {{ periodo.año }} ({{ periodo.fecha_inicio|date:"d/m/Y" }} - {{ periodo.fecha_fin|date:"d/m/Y" }})
+                                    {% if periodo.estado == 'CERRADO' %} - CERRADO{% endif %}
+                                </option>
+                            {% endfor %}
                         </select>
                         <div class="invalid-feedback">Por favor seleccione un período</div>
                     </div>

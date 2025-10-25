@@ -422,3 +422,105 @@ def calcular_gastos_totales(periodo):
     ).aggregate(total=Sum('debe'))['total'] or Decimal('0')
     
     return gastos
+
+def estado_resultados(request):
+    # Obtener el período seleccionado
+    periodo_id = request.POST.get('periodo_id') or request.GET.get('periodo_id')
+    
+    if periodo_id:
+        try:
+            periodo_actual = PeriodoContable.objects.get(id=periodo_id)
+        except PeriodoContable.DoesNotExist:
+            periodo_actual = PeriodoContable.objects.filter(estado='CERRADO').first()
+            messages.warning(request, "El período seleccionado no existe.")
+    else:
+        periodo_actual = PeriodoContable.objects.filter(estado='CERRADO').first()
+
+    # Inicializar datos
+    ingresos = []
+    gastos = []
+    total_ingresos = Decimal('0')
+    total_gastos = Decimal('0')
+    utilidad_bruta = Decimal('0')
+    fecha_inicio = ""
+    fecha_fin = ""
+
+    if periodo_actual:
+        # Obtener fechas del período
+        fecha_inicio = periodo_actual.fecha_inicio
+        fecha_fin = periodo_actual.fecha_fin
+        
+        # Buscar cuentas de INGRESO (grupo 51)
+        cuentas_ingresos = Cuenta.objects.filter(
+            Q(codigo__startswith='51') | Q(tipo='INGRESO')
+        )
+        
+        # Buscar cuentas de GASTO (grupos 42, 43 y 41 si existen)
+        cuentas_gastos = Cuenta.objects.filter(
+            Q(codigo__startswith='41') | Q(codigo__startswith='42') | 
+            Q(codigo__startswith='43') | Q(tipo='GASTO')
+        )
+        
+        # Calcular ingresos
+        for cuenta in cuentas_ingresos:
+            transacciones = Transaccion.objects.filter(
+                cuenta=cuenta,
+                periodo=periodo_actual
+            ).aggregate(
+                total_debe=Sum('debe'),
+                total_haber=Sum('haber')
+            )
+            
+            saldo_haber = transacciones['total_haber'] or Decimal('0')
+            saldo_debe = transacciones['total_debe'] or Decimal('0')
+            
+            # Para cuentas de ingreso, el saldo está en el HABER
+            if saldo_haber > 0:
+                ingresos.append({
+                    'codigo': cuenta.codigo,
+                    'nombre': cuenta.nombre,
+                    'monto': saldo_haber
+                })
+                total_ingresos += saldo_haber
+        
+        # Calcular gastos
+        for cuenta in cuentas_gastos:
+            transacciones = Transaccion.objects.filter(
+                cuenta=cuenta,
+                periodo=periodo_actual
+            ).aggregate(
+                total_debe=Sum('debe'),
+                total_haber=Sum('haber')
+            )
+            
+            saldo_debe = transacciones['total_debe'] or Decimal('0')
+            saldo_haber = transacciones['total_haber'] or Decimal('0')
+            
+            # Para cuentas de gasto, el saldo está en el DEBE
+            if saldo_debe > 0:
+                gastos.append({
+                    'codigo': cuenta.codigo,
+                    'nombre': cuenta.nombre,
+                    'monto': saldo_debe
+                })
+                total_gastos += saldo_debe
+        
+        # Calcular utilidad bruta
+        utilidad_bruta = total_ingresos - total_gastos
+    
+    # Obtener todos los períodos disponibles
+    periodos = PeriodoContable.objects.all().order_by('-año')
+    
+    context = {
+        'ingresos': ingresos,
+        'gastos': gastos,
+        'total_ingresos': total_ingresos,
+        'total_gastos': total_gastos,
+        'utilidad_bruta': utilidad_bruta,
+        'periodo_actual': periodo_actual,
+        'periodos': periodos,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+    }
+    
+    return render(request, 'EstadosFinancieros/estadoResultados.html', context)
