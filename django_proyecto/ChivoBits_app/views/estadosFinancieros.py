@@ -666,3 +666,215 @@ def estado_capital(request):
     }
     
     return render(request, 'EstadosFinancieros/estadoCapital.html', context)
+
+def balance_general(request):
+    # Obtener el período seleccionado
+    periodo_id = request.POST.get('periodo_id') or request.GET.get('periodo_id')
+    
+    if periodo_id:
+        try:
+            periodo_actual = PeriodoContable.objects.get(id=periodo_id)
+        except PeriodoContable.DoesNotExist:
+            periodo_actual = PeriodoContable.objects.filter(estado='CERRADO').first()
+            messages.warning(request, "El período seleccionado no existe.")
+    else:
+        periodo_actual = PeriodoContable.objects.filter(estado='CERRADO').first()
+
+    # Inicializar datos
+    activos = []
+    pasivos = []
+    patrimonio = []
+    total_debe = Decimal('0')
+    total_haber = Decimal('0')
+    total_haber_activos = Decimal('0')
+    fecha_inicio = ""
+    fecha_fin = ""
+
+    if periodo_actual:
+        # Obtener fechas del período
+        fecha_inicio = periodo_actual.fecha_inicio
+        fecha_fin = periodo_actual.fecha_fin
+        
+        # Obtener cuentas de ACTIVO (grupo 1)
+        cuentas_activo = Cuenta.objects.filter(
+            Q(codigo__startswith='1') | Q(tipo='ACTIVO')
+        )
+        
+        # Obtener cuentas de PASIVO (grupo 2)
+        cuentas_pasivo = Cuenta.objects.filter(
+            Q(codigo__startswith='2') | Q(tipo='PASIVO')
+        )
+        
+        # Calcular ACTIVOS - INCLUYENDO SALDOS ACREEDORES
+        for cuenta in cuentas_activo:
+            # Obtener todas las transacciones (regulares + ajustes)
+            transacciones = Transaccion.objects.filter(
+                cuenta=cuenta,
+                periodo=periodo_actual
+            )
+            
+            # Calcular saldo final (igual que en balance_comprobacion)
+            total_debe_trans = transacciones.aggregate(total=Sum('debe'))['total'] or Decimal('0')
+            total_haber_trans = transacciones.aggregate(total=Sum('haber'))['total'] or Decimal('0')
+            
+            # Calcular saldo según tipo de cuenta (ACTIVO)
+            if total_debe_trans > total_haber_trans:  # Saldo deudor
+                saldo_final = total_debe_trans - total_haber_trans
+                columna_debe = saldo_final
+                columna_haber = Decimal('0')
+                total_debe += saldo_final
+                es_deudor = True
+            else:  # Saldo acreedor (como depreciación)
+                saldo_final = total_haber_trans - total_debe_trans
+                columna_debe = Decimal('0')
+                columna_haber = saldo_final
+                total_haber += saldo_final
+                total_haber_activos += saldo_final
+                es_deudor = False
+            
+            # Solo incluir si tiene saldo
+            if saldo_final > 0:
+                activos.append({
+                    'codigo': cuenta.codigo,
+                    'nombre': cuenta.nombre,
+                    'saldo': saldo_final,
+                    'es_deudor': es_deudor,
+                    'debe': columna_debe,
+                    'haber': columna_haber
+                })
+        
+        # Calcular PASIVOS - INCLUYENDO SALDOS DEUDORES
+        for cuenta in cuentas_pasivo:
+            # Obtener todas las transacciones (regulares + ajustes)
+            transacciones = Transaccion.objects.filter(
+                cuenta=cuenta,
+                periodo=periodo_actual
+            )
+            
+            # Calcular saldo final (igual que en balance_comprobacion)
+            total_debe_trans = transacciones.aggregate(total=Sum('debe'))['total'] or Decimal('0')
+            total_haber_trans = transacciones.aggregate(total=Sum('haber'))['total'] or Decimal('0')
+            
+            # Calcular saldo según tipo de cuenta (PASIVO)
+            if total_haber_trans > total_debe_trans:  # Saldo acreedor (normal)
+                saldo_final = total_haber_trans - total_debe_trans
+                columna_debe = Decimal('0')
+                columna_haber = saldo_final
+                total_haber += saldo_final
+                es_acreedor = True
+            else:  # Saldo deudor (anormal)
+                saldo_final = total_debe_trans - total_haber_trans
+                columna_debe = saldo_final
+                columna_haber = Decimal('0')
+                total_debe += saldo_final
+                es_acreedor = False
+            
+            # Solo incluir si tiene saldo
+            if saldo_final > 0:
+                pasivos.append({
+                    'codigo': cuenta.codigo,
+                    'nombre': cuenta.nombre,
+                    'saldo': saldo_final,
+                    'es_acreedor': es_acreedor,
+                    'debe': columna_debe,
+                    'haber': columna_haber
+                })
+        
+        # === CALCULAR PATRIMONIO USANDO LA LÓGICA DEL ESTADO DE CAPITAL ===
+        
+        # 1. Obtener Capital Social inicial (3101)
+        try:
+            cuenta_capital = Cuenta.objects.get(codigo='3101')
+            transacciones_capital = Transaccion.objects.filter(
+                cuenta=cuenta_capital,
+                periodo=periodo_actual
+            ).aggregate(
+                total_debe=Sum('debe'),
+                total_haber=Sum('haber')
+            )
+            capital_inicial = (transacciones_capital['total_haber'] or Decimal('0')) - (transacciones_capital['total_debe'] or Decimal('0'))
+        except Cuenta.DoesNotExist:
+            capital_inicial = Decimal('0')
+        
+        # 2. Calcular utilidad bruta para la distribución
+        cuentas_ingresos = Cuenta.objects.filter(
+            Q(codigo__startswith='51') | Q(tipo='INGRESO')
+        )
+        
+        cuentas_gastos = Cuenta.objects.filter(
+            Q(codigo__startswith='41') | Q(codigo__startswith='42') | 
+            Q(codigo__startswith='43') | Q(tipo='GASTO')
+        )
+        
+        total_ingresos = Decimal('0')
+        total_gastos = Decimal('0')
+        
+        for cuenta in cuentas_ingresos:
+            transacciones = Transaccion.objects.filter(
+                cuenta=cuenta,
+                periodo=periodo_actual
+            ).aggregate(total_haber=Sum('haber'))
+            total_ingresos += transacciones['total_haber'] or Decimal('0')
+        
+        for cuenta in cuentas_gastos:
+            transacciones = Transaccion.objects.filter(
+                cuenta=cuenta,
+                periodo=periodo_actual
+            ).aggregate(total_debe=Sum('debe'))
+            total_gastos += transacciones['total_debe'] or Decimal('0')
+        
+        utilidad_bruta = total_ingresos - total_gastos
+        if utilidad_bruta < 0:
+            utilidad_bruta = Decimal('0')
+        
+        # 3. Aplicar distribución (60% reinversión, 40% reservas)
+        reinversion = utilidad_bruta * Decimal('0.60')
+        reservas_utilidad = utilidad_bruta * Decimal('0.40')
+        
+        # 4. Calcular patrimonio para el balance general
+        capital_final = capital_inicial + reinversion
+        
+        # Agregar al patrimonio (saldos acreedores)
+        if capital_final > 0:
+            patrimonio.append({
+                'codigo': '3101',
+                'nombre': 'Capital Social',
+                'saldo': capital_final,
+                'es_acreedor': True,
+                'debe': Decimal('0'),
+                'haber': capital_final
+            })
+            total_haber += capital_final
+        
+        if reservas_utilidad > 0:
+            patrimonio.append({
+                'codigo': '3102',
+                'nombre': 'Reservas de Capital', 
+                'saldo': reservas_utilidad,
+                'es_acreedor': True,
+                'debe': Decimal('0'),
+                'haber': reservas_utilidad
+            })
+            total_haber += reservas_utilidad
+    
+    # Obtener todos los períodos disponibles
+    periodos = PeriodoContable.objects.all().order_by('-año')
+    
+    # Verificar que el balance cuadre
+    balance_cuadra = (total_debe == total_haber)
+    
+    context = {
+        'activos': activos,
+        'pasivos': pasivos,
+        'patrimonio': patrimonio,
+        'total_debe': total_debe,
+        'total_haber': total_haber,
+        'total_haber_activos': total_haber_activos,
+        'periodo_actual': periodo_actual,
+        'periodos': periodos,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+        'balance_cuadra': balance_cuadra,
+    }
+    
+    return render(request, 'EstadosFinancieros/balanceGeneral.html', context)
