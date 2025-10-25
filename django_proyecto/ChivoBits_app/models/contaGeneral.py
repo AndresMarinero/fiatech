@@ -73,12 +73,16 @@ class PeriodoContable(models.Model):
     def puede_cerrar(self):
         """Verifica si el periodo puede ser cerrado"""
         from django.db.models import Sum
+        from decimal import Decimal
+        
         total_debe = Transaccion.objects.filter(
             periodo=self
-        ).aggregate(total=Sum('debe'))['total'] or 0
+        ).aggregate(total=Sum('debe'))['total'] or Decimal('0')
+        
         total_haber = Transaccion.objects.filter(
             periodo=self
-        ).aggregate(total=Sum('haber'))['total'] or 0
+        ).aggregate(total=Sum('haber'))['total'] or Decimal('0')
+        
         return total_debe == total_haber
 
 class Transaccion(models.Model):

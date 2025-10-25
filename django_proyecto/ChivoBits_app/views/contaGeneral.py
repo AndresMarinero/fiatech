@@ -60,14 +60,18 @@ def libro_mayor(request):
     resumen_cuentas = []
     
     if periodo_seleccionado:
+        # CAMBIO 1: Excluir ajustes de las transacciones
         transacciones = Transaccion.objects.filter(
-            periodo=periodo_seleccionado
+            periodo=periodo_seleccionado,
+            es_ajuste=False  # ← EXCLUIR AJUSTES
         ).select_related('cuenta', 'centro_costo').order_by('fecha', 'numero_transaccion')
         
         # Calcular resumen por cuenta
         from django.db.models import Sum
+        # CAMBIO 2: Excluir ajustes del resumen
         resumen = Transaccion.objects.filter(
-            periodo=periodo_seleccionado
+            periodo=periodo_seleccionado,
+            es_ajuste=False  # ← EXCLUIR AJUSTES
         ).values('cuenta').annotate(
             total_debe=Sum('debe'),
             total_haber=Sum('haber')
