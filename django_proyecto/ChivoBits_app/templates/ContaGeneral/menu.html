@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<h1>Página de inicio</h1>
+<p>Este contenido está usando base.html global.</p>
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }} <!-- si quieres mantener lo que está en base.html -->
+<!-- Js para validar formulario recordando que debe de agregar la clase "needs-validation" al form 
+         y también el atributo "novalidate" y debajo de cada input que quiere validar ponen <div class="invalid-feedback">aca ponen el mensaje que quieren que se muestre</div> 
+         -->
+<script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
+<!-- Js para hacer funcionar modal de eliminación aparte de agregarle la clase delete-btn al boton de eliminar -->
+<script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+<!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
+         title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
+<script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+{% endblock %}

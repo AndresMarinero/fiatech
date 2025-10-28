@@ -12,6 +12,9 @@ from decimal import Decimal
 def libro(request):
     return render(request, 'ContaGeneral/libroMayor.html')
 
+def menu_conta(request):
+    return render(request, 'ContaGeneral/menu.html')
+
 
 def catalogo_cuentas(request):
     # Obtener todas las cuentas ordenadas por código
@@ -53,7 +56,7 @@ def libro_mayor(request):
         periodo_seleccionado = periodo_activo
     
     # Obtener cuentas para el filtro
-    cuentas = Cuenta.objects.filter(activa=True).order_by('codigo')
+    cuentas = Cuenta.objects.filter(activa=True, nivel__in=[3, 4]).order_by('codigo')
     
     # Obtener transacciones si hay periodo seleccionado
     transacciones = []

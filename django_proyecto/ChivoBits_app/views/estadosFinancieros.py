@@ -249,7 +249,7 @@ def generar_estados_financieros(request):
             )
 
             messages.success(
-                request, f'Estados financieros generados exitosamente para el período {periodo.año}. Utilidad neta: ${utilidad_neta:.2f}')
+                request, f'Estados financieros generados exitosamente para el período {periodo.año}')
             return redirect('balance_comprobacion')
 
         except Exception as e:

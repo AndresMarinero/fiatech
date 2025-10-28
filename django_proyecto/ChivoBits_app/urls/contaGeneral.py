@@ -8,4 +8,5 @@ urlpatterns = [
     path('crear-periodo/', contaGeneral.crear_periodo_contable, name='crear_periodo_contable'),
     path('crear-transaccion/', contaGeneral.crear_transaccion, name='crear_transaccion'),
     path('detalle-transaccion/<int:numero_transaccion>/', contaGeneral.detalle_transaccion, name='detalle_transaccion'),
+    path('menu/', contaGeneral.menu_conta, name='menu_conta'),
 ]

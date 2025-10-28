@@ -23,17 +23,12 @@ from django.contrib.auth.views import LogoutView, LoginView
 from ChivoBits_app.views import usuario
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-]
-
-urlpatterns = [
     path('', lambda request: redirect('login')),  # Redirige la raíz al login
     path('login/', usuario.login_usuario, name='login'),
     path('admin/', admin.site.urls),
     path('ChivoBits_app/', include('ChivoBits_app.urls')),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('login/', LoginView.as_view(template_name='usuarios/login.html'), name='login'),
-    path('', include('ChivoBits_app.urls')),
 ]
 """if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)"""
