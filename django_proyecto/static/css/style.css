@@ -233,3 +233,18 @@ position: absolute;
     background-color: #eee;
     margin: 25px 0;
 }
+
+.card-header-custom, .card-footer-custom {
+    background-color:  #303a63;
+    color: white;
+}
+
+.modal-header-custom {
+    background-color:  #303a63 !important;
+    color: white !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header-custom .btn-close {
+    filter: invert(1);
+}

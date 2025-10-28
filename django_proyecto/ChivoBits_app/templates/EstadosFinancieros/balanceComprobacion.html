@@ -181,7 +181,7 @@
             <!-- Resumen de validación -->
 <div class="row mt-4">
     <div class="col-md-4">
-        <div class="card {% if totales.balance_debe == totales.balance_haber %}bg-success text-white{% else %}bg-warning{% endif %}">
+        <div class="card {% if totales.balance_debe == totales.balance_haber %}bg-dark text-white{% else %}bg-warning{% endif %}">
             <div class="card-body text-center">
                 <h6>Balance Comprobación</h6>
                 <p class="mb-0">
@@ -199,7 +199,7 @@
     <div class="col-md-4">
         <div class="card 
             {% if periodo_actual.estado == 'FINALIZADO' %}
-                {% if totales.ajuste_debe == totales.ajuste_haber %}bg-success text-white{% else %}bg-warning{% endif %}
+                {% if totales.ajuste_debe == totales.ajuste_haber %}bg-dark text-white{% else %}bg-warning{% endif %}
             {% else %}
                 bg-secondary text-white
             {% endif %}">
@@ -224,7 +224,7 @@
     <div class="col-md-4">
         <div class="card 
             {% if periodo_actual.estado == 'FINALIZADO' %}
-                {% if totales.balance_ajustado_debe == totales.balance_ajustado_haber %}bg-success text-white{% else %}bg-warning{% endif %}
+                {% if totales.balance_ajustado_debe == totales.balance_ajustado_haber %}bg-dark text-white{% else %}bg-warning{% endif %}
             {% else %}
                 bg-secondary text-white
             {% endif %}">
