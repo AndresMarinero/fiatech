@@ -13,10 +13,20 @@
     .section.active {
         display: block;
     }
+    .bg-pepe{
+        background-color: #050B31;
+        color: #ffffff;              /* text-white */
+        text-align: center;          /* text-center */
+        border-radius: 0.25rem;      /* rounded */
+        margin-bottom: 1.5rem;       /* mb-4 */
+        padding: 1.5rem;             /* p-4 */
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); /* shadow */
+        border-radius: 10px;
+    }
 </style>
 
 <div class="container">
-    <header class="bg-primary text-white text-center rounded mb-4 p-4 shadow">
+    <header class="bg-pepe">
         <h1 class="display-4 fw-bold">Calculadora de Puntos de Casos de Uso (UCP)</h1>
         <p class="lead">Estimación de esfuerzo para proyectos de software basada en el método de Puntos de Casos de Uso</p>
     </header>
@@ -222,7 +232,7 @@
                 <div>Suma Total: <span id="ef-sum">0</span></div>
             </div>
             
-            <div class="alert alert-success">
+            <div class="alert alert-info">
                 <div class="fw-bold">CF Calculado Automáticamente: <span id="auto-cf-value">20</span> horas por UCP</div>
             </div>
         </div>
@@ -263,13 +273,13 @@
                 <div class="h3 text-primary" id="duration-result">0</div>
             </div>
             
-            <div class="alert alert-warning">
+            <div class="alert alert-info">
                 <h5 class="alert-heading">Interpretación de Resultados</h5>
                 <p id="duration-interpretation"></p>
             </div>
             
             <div class="text-center mt-4">
-                <button class="btn btn-success btn-lg me-2" id="calculate-btn">Calcular Estimación</button>
+                <button class="btn btn-dark btn-lg me-2" id="calculate-btn">Calcular Estimación</button>
                 <button class="btn btn-warning btn-lg" id="reset-btn">Reiniciar Valores</button>
             </div>
         </div>
