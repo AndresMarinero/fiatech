@@ -203,7 +203,7 @@ def crear_transaccion(request):
             
             return JsonResponse({
                 'success': True,
-                'message': 'Transacción creada exitosamente.',
+                
                 'numero_transaccion': numero_transaccion
             })
             

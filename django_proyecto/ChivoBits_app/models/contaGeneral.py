@@ -55,6 +55,7 @@ class PeriodoContable(models.Model):
     ESTADOS = [
         ('ACTIVO', 'Activo'),
         ('CERRADO', 'Cerrado'),
+        ('FINALIZADO', 'Finalizado'),
     ]
     
     año = models.IntegerField(unique=True)

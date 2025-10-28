@@ -12,9 +12,10 @@
                     <h1 class="h3 mb-1">Libro Mayor</h1>
                     {% if periodo_seleccionado %}
                     <p class="text-muted mb-0">
-                        Periodo: {{ periodo_seleccionado.año }} 
+                        Periodo: {{ periodo_seleccionado.año }}
                         ({{ periodo_seleccionado.fecha_inicio }} al {{ periodo_seleccionado.fecha_fin }})
-                        <span class="badge {% if periodo_seleccionado.estado == 'ACTIVO' %}bg-success{% else %}bg-secondary{% endif %}">
+                        <span
+                            class="badge {% if periodo_seleccionado.estado == 'ACTIVO' %}bg-success{% else %}bg-secondary{% endif %}">
                             {{ periodo_seleccionado.estado }}
                         </span>
                     </p>
@@ -22,23 +23,29 @@
                 </div>
                 <div class="d-flex gap-2">
                     <!-- Botón Seleccionar Periodo -->
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#seleccionarPeriodoModal">
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#seleccionarPeriodoModal">
                         <i class="bi bi-calendar me-2"></i>Seleccionar Periodo
                     </button>
-                    
+
                     <!-- Botón Nuevo Periodo (solo si no hay periodo activo) -->
                     {% if puede_crear_periodo %}
                     <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#nuevoPeriodoModal">
                         <i class="bi bi-plus-circle me-2"></i>Nuevo Periodo
                     </button>
                     {% endif %}
-                    
-                    <!-- Botón Nueva Transacción (solo si hay periodo activo) -->
-                    {% if periodo_activo %}
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaTransaccionModal">
-                        <i class="bi bi-plus-circle me-2"></i>Nueva Transacción
-                    </button>
-                    {% endif %}
+
+
+
+                    <!-- Botón Nueva Transacción (solo si el periodo SELECCIONADO está activo) -->
+{% if periodo_seleccionado and periodo_seleccionado.estado == 'ACTIVO' %}
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaTransaccionModal">
+    <i class="bi bi-plus-circle me-2"></i>Nueva Transacción
+</button>
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmarCierreModal">
+    <i class="bi bi-check-circle me-2"></i>Finalizar Período
+</button>
+{% endif %}
                 </div>
             </div>
         </div>
@@ -126,10 +133,10 @@
                                         <td>{{ trans.fecha|date:"d/m/Y" }}</td>
                                         <td>{{ trans.descripcion }}</td>
                                         <td class="text-end {% if trans.debe > 0 %}text-success fw-bold{% endif %}">
-                                            {% if trans.debe > 0 %}$ {{ trans.debe|floatformat:2 }}{% else %}-{% endif %}
+                                            {% if trans.debe > 0 %}$ {{ trans.debe|floatformat:2 }}{% else %}-{% endif%}
                                         </td>
                                         <td class="text-end {% if trans.haber > 0 %}text-danger fw-bold{% endif %}">
-                                            {% if trans.haber > 0 %}$ {{ trans.haber|floatformat:2 }}{% else %}-{% endif %}
+                                            {% if trans.haber > 0 %}$ {{ trans.haber|floatformat:2 }}{% else %}-{% endif%}
                                         </td>
                                     </tr>
                                     {% endif %}
@@ -140,17 +147,20 @@
                                         <td colspan="3" class="text-end">TOTALES:</td>
                                         <td class="text-end text-success">$ {{ resumen.total_debe|floatformat:2 }}</td>
                                         <td class="text-end text-danger">$ {{ resumen.total_haber|floatformat:2 }}</td>
-                                        
+
                                     </tr>
                                     <tr class="table-warning">
-                                        <td colspan="3" class="text-end">SALDO FINAL ({{ resumen.naturaleza_saldo }}):</td>
-                                        <td class="text-end {% if resumen.naturaleza_saldo == 'DEBE' %}text-primary{% endif %}">
-                                            {% if resumen.naturaleza_saldo == 'DEBE' %}$ {{ resumen.saldo_final|floatformat:2 }}{% else %}-{% endif %}
+                                        <td colspan="3" class="text-end">SALDO FINAL ({{ resumen.naturaleza_saldo }}):
                                         </td>
-                                        <td class="text-end {% if resumen.naturaleza_saldo == 'HABER' %}text-primary{% endif %}">
-                                            {% if resumen.naturaleza_saldo == 'HABER' %}$ {{ resumen.saldo_final|floatformat:2 }}{% else %}-{% endif %}
+                                        <td
+                                            class="text-end {% if resumen.naturaleza_saldo == 'DEBE' %}text-primary{% endif %}">
+                                            {% if resumen.naturaleza_saldo == 'DEBE' %}$ {{resumen.saldo_final|floatformat:2 }}{% else %}-{% endif %}
                                         </td>
-                                        
+                                        <td
+                                            class="text-end {% if resumen.naturaleza_saldo == 'HABER' %}text-primary{% endif %}">
+                                            {% if resumen.naturaleza_saldo == 'HABER' %}$ {{resumen.saldo_final|floatformat:2 }}{% else %}-{% endif %}
+                                        </td>
+
                                     </tr>
                                 </tfoot>
                             </table>
@@ -186,18 +196,20 @@
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">Seleccionar Periodo Contable</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="list-group">
                     {% for periodo in periodos %}
-                    <a href="{% url 'libro_mayor' %}?periodo_id={{ periodo.id }}" 
-                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <a href="{% url 'libro_mayor' %}?periodo_id={{ periodo.id }}"
+                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="mb-1">Periodo {{ periodo.año }}</h6>
                             <small class="text-muted">{{ periodo.fecha_inicio }} al {{ periodo.fecha_fin }}</small>
                         </div>
-                        <span class="badge {% if periodo.estado == 'ACTIVO' %}bg-success{% else %}bg-secondary{% endif %} rounded-pill">
+                        <span
+                            class="badge {% if periodo.estado == 'ACTIVO' %}bg-success{% else %}bg-secondary{% endif %} rounded-pill">
                             {{ periodo.estado }}
                         </span>
                     </a>
@@ -214,15 +226,16 @@
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
                 <h5 class="modal-title">Crear Nuevo Periodo Contable</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <form method="post" action="{% url 'crear_periodo_contable' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="año" class="form-label">Año *</label>
-                        <input type="number" class="form-control" id="año" name="año" 
-                               value="{% now 'Y' %}" min="{% now 'Y' %}" required>
+                        <input type="number" class="form-control" id="año" name="año" value="{% now 'Y' %}"
+                            min="{% now 'Y' %}" required>
                     </div>
                     <div class="mb-3">
                         <label for="fecha_inicio" class="form-label">Fecha Inicio *</label>
@@ -248,7 +261,8 @@
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">Nueva Transacción</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <form id="formTransaccion">
                 {% csrf_token %}
@@ -291,7 +305,8 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <input type="number" class="form-control monto" step="0.01" min="0" placeholder="0.00" required>
+                                <input type="number" class="form-control monto" step="0.01" min="0" placeholder="0.00"
+                                    required>
                             </div>
                             <div class="col-md-1">
                                 <button type="button" class="btn btn-outline-danger btn-sm quitar-cuenta" disabled>
@@ -343,6 +358,63 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Confirmar Cierre -->
+<div class="modal fade" id="confirmarCierreModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Finalizar Período Contable
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'cerrar_periodo' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-lock text-warning display-4"></i>
+                    </div>
+                    <p class="text-center fw-bold">¿Está seguro de finalizar el período contable actual?</p>
+
+                    <div class="alert alert-warning" role="alert">
+                        <small>
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Esta acción es irreversible</strong>. Después de finalizar:
+                            <ul class="mt-2 mb-1">
+                                <li>No se podrán realizar más transacciones ni ajustes</li>
+                                <li>Se generará el Balance de Comprobación final</li>
+                                <li>Será redirigido automáticamente al Balance de Comprobación</li>
+                            </ul>
+                        </small>
+                    </div>
+
+                    <!-- Información del periodo -->
+                    {% if periodo_activo %}
+                    <div class="card border-primary">
+                        <div class="card-body py-2">
+                            <small class="text-muted">Período a finalizar:</small>
+                            <div class="d-flex justify-content-between">
+                                <span><strong>{{ periodo_activo.año }}</strong></span>
+                                <span>{{ periodo_activo.fecha_inicio|date:"d/m/Y" }} -
+                                    {{periodo_activo.fecha_fin|date:"d/m/Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-lock me-1"></i>Finalizar Período
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block footer_scripts %}
@@ -374,11 +446,11 @@
         btnFiltrar.addEventListener('click', filtrarCuentas);
 
         // Funcionalidad para ver detalle de transacción
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.closest('.ver-detalle')) {
                 const boton = e.target.closest('.ver-detalle');
                 const numeroTransaccion = boton.getAttribute('data-numero');
-                
+
                 fetch(`/contabilidad/detalle-transaccion/${numeroTransaccion}/?periodo_id={{ periodo_seleccionado.id }}`)
                     .then(response => response.json())
                     .then(data => {
@@ -386,10 +458,10 @@
                             document.getElementById('detalleNumero').textContent = data.transaccion.numero;
                             document.getElementById('detalleFecha').textContent = data.transaccion.fecha;
                             document.getElementById('detalleDescripcion').textContent = data.transaccion.descripcion;
-                            
+
                             const detalleCuentas = document.getElementById('detalleCuentas');
                             detalleCuentas.innerHTML = '';
-                            
+
                             data.transaccion.cuentas.forEach(cuenta => {
                                 const li = document.createElement('li');
                                 li.className = 'list-group-item d-flex justify-content-between align-items-center';
@@ -404,7 +476,7 @@
                                 `;
                                 detalleCuentas.appendChild(li);
                             });
-                            
+
                             new bootstrap.Modal(document.getElementById('detalleTransaccionModal')).show();
                         }
                     });
@@ -481,18 +553,18 @@
             }
 
             // Enviar formulario de transacción
-            formTransaccion.addEventListener('submit', function(e) {
+            formTransaccion.addEventListener('submit', function (e) {
                 e.preventDefault();
-                
+
                 const fecha = document.getElementById('fechaTransaccion').value;
                 const descripcion = document.getElementById('descripcion').value;
                 const cuentasAfectadas = [];
-                
+
                 document.querySelectorAll('.cuenta-fila').forEach(fila => {
                     const cuentaId = fila.querySelector('.select-cuenta').value;
                     const tipo = fila.querySelector('.tipo-movimiento').value;
                     const monto = parseFloat(fila.querySelector('.monto').value);
-                    
+
                     if (cuentaId && tipo && monto > 0) {
                         cuentasAfectadas.push({
                             cuenta_id: cuentaId,
@@ -516,19 +588,19 @@
                     },
                     body: JSON.stringify(data)
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Transacción creada exitosamente');
-                        window.location.reload();
-                    } else {
-                        alert('Error: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    alert('Error al crear la transacción');
-                    console.error('Error:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Transacción creada exitosamente');
+                            window.location.reload();
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error al crear la transacción');
+                        console.error('Error:', error);
+                    });
             });
         }
     });
