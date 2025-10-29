@@ -36,20 +36,26 @@ def ajustes_contables(request):
     # Obtener el período seleccionado
     periodo_id = request.GET.get('periodo_id')
     if periodo_id:
-        periodo_seleccionado = get_object_or_404(
-            PeriodoContable, id=periodo_id)
+        periodo_seleccionado = get_object_or_404(PeriodoContable, id=periodo_id)
     else:
         periodo_seleccionado = periodo_cerrado
 
-    # Obtener todos los ajustes del periodo seleccionado
-    ajustes = Transaccion.objects.filter(
-        periodo=periodo_seleccionado,
-        es_ajuste=True
-    ).select_related('cuenta').order_by('fecha', 'id') if periodo_seleccionado else []
-
-    # Calcular totales
-    total_debe = ajustes.aggregate(total=Sum('debe'))['total'] or 0
-    total_haber = ajustes.aggregate(total=Sum('haber'))['total'] or 0
+    # ✅ CORREGIDO: Manejar el caso cuando no hay periodo seleccionado
+    if periodo_seleccionado:
+        # Obtener todos los ajustes del periodo seleccionado
+        ajustes = Transaccion.objects.filter(
+            periodo=periodo_seleccionado,
+            es_ajuste=True
+        ).select_related('cuenta').order_by('fecha', 'id')
+        
+        # Calcular totales - esto funciona porque ajustes es un QuerySet
+        total_debe = ajustes.aggregate(total=Sum('debe'))['total'] or 0
+        total_haber = ajustes.aggregate(total=Sum('haber'))['total'] or 0
+    else:
+        # Cuando no hay periodo seleccionado, usar valores por defecto
+        ajustes = []
+        total_debe = 0
+        total_haber = 0
 
     # Obtener todos los periodos para el selector
     periodos = PeriodoContable.objects.all().order_by('-año')

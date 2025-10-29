@@ -14,7 +14,7 @@ def login_usuario(request):
                 request.session['usuario_id'] = usuario.id
                 request.session['username'] = usuario.username
                 messages.success(request, f'¡Bienvenido {usuario.username}!')
-                return redirect('/ChivoBits_app/menu/')  # Cambia 'home' por tu vista principal
+                return redirect('menu_conta')  # Cambia 'home' por tu vista principal
             else:
                 return render(request, 'Usuario/login.html', {'error': 'Contraseña incorrecta'})
         except Usuario.DoesNotExist:
