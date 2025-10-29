@@ -9,3 +9,5 @@ def CDM(request):
     return render(request, 'costos/CDM.html')
 def cif(request):
     return render(request, 'costos/CIF.html')
+def cmo(request):
+    return render(request, 'costos/CMO.html')
