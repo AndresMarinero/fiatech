@@ -39,8 +39,8 @@
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <label for="worked-days" class="form-label">Días Laborados:</label>
-                    <input type="number" id="worked-days" class="form-control" min="0" max="365" value="0">
+                    <label for="worked-days" class="form-label">Días Laborados(Semana):</label>
+                    <input type="number" id="worked-days" class="form-control" min="0" max="7" value="0">
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
@@ -80,8 +80,8 @@
             </div>
             
             <div class="text-center">
-                <button class="btn btn-dark me-2" id="add-employee-btn">Agregar Empleado</button>
-                <button class="btn btn-warning" id="clear-form-btn">Limpiar Formulario</button>
+                <button class="btn btn-dark fw-bold me-2" id="add-employee-btn">Agregar Empleado</button>
+                <button class="btn btn-warning fw-bold" id="clear-form-btn">Limpiar Formulario</button>
             </div>
         </div>
     </div>
@@ -185,8 +185,8 @@
     </div>
     
     <div class="text-center mt-4">
-        <button class="btn btn-dark me-2" id="calculate-all-btn">Calcular Todos</button>
-        <button class="btn btn-warning" id="clear-all-btn">Limpiar Todo</button>
+        <button class="btn btn-dark fw-bold me-2" id="calculate-all-btn">Calcular Todos</button>
+        <button class="btn btn-warning fw-bold" id="clear-all-btn">Limpiar Todo</button>
     </div>
 </div>
 {% endblock %}
