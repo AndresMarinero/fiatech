@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calculadora de Costo Total y Precio de Venta{% endblock %}
+
+{% block content %}
+<style>
+    .bg-pepe{
+        background-color: #050B31;
+        color: #ffffff;              /* text-white */
+        text-align: center;          /* text-center */
+        border-radius: 0.25rem;      /* rounded */
+        margin-bottom: 1.5rem;       /* mb-4 */
+        padding: 1.5rem;             /* p-4 */
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); /* shadow */
+        border-radius: 10px;
+    }
+</style>
+<div class="container">
+    <header class="bg-pepe">
+        <h1 class="display-4 fw-bold">Calculadora de Costo Total y Precio de Venta</h1>
+        <p class="lead">Cálculo del costo unitario y precio de venta por orden de fabricación</p>
+    </header>
+
+    <!-- Sección 1: Configuración General -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title h4 border-bottom pb-2 mb-3">1. Configuración General</h2>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="dias-laborables" class="form-label">Días Laborables por Año:</label>
+                    <input type="number" id="dias-laborables" class="form-control" min="1" max="365" value="200">
+                </div>
+                <div class="col-md-6">
+                    <label for="horas-productivas" class="form-label">Horas Productivas por Día:</label>
+                    <input type="number" id="horas-productivas" class="form-control" min="1" max="24" value="6" step="0.5">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 2: Datos del Proyecto -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title h4 border-bottom pb-2 mb-3">2. Datos del Proyecto</h2>
+            
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label for="proyecto-nombre" class="form-label">Nombre del Proyecto:</label>
+                    <input type="text" id="proyecto-nombre" class="form-control" placeholder="Ej: Sistema de Gestión">
+                </div>
+                <div class="col-md-4">
+                    <label for="tiempo-proyecto" class="form-label">Tiempo del Proyecto (días):</label>
+                    <input type="number" id="tiempo-proyecto" class="form-control" min="1" value="30">
+                </div>
+                <div class="col-md-4">
+                    <label for="unidades-producir" class="form-label">Unidades a Producir:</label>
+                    <input type="number" id="unidades-producir" class="form-control" min="1" value="1">
+                </div>
+                <div class="col-md-6">
+                    <label for="costo-mano-obra" class="form-label">Costo Mano de Obra Semanal ($):</label>
+                    <input type="number" id="costo-mano-obra" class="form-control" min="0" step="0.01" value="0">
+                </div>
+                <div class="col-md-6">
+                    <label for="costo-cif-anual" class="form-label">Costo CIF Anual ($):</label>
+                    <input type="number" id="costo-cif-anual" class="form-control" min="0" step="0.01" value="0">
+                </div>
+                <div class="col-md-6">
+                    <label for="costo-materiales" class="form-label">Costo de Materiales ($):</label>
+                    <input type="number" id="costo-materiales" class="form-control" min="0" step="0.01" value="0">
+                </div>
+                <div class="col-md-6">
+                    <label for="margen-ganancia" class="form-label">Margen de Ganancia (%):</label>
+                    <input type="number" id="margen-ganancia" class="form-control" min="0" max="100" value="30">
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-dark fw-bold me-2" id="agregar-proyecto-btn">Agregar Proyecto</button>
+                <button class="btn btn-warning fw-bold" id="limpiar-formulario-btn">Limpiar Formulario</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 3: Lista de Proyectos -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title h4 border-bottom pb-2 mb-3">3. Lista de Proyectos</h2>
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover" id="proyectos-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Tiempo (días)</th>
+                            <th>Unidades</th>
+                            <th>Mano Obra</th>
+                            <th>CIF Proyecto</th>
+                            <th>Materiales</th>
+                            <th>Costo Total</th>
+                            <th>Costo Unitario</th>
+                            <th>Precio Venta</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="proyectos-list">
+                        <!-- Los proyectos se agregarán aquí dinámicamente -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-primary fw-bold">
+                            <td colspan="6">Totales Generales</td>
+                            <td id="total-costo-total">$0.00</td>
+                            <td>-</td>
+                            <td id="total-precio-venta">$0.00</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 4: Resumen de Cálculos -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title h4 border-bottom pb-2 mb-3">4. Resumen de Cálculos</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-primary">
+                        <h5 class="alert-heading">Fórmulas Utilizadas</h5>
+                        <ul class="mb-0">
+                            <li><strong>CIF Proyecto:</strong> (CIF Anual ÷ Días Laborables) × Tiempo Proyecto</li>
+                            <li><strong>Mano de Obra Proyecto:</strong> (Mano Obra Semanal ÷ 5) × Tiempo Proyecto</li>
+                            <li><strong>Costo Total:</strong> Mano Obra + CIF + Materiales</li>
+                            <li><strong>Costo Unitario:</strong> Costo Total ÷ Unidades</li>
+                            <li><strong>Precio Venta:</strong> Costo Unitario × (1 + Margen%)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-primary">
+                        <h5 class="alert-heading">Variables Actuales</h5>
+                        <div class="mb-1"><strong>Días Laborables:</strong> <span id="resumen-dias">200</span> días/año</div>
+                        <div class="mb-1"><strong>Horas Productivas:</strong> <span id="resumen-horas">6</span> horas/día</div>
+                        <div class="mb-1"><strong>Total Proyectos:</strong> <span id="resumen-proyectos">0</span></div>
+                        <div class="mb-1"><strong>Total Unidades:</strong> <span id="resumen-unidades">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer_scripts %}
+<script>
+    // Array para almacenar los proyectos
+    let proyectos = [];
+
+    // Elementos del DOM
+    const proyectosList = document.getElementById('proyectos-list');
+    const agregarProyectoBtn = document.getElementById('agregar-proyecto-btn');
+    const limpiarFormularioBtn = document.getElementById('limpiar-formulario-btn');
+    const diasLaborablesInput = document.getElementById('dias-laborables');
+    const horasProductivasInput = document.getElementById('horas-productivas');
+
+    // Función para agregar proyecto
+    function agregarProyecto() {
+        const nombre = document.getElementById('proyecto-nombre').value.trim();
+        const tiempo = parseInt(document.getElementById('tiempo-proyecto').value) || 0;
+        const unidades = parseInt(document.getElementById('unidades-producir').value) || 1;
+        const costoManoObra = parseFloat(document.getElementById('costo-mano-obra').value) || 0;
+        const costoCIFAnual = parseFloat(document.getElementById('costo-cif-anual').value) || 0;
+        const costoMateriales = parseFloat(document.getElementById('costo-materiales').value) || 0;
+        const margenGanancia = parseFloat(document.getElementById('margen-ganancia').value) || 0;
+        const diasLaborables = parseInt(diasLaborablesInput.value) || 200;
+
+        if (!nombre) {
+            alert('Por favor ingrese el nombre del proyecto');
+            return;
+        }
+
+        if (tiempo <= 0) {
+            alert('El tiempo del proyecto debe ser mayor a 0');
+            return;
+        }
+
+        if (unidades <= 0) {
+            alert('Las unidades a producir deben ser mayor a 0');
+            return;
+        }
+
+        // Calcular costos
+        const calculos = calcularCostosProyecto(tiempo, unidades, costoManoObra, costoCIFAnual, costoMateriales, margenGanancia, diasLaborables);
+
+        const proyecto = {
+            id: Date.now(),
+            nombre,
+            tiempo,
+            unidades,
+            costoManoObra,
+            costoCIFAnual,
+            costoMateriales,
+            margenGanancia,
+            ...calculos
+        };
+
+        proyectos.push(proyecto);
+        actualizarTablaProyectos();
+        limpiarFormulario();
+        actualizarResumen();
+    }
+
+    // Función para calcular los costos del proyecto
+    function calcularCostosProyecto(tiempo, unidades, costoManoObra, costoCIFAnual, costoMateriales, margenGanancia, diasLaborables) {
+        // Calcular CIF del proyecto (regla de tres)
+        const cifProyecto = (costoCIFAnual / diasLaborables) * tiempo;
+
+        // Calcular Mano de Obra del proyecto (semanal a días)
+        const manoObraProyecto = (costoManoObra / 5) * tiempo;
+
+        // Calcular costo total
+        const costoTOTAL = manoObraProyecto + cifProyecto + costoMateriales;
+
+        // Calcular costo unitario
+        const costoUnitario = costoTOTAL / unidades;
+
+        // Calcular precio de venta
+        const precioVenta = costoUnitario * (1 + (margenGanancia / 100));
+
+        return {
+            cifProyecto,
+            manoObraProyecto,
+            costoTOTAL,
+            costoUnitario,
+            precioVenta
+        };
+    }
+
+    // Función para actualizar la tabla de proyectos
+    function actualizarTablaProyectos() {
+        proyectosList.innerHTML = '';
+        let totalCostoTotal = 0;
+        let totalPrecioVenta = 0;
+        let totalUnidades = 0;
+
+        proyectos.forEach(proyecto => {
+            totalCostoTotal += proyecto.costoTOTAL;
+            totalPrecioVenta += proyecto.precioVenta * proyecto.unidades;
+            totalUnidades += proyecto.unidades;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${proyecto.nombre}</td>
+                <td>${proyecto.tiempo}</td>
+                <td>${proyecto.unidades}</td>
+                <td>$${proyecto.manoObraProyecto.toFixed(2)}</td>
+                <td>$${proyecto.cifProyecto.toFixed(2)}</td>
+                <td>$${proyecto.costoMateriales.toFixed(2)}</td>
+                <td>$${proyecto.costoTOTAL.toFixed(2)}</td>
+                <td>$${proyecto.costoUnitario.toFixed(2)}</td>
+                <td>$${proyecto.precioVenta.toFixed(2)}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarProyecto(${proyecto.id})">Eliminar</button>
+                </td>
+            `;
+            proyectosList.appendChild(row);
+        });
+
+        // Actualizar totales
+        document.getElementById('total-costo-total').textContent = `$${totalCostoTotal.toFixed(2)}`;
+        document.getElementById('total-precio-venta').textContent = `$${totalPrecioVenta.toFixed(2)}`;
+    }
+
+    // Función para eliminar un proyecto
+    function eliminarProyecto(proyectoId) {
+        proyectos = proyectos.filter(proyecto => proyecto.id !== proyectoId);
+        actualizarTablaProyectos();
+        actualizarResumen();
+    }
+
+    // Función para limpiar el formulario
+    function limpiarFormulario() {
+        document.getElementById('proyecto-nombre').value = '';
+        document.getElementById('tiempo-proyecto').value = '30';
+        document.getElementById('unidades-producir').value = '1';
+        document.getElementById('costo-mano-obra').value = '0';
+        document.getElementById('costo-cif-anual').value = '0';
+        document.getElementById('costo-materiales').value = '0';
+        document.getElementById('margen-ganancia').value = '30';
+    }
+
+    // Función para actualizar el resumen
+    function actualizarResumen() {
+        document.getElementById('resumen-dias').textContent = diasLaborablesInput.value;
+        document.getElementById('resumen-horas').textContent = horasProductivasInput.value;
+        document.getElementById('resumen-proyectos').textContent = proyectos.length;
+        
+        const totalUnidades = proyectos.reduce((total, proyecto) => total + proyecto.unidades, 0);
+        document.getElementById('resumen-unidades').textContent = totalUnidades;
+    }
+
+    // Función para recalcular todos los proyectos cuando cambien los días laborables
+    function recalcularTodosProyectos() {
+        const diasLaborables = parseInt(diasLaborablesInput.value) || 200;
+        
+        proyectos.forEach(proyecto => {
+            const calculos = calcularCostosProyecto(
+                proyecto.tiempo,
+                proyecto.unidades,
+                proyecto.costoManoObra,
+                proyecto.costoCIFAnual,
+                proyecto.costoMateriales,
+                proyecto.margenGanancia,
+                diasLaborables
+            );
+            
+            // Actualizar el proyecto con los nuevos cálculos
+            Object.assign(proyecto, calculos);
+        });
+        
+        actualizarTablaProyectos();
+        actualizarResumen();
+    }
+
+    // Event Listeners
+    agregarProyectoBtn.addEventListener('click', agregarProyecto);
+    limpiarFormularioBtn.addEventListener('click', limpiarFormulario);
+
+    // Recalcular cuando cambien los días laborables u horas productivas
+    diasLaborablesInput.addEventListener('change', recalcularTodosProyectos);
+    horasProductivasInput.addEventListener('change', actualizarResumen);
+
+    // Permitir agregar proyecto con Enter
+    document.getElementById('proyecto-nombre').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            agregarProyecto();
+        }
+    });
+
+    // Inicializar el resumen
+    actualizarResumen();
+</script>
+{% endblock %}

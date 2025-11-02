@@ -225,14 +225,14 @@
                 </div>
             </div>
             
-            <div class="alert alert-info">
+            <div class="alert alert-secondary">
                 <h5 class="alert-heading">Cálculo Detallado del CF:</h5>
                 <div class="mb-1">Factores E1-E6 < 3: <span id="ef-low-count">0</span> factores</div>
                 <div class="mb-1">Factores E7-E8 > 3: <span id="ef-high-count">0</span> factores</div>
                 <div>Suma Total: <span id="ef-sum">0</span></div>
             </div>
             
-            <div class="alert alert-info">
+            <div class="alert alert-secondary">
                 <div class="fw-bold">CF Calculado Automáticamente: <span id="auto-cf-value">20</span> horas por UCP</div>
             </div>
         </div>
@@ -273,22 +273,23 @@
                 <div class="h3 text-primary" id="duration-result">0</div>
             </div>
             
-            <div class="alert alert-info">
+            <div class="alert alert-success">
                 <h5 class="alert-heading">Interpretación de Resultados</h5>
                 <p id="duration-interpretation"></p>
             </div>
             
             <div class="text-center mt-4">
-                <button class="btn btn-dark btn-lg me-2" id="calculate-btn">Calcular Estimación</button>
-                <button class="btn btn-warning btn-lg" id="reset-btn">Reiniciar Valores</button>
+                <button class="btn btn-dark btn-lg fw-bold me-2" id="calculate-btn">Calcular Estimación</button>
+                <button class="btn btn-warning btn-lg fw-bold" id="reset-btn">Reiniciar Valores</button>
             </div>
         </div>
     </div>
-    
+    <!--
     <footer class="text-center text-muted mt-5 py-3">
         <p>Calculadora UCP - Método de Puntos de Casos de Uso para estimación de proyectos de software</p>
         <p>Basado en la metodología de Gustav Karner</p>
     </footer>
+    -->
 </div>
 {% endblock %}
 
