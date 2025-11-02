@@ -21,7 +21,7 @@ def catalogo_cuentas(request):
     cuentas = Cuenta.objects.all().order_by('codigo')
 
     # Calcular estadísticas
-    total_cuentas = cuentas.count()
+    total_cuentas = Cuenta.objects.filter(nivel__in=[3, 4]).count()
     cuentas_activo = cuentas.filter(tipo='ACTIVO').count()
     cuentas_pasivo = cuentas.filter(tipo='PASIVO').count()
     cuentas_patrimonio = cuentas.filter(tipo='PATRIMONIO').count()

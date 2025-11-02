@@ -12,23 +12,6 @@ from decimal import Decimal
 def financiero(request):
     return render(request, 'EstadosFinancieros/estadoFinanciero.html')
 
-
-def ajustesContables(request):
-    return render(request, 'EstadosFinancieros/ajustesContables.html')
-
-
-def balanceComprobacion(request):
-    return render(request, 'EstadosFinancieros/balanceComprobacion.html')
-
-
-def estadoResultados(request):
-    return render(request, 'EstadosFinancieros/estadoResultados.html')
-
-
-def estadoCapital(request):
-    return render(request, 'EstadosFinancieros/estadoCapital.html')
-
-
 def ajustes_contables(request):
     # Obtener periodo CERRADO por defecto (para hacer ajustes)
     periodo_cerrado = PeriodoContable.objects.filter(estado='CERRADO').first()
@@ -40,7 +23,7 @@ def ajustes_contables(request):
     else:
         periodo_seleccionado = periodo_cerrado
 
-    # ✅ CORREGIDO: Manejar el caso cuando no hay periodo seleccionado
+    # Manejar el caso cuando no hay periodo seleccionado
     if periodo_seleccionado:
         # Obtener todos los ajustes del periodo seleccionado
         ajustes = Transaccion.objects.filter(
@@ -930,7 +913,7 @@ def balance_general(request):
         resultado_ejercicio = total_ingresos - total_gastos
         hay_perdida = resultado_ejercicio < 0
 
-        # 3. CALCULAR PATRIMONIO SEGÚN RESULTADO - VERSIÓN CORREGIDA
+        # 3. CALCULAR PATRIMONIO SEGÚN RESULTADO 
         if hay_perdida:
             # En caso de PÉRDIDA: capital_inicial - pérdida_total
             perdida_total = abs(resultado_ejercicio)

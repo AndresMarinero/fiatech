@@ -3,8 +3,6 @@ from ChivoBits_app.views import estadosFinancieros
 
 urlpatterns = [
     path('estadosFinancieros/', estadosFinancieros.financiero, name='estadosFinancieros'),
-    path('estadoResultados/', estadosFinancieros.estadoResultados, name='estadoResultados'),
-    path('estadoCapital/', estadosFinancieros.estadoCapital, name='estadoCapital'),
 
     path('ajustesContables/', estadosFinancieros.ajustes_contables, name='ajustes_contables'),
     path('ajustes/crear/', estadosFinancieros.crear_ajuste, name='crear_ajuste'),
