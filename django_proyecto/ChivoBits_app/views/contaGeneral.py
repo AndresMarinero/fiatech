@@ -98,7 +98,7 @@ def libro_mayor(request):
         'cuentas': cuentas,
         'transacciones': transacciones,
         'resumen_cuentas': resumen_cuentas,
-        'puede_crear_periodo': not PeriodoContable.objects.filter(estado='ACTIVO').exists(),
+        'puede_crear_periodo': not PeriodoContable.objects.filter(estado__in=['ACTIVO', 'CERRADO']).exists(),
     }
     
     return render(request, 'ContaGeneral/libroMayor.html', context)
