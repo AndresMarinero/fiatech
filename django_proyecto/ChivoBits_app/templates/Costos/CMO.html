@@ -39,8 +39,8 @@
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <label for="worked-days" class="form-label">Días Laborados(Semana):</label>
-                    <input type="number" id="worked-days" class="form-control" min="0" max="7" value="0">
+                    <label for="worked-days" class="form-label">Días Laborados (Semana):</label>
+                    <input type="number" id="worked-days" class="form-control" min="0" max="7" step="0.1" value="0">
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
@@ -111,6 +111,11 @@
                     </tbody>
                 </table>
             </div>
+            
+            <!-- Botón para calcular todos los empleados -->
+            <div class="text-center mt-3">
+                <button class="btn btn-dark fw-bold" id="calculate-employees-btn">Calcular Todos los Empleados</button>
+            </div>
         </div>
     </div>
     
@@ -130,6 +135,7 @@
                             <th>ISSS</th>
                             <th>AFP</th>
                             <th>Costo Real</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="calculations-list">
@@ -186,7 +192,7 @@
     
     <div class="text-center mt-4">
         <button class="btn btn-dark fw-bold me-2" id="calculate-all-btn">Calcular Todos</button>
-        <button class="btn btn-warning fw-bold" id="clear-all-btn">Limpiar Todo</button>
+        <button class="btn btn-warning fw-bold" id="clear-all-btn">Limpiar Datos Ingresados</button>
     </div>
 </div>
 {% endblock %}
@@ -196,6 +202,30 @@
     // Array para almacenar los empleados
     let employees = [];
     
+    // Empleados predeterminados (de la imagen)
+    const defaultEmployees = [
+        { id: -1, name: "Víctor Sanchez", dailySalary: 66.67, workedDays: 5, dailyHours: 8, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", isDefault: true },
+        { id: -2, name: "Dolores Tobar", dailySalary: 60.00, workedDays: 5, dailyHours: 6, efficiency: 75, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", isDefault: true },
+        { id: -3, name: "Efraín Alfaro", dailySalary: 60.00, workedDays: 4, dailyHours: 6, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "3-10", isDefault: true },
+        { id: -4, name: "Javier Martinez", dailySalary: 60.00, workedDays: 4, dailyHours: 6, efficiency: 75, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "3-10", isDefault: true },
+        { id: -5, name: "Rodrigo Lopez", dailySalary: 60.00, workedDays: 5.5, dailyHours: 8, efficiency: 75, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", isDefault: true },
+        { id: -6, name: "Enrique Santos", dailySalary: 60.00, workedDays: 5.5, dailyHours: 8, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "3-10", isDefault: true },
+        { id: -7, name: "Feferico Diaz", dailySalary: 53.33, workedDays: 5.5, dailyHours: 8, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "1-3", isDefault: true },
+        { id: -8, name: "Cristian Martel", dailySalary: 53.33, workedDays: 5, dailyHours: 8, efficiency: 75, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "3-10", isDefault: true },
+        { id: -9, name: "Gabriela Perez", dailySalary: 53.33, workedDays: 5.5, dailyHours: 8, efficiency: 60, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "1-3", isDefault: true },
+        { id: -10, name: "Noelia Monge", dailySalary: 53.33, workedDays: 5.5, dailyHours: 8, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", isDefault: true },
+        { id: -11, name: "Carlos Orellana", dailySalary: 53.33, workedDays: 5, dailyHours: 7, efficiency: 75, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "1-3", isDefault: true },
+        { id: -12, name: "Alex Carrillo", dailySalary: 53.33, workedDays: 5.5, dailyHours: 7, efficiency: 60, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "3-10", isDefault: true },
+        { id: -13, name: "Noel Perez", dailySalary: 53.33, workedDays: 5.5, dailyHours: 8, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", isDefault: true },
+        { id: -14, name: "Alexis Enriquez", dailySalary: 53.33, workedDays: 5, dailyHours: 7, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "3-10", isDefault: true },
+        { id: -15, name: "Mario Mongue", dailySalary: 53.33, workedDays: 5.5, dailyHours: 8, efficiency: 75, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "3-10", isDefault: true },
+        { id: -16, name: "Andrea Aguirre", dailySalary: 53.33, workedDays: 5.5, dailyHours: 8, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "1-3", isDefault: true },
+        { id: -17, name: "Andres Boris", dailySalary: 53.33, workedDays: 4, dailyHours: 7, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "3-10", isDefault: true },
+        { id: -18, name: "Jeniffer Castillo", dailySalary: 53.33, workedDays: 3, dailyHours: 8, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", isDefault: true },
+        { id: -19, name: "Felix Urrea", dailySalary: 53.33, workedDays: 5.5, dailyHours: 7, efficiency: 75, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "1-3", isDefault: true },
+        { id: -20, name: "Luis Ramirez", dailySalary: 53.33, workedDays: 5, dailyHours: 7, efficiency: 60, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", isDefault: true }
+    ];
+    
     // Elementos del DOM
     const employeesList = document.getElementById('employees-list');
     const calculationsList = document.getElementById('calculations-list');
@@ -203,12 +233,19 @@
     const clearFormBtn = document.getElementById('clear-form-btn');
     const calculateAllBtn = document.getElementById('calculate-all-btn');
     const clearAllBtn = document.getElementById('clear-all-btn');
+    const calculateEmployeesBtn = document.getElementById('calculate-employees-btn');
+    
+    // Función para inicializar empleados predeterminados
+    function initializeDefaultEmployees() {
+        employees = [...defaultEmployees];
+        updateEmployeesTable();
+    }
     
     // Función para agregar empleado
     function addEmployee() {
         const name = document.getElementById('employee-name').value.trim();
         const dailySalary = parseFloat(document.getElementById('daily-salary').value) || 0;
-        const workedDays = parseInt(document.getElementById('worked-days').value) || 0;
+        const workedDays = parseFloat(document.getElementById('worked-days').value) || 0;
         const dailyHours = parseInt(document.getElementById('daily-hours').value) || 8;
         const efficiency = parseInt(document.getElementById('efficiency').value) || 100;
         const afpType = document.getElementById('afp-type').value;
@@ -234,7 +271,8 @@
             efficiency,
             afpType,
             salaryBase,
-            yearsCompany
+            yearsCompany,
+            isDefault: false
         };
         
         employees.push(employee);
@@ -256,26 +294,23 @@
                 <td>${employee.efficiency}%</td>
                 <td>${employee.afpType === 'afiliado' ? 'Afiliado' : 'Empleador'}</td>
                 <td>${employee.salaryBase === 'nominal' ? 'Nominal' : 'Cancelado'}</td>
-                <td>${employee.yearsCompany}</td>
+                <td>${getYearsCompanyText(employee.yearsCompany)}</td>
                 <td>
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-warning btn-sm" onclick="calculateEmployee(${employee.id})">Calcular</button>
-                        <button class="btn btn-danger btn-sm" onclick="removeEmployee(${employee.id})">Eliminar</button>
-                    </div>
+                    ${!employee.isDefault ? `<button class="btn btn-danger btn-sm" onclick="removeEmployee(${employee.id})">Eliminar</button>` : ''}
                 </td>
             `;
             employeesList.appendChild(row);
         });
     }
     
-    // Función para calcular un empleado específico
-    function calculateEmployee(employeeId) {
-        const employee = employees.find(emp => emp.id === employeeId);
-        if (!employee) return;
-        
-        const calculations = calculateEmployeeCosts(employee);
-        displayEmployeeCalculation(employee, calculations);
-        updateTotals();
+    // Función para obtener el texto de años en la empresa
+    function getYearsCompanyText(yearsCompany) {
+        switch(yearsCompany) {
+            case '1-3': return '1 a 3 años';
+            case '3-10': return '3 a 10 años';
+            case '10+': return 'Más de 10 años';
+            default: return yearsCompany;
+        }
     }
     
     // Función para calcular todos los empleados
@@ -362,6 +397,9 @@
                 <td>$${calculations.isss.toFixed(2)}</td>
                 <td>$${calculations.afp.toFixed(2)}</td>
                 <td>$${calculations.costoReal.toFixed(2)}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="removeCalculation(${employee.id})">Eliminar</button>
+                </td>
             `;
         } else {
             // Crear nueva fila
@@ -375,8 +413,20 @@
                 <td>$${calculations.isss.toFixed(2)}</td>
                 <td>$${calculations.afp.toFixed(2)}</td>
                 <td>$${calculations.costoReal.toFixed(2)}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="removeCalculation(${employee.id})">Eliminar</button>
+                </td>
             `;
             calculationsList.appendChild(row);
+        }
+    }
+    
+    // Función para eliminar un cálculo de la tabla de cálculos
+    function removeCalculation(employeeId) {
+        const calculationRow = document.querySelector(`tr[data-employee-id="${employeeId}"]`);
+        if (calculationRow) {
+            calculationRow.remove();
+            updateTotals();
         }
     }
     
@@ -419,11 +469,7 @@
         updateEmployeesTable();
         
         // Eliminar también de la tabla de cálculos
-        const calculationRow = document.querySelector(`tr[data-employee-id="${employeeId}"]`);
-        if (calculationRow) {
-            calculationRow.remove();
-            updateTotals();
-        }
+        removeCalculation(employeeId);
     }
     
     // Función para limpiar el formulario
@@ -438,10 +484,10 @@
         document.getElementById('years-company').value = '1-3';
     }
     
-    // Función para limpiar todo
-    function clearAll() {
-        employees = [];
-        employeesList.innerHTML = '';
+    // Función para limpiar solo los empleados agregados por el usuario
+    function clearUserEmployees() {
+        employees = employees.filter(emp => emp.isDefault);
+        updateEmployeesTable();
         calculationsList.innerHTML = '';
         clearForm();
         updateTotals();
@@ -451,7 +497,8 @@
     addEmployeeBtn.addEventListener('click', addEmployee);
     clearFormBtn.addEventListener('click', clearForm);
     calculateAllBtn.addEventListener('click', calculateAllEmployees);
-    clearAllBtn.addEventListener('click', clearAll);
+    clearAllBtn.addEventListener('click', clearUserEmployees);
+    calculateEmployeesBtn.addEventListener('click', calculateAllEmployees);
     
     // Permitir agregar empleado con Enter
     document.getElementById('employee-name').addEventListener('keypress', function(e) {
@@ -460,7 +507,7 @@
         }
     });
     
-    // Inicializar la tabla de totales
-    updateTotals();
+    // Inicializar empleados predeterminados al cargar la página
+    initializeDefaultEmployees();
 </script>
 {% endblock %}
