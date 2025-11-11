@@ -234,8 +234,9 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="año" class="form-label">Año *</label>
-                        <input type="number" class="form-control" id="año" name="año" value="{% now 'Y' %}"
-                            min="{% now 'Y' %}" required>
+                        <input type="number" class="form-control" id="año" name="año"
+                            value="{% now 'Y' %}" min="2021" max="{% now 'Y' %}" required>
+
                     </div>
                     <div class="mb-3">
                         <label for="fecha_inicio" class="form-label">Fecha Inicio *</label>
