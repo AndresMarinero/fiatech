@@ -95,7 +95,7 @@
                                 {% endfor %}
                                 <tr class="table-active">
                                     <td colspan="2" class="fw-bold ps-4">TOTAL ACTIVOS</td>
-                                    <td class="text-end fw-bolder text-success pe-4">$ {{ total_debe|floatformat:2 }}</td>
+                                    <td class="text-end fw-bolder text-success pe-4">$ {{ total_debe_activos|floatformat:2 }}</td>
                                     <td class="text-end fw-bolder text-danger pe-4">$ {{ total_haber_activos|floatformat:2 }}</td>
                                 </tr>
 
@@ -134,14 +134,10 @@
                                 <tr class="table-active">
                                     <td colspan="2" class="fw-bold ps-4">TOTAL PASIVOS</td>
                                     <td class="text-end fw-bolder text-success pe-4">
-                                        {% with total_pasivos_debe=pasivos|dictsortreversed:"es_acreedor"|first %}
-                                        $ {{ total_pasivos_debe.debe|default:0|floatformat:2 }}
-                                        {% endwith %}
+                                        $ {{ total_debe_pasivos|floatformat:2 }}
                                     </td>
                                     <td class="text-end fw-bolder text-danger pe-4">
-                                        {% with total_pasivos_haber=pasivos|dictsortreversed:"es_acreedor"|last %}
-                                        $ {{ total_pasivos_haber.haber|default:0|floatformat:2 }}
-                                        {% endwith %}
+                                        $ {{ total_haber_pasivos|floatformat:2 }}
                                     </td>
                                 </tr>
 
@@ -155,8 +151,20 @@
                                 <tr>
                                     <td class="ps-4 fw-semibold">{{ cuenta.codigo }}</td>
                                     <td>{{ cuenta.nombre }}</td>
-                                    <td class="text-end pe-4">-</td>
-                                    <td class="text-end text-primary fw-bold pe-4">$ {{ cuenta.saldo|floatformat:2 }}</td>
+                                    <td class="text-end text-success fw-bold pe-4">
+                                        {% if not cuenta.es_acreedor %}
+                                            $ {{ cuenta.saldo|floatformat:2 }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end text-danger fw-bold pe-4">
+                                        {% if cuenta.es_acreedor %}
+                                            $ {{ cuenta.saldo|floatformat:2 }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
@@ -167,11 +175,11 @@
                                 {% endfor %}
                                 <tr class="table-active">
                                     <td colspan="2" class="fw-bold ps-4">TOTAL PATRIMONIO</td>
-                                    <td class="text-end pe-4">-</td>
-                                    <td class="text-end fw-bolder text-primary pe-4">
-                                        {% with total_patrimonio_haber=patrimonio|dictsortreversed:"saldo"|first %}
-                                        $ {{ total_patrimonio_haber.saldo|default:0|floatformat:2 }}
-                                        {% endwith %}
+                                    <td class="text-end fw-bolder text-success pe-4">
+                                        $ {{ total_debe_patrimonio|floatformat:2 }}
+                                    </td>
+                                    <td class="text-end fw-bolder text-danger pe-4">
+                                        $ {{ total_haber_patrimonio|floatformat:2 }}
                                     </td>
                                 </tr>
 

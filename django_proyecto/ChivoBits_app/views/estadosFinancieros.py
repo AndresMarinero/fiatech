@@ -768,7 +768,17 @@ def balance_general(request):
     patrimonio = []
     total_debe = Decimal('0')
     total_haber = Decimal('0')
+    
+    # NUEVO: Totales por sección (DEBE y HABER separados)
+    total_debe_activos = Decimal('0')
     total_haber_activos = Decimal('0')
+    
+    total_debe_pasivos = Decimal('0')
+    total_haber_pasivos = Decimal('0')
+    
+    total_debe_patrimonio = Decimal('0')
+    total_haber_patrimonio = Decimal('0')
+    
     fecha_inicio = ""
     fecha_fin = ""
 
@@ -784,14 +794,13 @@ def balance_general(request):
         )
 
         # Obtener cuentas de PASIVO (grupo 2)
-        cuentas_pasivo = Cuenta.objects.filter(
+        cuentas_pasivos = Cuenta.objects.filter(
             Q(codigo__startswith='2') | Q(tipo='PASIVO'),
             activa=True
         )
 
-        # === Calcular ACTIVOS (MODIFICADO) ===
+        # === Calcular ACTIVOS (MODIFICADO para sumar DEBE y HABER por separado) ===
         for cuenta in cuentas_activo:
-            # Obtener todas las transacciones (regulares + ajustes)
             transacciones = Transaccion.objects.filter(
                 cuenta=cuenta,
                 periodo=periodo_actual
@@ -801,100 +810,116 @@ def balance_general(request):
                 total_debe_trans = transacciones.aggregate(total=Sum('debe'))['total'] or Decimal('0')
                 total_haber_trans = transacciones.aggregate(total=Sum('haber'))['total'] or Decimal('0')
 
-                if total_debe_trans > total_haber_trans:  # Saldo deudor (Activo normal)
-                    saldo_final = total_debe_trans - total_haber_trans
-                    columna_debe = saldo_final
-                    columna_haber = Decimal('0')
-                    total_debe += saldo_final # Suma al DEBE total
-                    es_deudor = True
+                saldo_final = total_debe_trans - total_haber_trans
+
+                # Identificar tipos de cuentas
+                es_contra_activo = cuenta.codigo.startswith('1202') or cuenta.codigo.startswith('1204')
+                es_cuenta_bancaria = cuenta.codigo.startswith('1101')
+                
+                if es_contra_activo:
+                    # Contra-activos (depreciación, amortización) - saldo en HABER
+                    if saldo_final < 0:  # Saldo acreedor (normal para contra-activos)
+                        saldo_absoluto = abs(saldo_final)
+                        columna_debe = Decimal('0')
+                        columna_haber = saldo_absoluto
+                        total_haber += saldo_absoluto
+                        total_haber_activos += saldo_absoluto  # SUMA AL HABER DE ACTIVOS
+                        
+                        if saldo_absoluto > 0:
+                            activos.append({
+                                'codigo': cuenta.codigo,
+                                'nombre': cuenta.nombre,
+                                'saldo': saldo_absoluto,
+                                'es_deudor': False,
+                                'debe': columna_debe,
+                                'haber': columna_haber,
+                                'es_contra_activo': True
+                            })
+                
+                elif es_cuenta_bancaria and saldo_final < 0:
+                    # Cuentas bancarias con sobregiro
+                    saldo_absoluto = abs(saldo_final)
+                    columna_debe = Decimal('0')
+                    columna_haber = saldo_absoluto
+                    total_haber += saldo_absoluto
+                    total_haber_activos += saldo_absoluto  # SUMA AL HABER DE ACTIVOS
                     
+                    activos.append({
+                        'codigo': cuenta.codigo,
+                        'nombre': f"{cuenta.nombre} (Sobregiro)",
+                        'saldo': saldo_absoluto,
+                        'es_deudor': False,
+                        'debe': columna_debe,
+                        'haber': columna_haber,
+                        'es_sobregiro': True
+                    })
+                
+                else:
+                    # Activos normales - saldo en DEBE
                     if saldo_final > 0:
+                        columna_debe = saldo_final
+                        columna_haber = Decimal('0')
+                        total_debe += saldo_final
+                        total_debe_activos += saldo_final  # SUMA AL DEBE DE ACTIVOS
+                        
                         activos.append({
                             'codigo': cuenta.codigo,
                             'nombre': cuenta.nombre,
                             'saldo': saldo_final,
-                            'es_deudor': es_deudor,
+                            'es_deudor': True,
                             'debe': columna_debe,
                             'haber': columna_haber
                         })
-                else:  # Saldo acreedor (Contra-Activo o Pasivo reclasificado)
-                    saldo_final = total_haber_trans - total_debe_trans
 
-                    # --- INICIO DE MODIFICACIÓN 1: RECLASIFICAR SOBREGIROS ---
-                    # Códigos de contra-activo (Depreciación, Amortización)
-                    es_contra_activo = cuenta.codigo.startswith('1202') or cuenta.codigo.startswith('1204')
-                    
-                    if es_contra_activo:
-                        # Es un contra-activo, se queda en Activos (Haber)
-                        columna_debe = Decimal('0')
-                        columna_haber = saldo_final
-                        total_haber += saldo_final # Suma al HABER total
-                        total_haber_activos += saldo_final
-                        es_deudor = False
-                        
-                        if saldo_final > 0:
-                            activos.append({
-                                'codigo': cuenta.codigo,
-                                'nombre': cuenta.nombre,
-                                'saldo': saldo_final,
-                                'es_deudor': es_deudor,
-                                'debe': columna_debe,
-                                'haber': columna_haber
-                            })
-                    else:
-                        # Es un pasivo (Ej: 110103 - Banco Cuscatlán sobregirado)
-                        # Se añade a la lista de 'pasivos'.
-                        columna_debe = Decimal('0')
-                        columna_haber = saldo_final
-                        total_haber += saldo_final # Suma al HABER total
-                        es_acreedor = True
-                        
-                        if saldo_final > 0:
-                            pasivos.append({
-                                'codigo': cuenta.codigo,
-                                'nombre': f"{cuenta.nombre} (Sobregiro)",
-                                'saldo': saldo_final,
-                                'es_acreedor': es_acreedor,
-                                'debe': columna_debe,
-                                'haber': columna_haber
-                            })
-                    # --- FIN DE MODIFICACIÓN 1 ---
-
-        # === Calcular PASIVOS (SIN CAMBIOS) ===
-        for cuenta in cuentas_pasivo:
+        # === Calcular PASIVOS (MODIFICADO para sumar DEBE y HABER por separado) ===
+        for cuenta in cuentas_pasivos:
             transacciones = Transaccion.objects.filter(
                 cuenta=cuenta,
                 periodo=periodo_actual
             )
+            
             if transacciones.exists():
                 total_debe_trans = transacciones.aggregate(total=Sum('debe'))['total'] or Decimal('0')
                 total_haber_trans = transacciones.aggregate(total=Sum('haber'))['total'] or Decimal('0')
 
-                if total_haber_trans > total_debe_trans:  # Saldo acreedor (normal)
+                # Para pasivos, el saldo normal es acreedor
+                if total_haber_trans > total_debe_trans:
                     saldo_final = total_haber_trans - total_debe_trans
                     columna_debe = Decimal('0')
                     columna_haber = saldo_final
                     total_haber += saldo_final
+                    total_haber_pasivos += saldo_final  # SUMA AL HABER DE PASIVOS
                     es_acreedor = True
-                else:  # Saldo deudor (anormal)
+                    
+                    if saldo_final > 0:
+                        pasivos.append({
+                            'codigo': cuenta.codigo,
+                            'nombre': cuenta.nombre,
+                            'saldo': saldo_final,
+                            'es_acreedor': es_acreedor,
+                            'debe': columna_debe,
+                            'haber': columna_haber
+                        })
+                else:
+                    # Saldo deudor en pasivos (anormal)
                     saldo_final = total_debe_trans - total_haber_trans
                     columna_debe = saldo_final
                     columna_haber = Decimal('0')
                     total_debe += saldo_final
+                    total_debe_pasivos += saldo_final  # SUMA AL DEBE DE PASIVOS
                     es_acreedor = False
 
-                if saldo_final > 0:
-                    pasivos.append({
-                        'codigo': cuenta.codigo,
-                        'nombre': cuenta.nombre,
-                        'saldo': saldo_final,
-                        'es_acreedor': es_acreedor,
-                        'debe': columna_debe,
-                        'haber': columna_haber
-                    })
+                    if saldo_final > 0:
+                        pasivos.append({
+                            'codigo': cuenta.codigo,
+                            'nombre': cuenta.nombre,
+                            'saldo': saldo_final,
+                            'es_acreedor': es_acreedor,
+                            'debe': columna_debe,
+                            'haber': columna_haber
+                        })
 
-        # === CALCULAR PATRIMONIO (MODIFICADO) ===
-
+        # === CALCULAR PATRIMONIO (MODIFICADO para sumar DEBE y HABER por separado) ===
         # 1. Obtener Capital Social inicial (3101)
         capital_inicial = Decimal('0')
         try:
@@ -910,8 +935,7 @@ def balance_general(request):
         except Cuenta.DoesNotExist:
             capital_inicial = Decimal('0')
 
-        # --- INICIO DE MODIFICACIÓN 2: OBTENER RESERVAS INICIALES ---
-        # (Este era el saldo que faltaba)
+        # 2. Obtener Reservas iniciales (3102)
         reservas_inicial = Decimal('0')
         try:
             cuenta_reservas = Cuenta.objects.get(codigo='3102')
@@ -925,24 +949,19 @@ def balance_general(request):
             reservas_inicial = (trans_reservas_agg['total_haber'] or Decimal('0')) - (trans_reservas_agg['total_debe'] or Decimal('0'))
         except Cuenta.DoesNotExist:
             reservas_inicial = Decimal('0')
-        # --- FIN DE MODIFICACIÓN 2 ---
 
-        # 2. Calcular RESULTADO del ejercicio (MODIFICADO)
-        # --- INICIO DE MODIFICACIÓN 3: CÁLCULO CORRECTO DE UTILIDAD ---
-        # (Usando las funciones helper ya corregidas)
+        # 3. Calcular RESULTADO del ejercicio
         total_ingresos = calcular_ventas_totales(periodo_actual, incluir_ajustes=True)
         total_gastos = calcular_gastos_totales(periodo_actual, incluir_ajustes=True)
-
         resultado_ejercicio = total_ingresos - total_gastos
         hay_perdida = resultado_ejercicio < 0
-        # --- FIN DE MODIFICACIÓN 3 ---
 
-        # 3. CALCULAR PATRIMONIO SEGÚN RESULTADO (MODIFICADO)
+        # 4. CALCULAR PATRIMONIO SEGÚN RESULTADO
         if hay_perdida:
             # En caso de PÉRDIDA
             perdida_total = abs(resultado_ejercicio)
             capital_final = capital_inicial - perdida_total
-            reservas_final = reservas_inicial # No se suman nuevas reservas
+            reservas_final = reservas_inicial
             
             # Agregar Capital Social
             if capital_final > 0:
@@ -952,6 +971,7 @@ def balance_general(request):
                     'debe': Decimal('0'), 'haber': capital_final
                 })
                 total_haber += capital_final
+                total_haber_patrimonio += capital_final  # SUMA AL HABER DE PATRIMONIO
             else: # Déficit
                 patrimonio.append({
                     'codigo': '3101', 'nombre': 'Capital Social (Déficit)',
@@ -959,8 +979,9 @@ def balance_general(request):
                     'debe': abs(capital_final), 'haber': Decimal('0')
                 })
                 total_debe += abs(capital_final)
+                total_debe_patrimonio += abs(capital_final)  # SUMA AL DEBE DE PATRIMONIO
             
-            # Agregar Reservas (el saldo inicial)
+            # Agregar Reservas
             if reservas_final > 0:
                 patrimonio.append({
                     'codigo': '3102', 'nombre': 'Reservas de Capital',
@@ -968,16 +989,15 @@ def balance_general(request):
                     'debe': Decimal('0'), 'haber': reservas_final
                 })
                 total_haber += reservas_final
+                total_haber_patrimonio += reservas_final  # SUMA AL HABER DE PATRIMONIO
                 
         else:
-            # En caso de UTILIDAD: distribución normal
+            # En caso de UTILIDAD
             reinversion = resultado_ejercicio * Decimal('0.60')
             reservas_utilidad_periodo = resultado_ejercicio * Decimal('0.40')
             
             capital_final = capital_inicial + reinversion
-            # --- INICIO DE MODIFICACIÓN 4: CALCULAR RESERVAS FINALES ---
             reservas_final = reservas_inicial + reservas_utilidad_periodo
-            # --- FIN DE MODIFICACIÓN 4 ---
 
             # Agregar Capital Social
             if capital_final > 0:
@@ -987,17 +1007,19 @@ def balance_general(request):
                     'debe': Decimal('0'), 'haber': capital_final
                 })
                 total_haber += capital_final
+                total_haber_patrimonio += capital_final  # SUMA AL HABER DE PATRIMONIO
 
-            # Agregar Reservas (el saldo FINAL)
+            # Agregar Reservas
             if reservas_final > 0:
                 patrimonio.append({
                     'codigo': '3102', 'nombre': 'Reservas de Capital',
-                    'saldo': reservas_final, # Usar el saldo final
+                    'saldo': reservas_final,
                     'es_acreedor': True,
                     'debe': Decimal('0'),
-                    'haber': reservas_final # Usar el saldo final
+                    'haber': reservas_final
                 })
                 total_haber += reservas_final
+                total_haber_patrimonio += reservas_final  # SUMA AL HABER DE PATRIMONIO
 
     # Obtener todos los períodos disponibles
     periodos = PeriodoContable.objects.all().order_by('-año')
@@ -1011,7 +1033,13 @@ def balance_general(request):
         'patrimonio': patrimonio,
         'total_debe': total_debe,
         'total_haber': total_haber,
+        # NUEVOS: Totales por sección (DEBE y HABER separados)
+        'total_debe_activos': total_debe_activos,
         'total_haber_activos': total_haber_activos,
+        'total_debe_pasivos': total_debe_pasivos,
+        'total_haber_pasivos': total_haber_pasivos,
+        'total_debe_patrimonio': total_debe_patrimonio,
+        'total_haber_patrimonio': total_haber_patrimonio,
         'periodo_actual': periodo_actual,
         'periodos': periodos,
         'fecha_inicio': fecha_inicio,
