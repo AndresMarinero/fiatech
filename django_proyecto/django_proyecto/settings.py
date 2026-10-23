@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ChivoBits_app',
+    'fiatech_app',
 ]
 
 MIDDLEWARE = [
@@ -75,12 +75,19 @@ WSGI_APPLICATION = 'django_proyecto.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'SIC',
-        'USER': 'postgres',
-        'PASSWORD': '123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        
+        #'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': 'SIC',
+        #'USER': 'postgres',
+        #'PASSWORD': 'admin2003',
+        #'HOST': 'localhost',
+        #'PORT': '5432',
+        #'OPTIONS': {
+         #   'client_encoding': 'UTF8',
+        #},
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        
     }
 }
 

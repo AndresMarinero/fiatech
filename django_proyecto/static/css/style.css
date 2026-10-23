@@ -1,19 +1,23 @@
 .custom-navbar {
-    background-color: #050B31;
+    background-color: #7cdaf9;
     /* Reemplaza ##005187 con el color que desees */
   }
   
   /*Reescribo color de encabezado de tablas*/
   .table thead th {
-    background-color: #050B31;
+    background-color: #7cdaf9;
     color: white;
     /* Color del texto del encabezado */
   }
   .area-login{
-    background: #050B31;  
-    background: -webkit-linear-gradient(to left, #322457,#050B31); 
+    position: relative;
+    background: #7cdaf9;  
+    background: linear-gradient(to left, #15014d,#7cdaf9), url('../image/fodo1.png') no-repeat center center;
+    background-size: cover;
+    background-blend-mode: overlay;
     width: 100%;
     height:100vh;
+    overflow: hidden;
    
 }
 /*Log*/
@@ -145,9 +149,12 @@ position: absolute;
 }
 .form-container-login{
     position: absolute;
-    top: 16%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     right: 150px;
     width: 400px;
+    max-width: 90%;
     padding: 10px;
     z-index: 10;
 }
@@ -160,7 +167,7 @@ position: absolute;
 }
         
 .login-container-login h2 {
-    text-align: center;
+    text-align: center; 
     margin-bottom: 30px;
     font-weight: 600;
 }
@@ -213,6 +220,21 @@ position: absolute;
     box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
 }
 
+.forgot-password-login {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.forgot-password-login a {
+    color: #2575fc;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password-login a:hover {
+    text-decoration: underline;
+}
+
 .forgot-password {
     text-align: center;
     margin-top: 20px;
@@ -247,4 +269,20 @@ position: absolute;
 
 .modal-header-custom .btn-close {
     filter: invert(1);
+}
+
+.logo-inside-login {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.logo-inside-login img {
+    /*max-width: 300bpx;
+    height: auto;
+    mix-blend-mode: multiply; /* ¡Este es el truco mágico! */
+    max-width: 200px !important; /* Límite estricto de ancho */
+    width: 100% !important;        /* Se adapta de forma fluida */
+    height: auto !important;       /* Mantiene su proporción original */
+    display: block;
+    margin: 0 auto 15px auto;
 }
