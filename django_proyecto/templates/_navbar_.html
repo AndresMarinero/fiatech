@@ -1,0 +1,55 @@
+{% load static %}
+
+<link href="{% static 'css/navbar_all.css' %}" rel="stylesheet">
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-logo">
+        <img src="{% static 'image/logo2.jpeg' %}" alt="FIA-tech">
+    </div>
+
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    
+    <nav>
+        <ul>
+            <li>               
+                <a href="{% url 'inventario:inventario_dashboard' %}" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="text">Inicio</span>
+                </a>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a href="{% url 'inventario:insumo_list' %}" class="nav-link">                  
+                    <div class="module-icon">
+                        <i class="fas fa-user-injured"></i>
+                    </div>
+                    <span class="text">Insumos</span>
+                </a>
+            </li>
+        </ul>
+                <ul>
+            <li>
+                <a href="{% url 'inventario:item_inventario_list' %}" class="nav-link">                  
+                <div class="module-icon">
+                    <i class="fas fa-vials"></i>
+                </div>
+                    <span class="text">Stock</span>
+                </a>
+            </li>
+        </ul>
+                <ul>
+            <li>
+                <a href="{% url 'inventario:movimiento_inventario_create' %}" class="nav-link">                  
+                    <div class="module-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <span class="text">Movimientos</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    {% include 'includes/_logout_button.html' %}
+</aside>

@@ -1,0 +1,128 @@
+
+/* ==========================================
+   CATALOGO DE CUENTAS - TARJETAS ESTADISTICAS
+   Estilo blanco profesional FIA-TECH
+========================================== */
+
+.catalogo-estadisticas .catalogo-stat-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(18, 14, 56, 0.05);
+    height: 100%;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Espaciado interior */
+.catalogo-estadisticas .catalogo-stat-card .card-body {
+    padding: 18px;
+}
+
+/* Línea de color superior */
+.catalogo-estadisticas .catalogo-stat-accent {
+    width: 100%;
+    height: 4px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+/* Nombre de la categoría */
+.catalogo-estadisticas .catalogo-stat-label {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Iconos */
+.catalogo-estadisticas .catalogo-stat-icon {
+    font-size: 25px;
+    color: #94a3b8;
+    margin-left: 8px;
+}
+
+/* Cantidad de cuentas */
+.catalogo-estadisticas .catalogo-stat-number {
+    color: #172554;
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: 12px;
+    margin-bottom: 0;
+}
+
+/* Colores de las líneas superiores */
+.catalogo-estadisticas .stat-total .catalogo-stat-accent {
+    background-color: #75a4ec;
+}
+
+.catalogo-estadisticas .stat-activo .catalogo-stat-accent {
+    background-color: #1356c4;
+}
+
+.catalogo-estadisticas .stat-pasivo .catalogo-stat-accent {
+    background-color: #0e3475;
+}
+
+.catalogo-estadisticas .stat-patrimonio .catalogo-stat-accent {
+    background-color: #061b3e;
+}
+
+/* Efecto al pasar el cursor */
+.catalogo-estadisticas .catalogo-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(18, 14, 56, 0.10);
+}
+
+/* Pantallas pequeñas */
+@media (max-width: 767.98px) {
+    .catalogo-estadisticas .catalogo-stat-card .card-body {
+        padding: 16px;
+    }
+
+    .catalogo-estadisticas .catalogo-stat-number {
+        font-size: 26px;
+    }
+}
+
+
+/* Distribución de información e icono */
+.catalogo-estadisticas .catalogo-stat-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Información de las cuentas */
+.catalogo-estadisticas .catalogo-stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Cantidad de cuentas */
+.catalogo-estadisticas .catalogo-stat-number {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: #172554;
+}
+
+/* Recuadro del icono */
+.catalogo-estadisticas .catalogo-stat-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    background-color: #f1f5f9;
+    border-radius: 10px;
+}
+
+/* Icono */
+.catalogo-estadisticas .catalogo-stat-icon {
+    font-size: 25px;
+    color: #64748b;
+    margin: 0;
+}

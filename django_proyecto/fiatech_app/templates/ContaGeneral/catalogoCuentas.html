@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}Catálogo de Cuentas{% endblock %}
+
+{% block extra_css %}
+
+<link href="{% static 'css2/catalogo.css' %}" rel="stylesheet">
+
+{% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
@@ -22,68 +30,103 @@
     </div>
 
     <!-- Estadísticas Rápidas -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-0">{{ total_cuentas }}</h4>
-                            <small>Total Cuentas</small>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="bi bi-journal-bookmark fs-1 opacity-50"></i>
-                        </div>
+  
+<!-- Estadísticas Rápidas -->
+<
+<!-- Estadísticas Rápidas -->
+<div class="row mb-4 catalogo-estadisticas">
+
+    <!-- Total de cuentas -->
+    <div class="col-md-6 mb-3">
+        <div class="card catalogo-stat-card stat-total">
+            <div class="card-body">
+
+                <div class="catalogo-stat-accent"></div>
+
+                <div class="catalogo-stat-content">
+                    <div class="catalogo-stat-info">
+                        <span class="catalogo-stat-label">Total Cuentas</span>
+                        <h4 class="catalogo-stat-number">{{ total_cuentas }}</h4>
+                    </div>
+
+                    <div class="catalogo-stat-icon-box">
+                        <i class="bi bi-journal-bookmark catalogo-stat-icon"></i>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-0">{{ cuentas_activo }}</h4>
-                            <small>Cuentas de Activo</small>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="bi bi-graph-up-arrow fs-1 opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card bg-warning text-dark">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-0">{{ cuentas_pasivo }}</h4>
-                            <small>Cuentas de Pasivo</small>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="bi bi-graph-down-arrow fs-1 opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-0">{{ cuentas_patrimonio }}</h4>
-                            <small>Cuentas de Patrimonio</small>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="bi bi-pie-chart fs-1 opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
+
+    <!-- Cuentas de activo -->
+    <div class="col-md-6 mb-3">
+        <div class="card catalogo-stat-card stat-activo">
+            <div class="card-body">
+
+                <div class="catalogo-stat-accent"></div>
+
+                <div class="catalogo-stat-content">
+                    <div class="catalogo-stat-info">
+                        <span class="catalogo-stat-label">Cuentas de Activo</span>
+                        <h4 class="catalogo-stat-number">{{ cuentas_activo }}</h4>
+                    </div>
+
+                    <div class="catalogo-stat-icon-box">
+                        <i class="bi bi-graph-up-arrow catalogo-stat-icon"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Cuentas de pasivo -->
+    <div class="col-md-6 mb-3">
+        <div class="card catalogo-stat-card stat-pasivo">
+            <div class="card-body">
+
+                <div class="catalogo-stat-accent"></div>
+
+                <div class="catalogo-stat-content">
+                    <div class="catalogo-stat-info">
+                        <span class="catalogo-stat-label">Cuentas de Pasivo</span>
+                        <h4 class="catalogo-stat-number">{{ cuentas_pasivo }}</h4>
+                    </div>
+
+                    <div class="catalogo-stat-icon-box">
+                        <i class="bi bi-graph-down-arrow catalogo-stat-icon"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Cuentas de patrimonio -->
+    <div class="col-md-6 mb-3">
+        <div class="card catalogo-stat-card stat-patrimonio">
+            <div class="card-body">
+
+                <div class="catalogo-stat-accent"></div>
+
+                <div class="catalogo-stat-content">
+                    <div class="catalogo-stat-info">
+                        <span class="catalogo-stat-label">Cuentas de Patrimonio</span>
+                        <h4 class="catalogo-stat-number">{{ cuentas_patrimonio }}</h4>
+                    </div>
+
+                    <div class="catalogo-stat-icon-box">
+                        <i class="bi bi-pie-chart catalogo-stat-icon"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
 
     <!-- Filtros y Búsqueda -->
     <div class="row mb-4">
@@ -116,9 +159,9 @@
                                 <option value="1">Nivel 1 - Grupo</option>
                                 <option value="2">Nivel 2 - Subgrupo</option>
                                 <option value="3">Nivel 3 - Cuenta</option>
-                                <option value="4">Nivel 4 - Subcuenta</option>
                             </select>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -162,39 +205,11 @@
                                     <td class="text-center"><span class="badge bg-info">Subgrupo</span></td>
                                     <td class="text-center">
                                         <span class="badge 
-                                            {% if cuenta.tipo == 'ACTIVO' %}bg-primary
-                                            {% elif cuenta.tipo == 'PASIVO' %}bg-warning text-dark
-                                            {% elif cuenta.tipo == 'PATRIMONIO' %}bg-info
-                                            {% elif cuenta.tipo == 'INGRESO' %}bg-success
-                                            {% elif cuenta.tipo == 'GASTO' %}bg-danger
-                                            {% endif %}">
-                                            {{ cuenta.get_tipo_display }}
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge 
-                                            {% if cuenta.tipo == 'ACTIVO' or cuenta.tipo == 'GASTO' %}bg-success
-                                            {% else %}bg-danger
-                                            {% endif %}">
-                                            {% if cuenta.tipo == 'ACTIVO' or cuenta.tipo == 'GASTO' %}Deudora
-                                            {% else %}Acreedora
-                                            {% endif %}
-                                        </span>
-                                    </td>
-                                </tr>
-                                {% elif cuenta.codigo|length == 4 %}
-                                <!-- Cuentas principales -->
-                                <tr>
-                                    <td class="fw-bold font-monospace">{{ cuenta.codigo }}</td>
-                                    <td>{{ cuenta.nombre }}</td>
-                                    <td class="text-center"><span class="badge bg-warning text-dark">Cuenta</span></td>
-                                    <td class="text-center">
-                                        <span class="badge 
-                                            {% if cuenta.tipo == 'ACTIVO' %}bg-primary
-                                            {% elif cuenta.tipo == 'PASIVO' %}bg-warning text-dark
-                                            {% elif cuenta.tipo == 'PATRIMONIO' %}bg-info
-                                            {% elif cuenta.tipo == 'INGRESO' %}bg-success
-                                            {% elif cuenta.tipo == 'GASTO' %}bg-danger
+                                            {% if cuenta.tipo == 'ACTIVO' %}cuenta_activo
+                                            {% elif cuenta.tipo == 'PASIVO' %}cuenta_pasivo text-white
+                                            {% elif cuenta.tipo == 'PATRIMONIO' %}cuenta_patrimonio
+                                            {% elif cuenta.tipo == 'INGRESO' %}cuenta_ingreso
+                                            {% elif cuenta.tipo == 'GASTO' %}cuenta_gasto
                                             {% endif %}">
                                             {{ cuenta.get_tipo_display }}
                                         </span>
@@ -211,18 +226,17 @@
                                     </td>
                                 </tr>
                                 {% else %}
-                                <!-- Subcuentas -->
+                                <!-- Cuentas principales -->
                                 <tr>
                                     <td class="fw-bold font-monospace">{{ cuenta.codigo }}</td>
-                                    <td class="ps-4">{{ cuenta.nombre }}</td>
-                                    <td class="text-center"><span class="badge bg-dark text-white">Subcuenta</span></td>
+                                    <td class="{% if cuenta.codigo|length > 4 %}ps-4{% endif %}">{{ cuenta.nombre }}</td>                                    <td class="text-center"><span class="badge level3 text-dark">Cuenta</span></td>
                                     <td class="text-center">
                                         <span class="badge 
-                                            {% if cuenta.tipo == 'ACTIVO' %}bg-primary
-                                            {% elif cuenta.tipo == 'PASIVO' %}bg-warning text-dark
-                                            {% elif cuenta.tipo == 'PATRIMONIO' %}bg-info
-                                            {% elif cuenta.tipo == 'INGRESO' %}bg-success
-                                            {% elif cuenta.tipo == 'GASTO' %}bg-danger
+                                            {% if cuenta.tipo == 'ACTIVO' %}cuenta_activo
+                                            {% elif cuenta.tipo == 'PASIVO' %}cuenta_pasivo text-white
+                                            {% elif cuenta.tipo == 'PATRIMONIO' %}cuenta_patrimonio
+                                            {% elif cuenta.tipo == 'INGRESO' %}cuenta_ingreso
+                                            {% elif cuenta.tipo == 'GASTO' %}cuenta_gasto
                                             {% endif %}">
                                             {{ cuenta.get_tipo_display }}
                                         </span>
@@ -237,6 +251,7 @@
                                             {% endif %}
                                         </span>
                                     </td>
+                                </tr>
                                 {% endif %}
                                 {% endfor %}
                             </tbody>
@@ -258,7 +273,7 @@
 <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header cuenta_activo text-white">
                 <h5 class="modal-title" id="infoModalLabel">
                     <i class="bi bi-info-circle me-2"></i>Instrucciones del Catálogo
                 </h5>
@@ -267,25 +282,24 @@
             <div class="modal-body">
                 <h6>Estructura del Catálogo:</h6>
                 <ul class="list-unstyled">
-                    <li><span class="badge bg-secondary">Grupo</span> - Nivel 1 (Ej: 1, 2, 3)</li>
-                    <li><span class="badge bg-info">Subgrupo</span> - Nivel 2 (Ej: 11, 21, 31)</li>
-                    <li><span class="badge bg-warning text-dark">Cuenta</span> - Nivel 3 (Ej: 1101, 2101)</li>
-                    <li><span class="badge bg-light text-dark">Subcuenta</span> - Nivel 4 (Ej: 110101, 210101)</li>
+                    <li><span class="badge level text-dark">Grupo</span> - Nivel 1 (Ej: 1, 2, 3)</li>
+                    <li><span class="badge level2 text-white">Subgrupo</span> - Nivel 2 (Ej: 11, 21, 31)</li>
+                    <li><span class="badge level3 text-white">Cuenta</span> - Nivel 3 (Ej: 1101, 2101)</li>
                 </ul>
                 
                 <h6 class="mt-3">Naturaleza de las Cuentas:</h6>
                 <ul class="list-unstyled">
-                    <li><span class="badge bg-success">Deudora</span> - Aumenta con débitos (Activos, Gastos)</li>
-                    <li><span class="badge bg-danger">Acreedora</span> - Aumenta con créditos (Pasivos, Patrimonio, Ingresos)</li>
+                    <li><span class="badge deudora">Deudora</span> - Aumenta con débitos (Activos, Gastos)</li>
+                    <li><span class="badge acreedora">Acreedora</span> - Aumenta con créditos (Pasivos, Patrimonio, Ingresos)</li>
                 </ul>
 
                 <h6 class="mt-3">Tipos de Cuenta:</h6>
                 <ul class="list-unstyled">
-                    <li><span class="badge bg-primary">Activo</span> - Recursos de la empresa</li>
-                    <li><span class="badge bg-warning text-dark">Pasivo</span> - Obligaciones de la empresa</li>
-                    <li><span class="badge bg-info">Patrimonio</span> - Capital y reservas</li>
-                    <li><span class="badge bg-success">Ingreso</span> - Entradas de recursos</li>
-                    <li><span class="badge bg-danger">Gasto</span> - Salidas de recursos</li>
+                    <li><span class="badge cuenta_activo text-dark">Activo</span> - Recursos de la empresa</li>
+                    <li><span class="badge cuenta_pasivo text-white">Pasivo</span> - Obligaciones de la empresa</li>
+                    <li><span class="badge cuenta_patrimonio text-whiteb">Patrimonio</span> - Capital y reservas</li>
+                    <li><span class="badge cuenta_ingreso">Ingreso</span> - Entradas de recursos</li>
+                    <li><span class="badge cuenta_gasto">Gasto</span> - Salidas de recursos</li>
                 </ul>
             </div>
             <div class="modal-footer">

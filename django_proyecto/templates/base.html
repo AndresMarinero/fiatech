@@ -1,54 +1,141 @@
+
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sistema de rendimiento{% endblock %}</title>
 
-    <!-- Bootstrap CSS -->
+    <title>{% block title %}Sistema Contable FIA-TECH{% endblock %}</title>
+
+    <!-- Estilos generales -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/navbar_all.css' %}" rel="stylesheet">
 
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Estilos específicos de cada página -->
+    {% block extra_css %}
+    {% endblock %}
+
 </head>
 
 <body>
-    
-    <nav class="navbar navbar-dark custom-navbar">
-        <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
-                <a class="navbar-brand d-flex align-items-center" href="{% url 'menu_conta' %}">
-                    <span class="fs-4 fw-bold">Fiatech</span>
+
+    <!-- NAVBAR PRINCIPAL -->
+    <nav class="navbar navbar-dark custom-navbar"
+         id="navbarSuperior">
+
+        <!-- Contenido superior -->
+        <div class="container-fluid navbar-contenido">
+
+            <!-- LOGO Y NOMBRE -->
+            <a href="{% url 'menu_conta' %}"
+               class="navbar-brand fiatech-brand">
+
+                <img src="{% static 'image/logo3.png' %}"
+                     alt="Logo FIA-TECH"
+                     class="fiatech-logo">
+            </a>
+
+            <!-- MODULOS CONTABLES -->
+            <div class="fiatech-nav-links">
+
+                <!-- LIBRO MAYOR -->
+                <a href="#"
+                   class="fiatech-nav-item">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Libro Mayor</span>
                 </a>
-            <form method="POST" action="{% url 'logout' %}" class="d-flex">
+
+                <!-- CATALOGO DE CUENTAS -->
+                <a href="#"
+                   class="fiatech-nav-item">
+                    <i class="bi bi-list-columns-reverse"></i>
+                    <span>Catálogo de Cuentas</span>
+                </a>
+
+                <!-- ESTADOS FINANCIEROS -->
+                <a href="#"
+                   class="fiatech-nav-item">
+                    <i class="bi bi-bar-chart-line"></i>
+                    <span>Estados Financieros</span>
+                </a>
+
+                <!-- GESTION DE COSTOS -->
+                <a href="#"
+                   class="fiatech-nav-item">
+                    <i class="bi bi-calculator"></i>
+                    <span>Gestión de Costos</span>
+                </a>
+
+            </div>
+
+            <!-- CERRAR SESION -->
+            <form method="POST"
+                  action="{% url 'logout' %}"
+                  class="navbar-logout">
+
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-light d-flex align-items-center">
-                    <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
+
+                <button type="submit"
+                        class="btn btn-outline-light">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Cerrar sesión</span>
                 </button>
+
             </form>
+
         </div>
+
+        <!-- BOTON OCULTAR / MOSTRAR -->
+        <button type="button"
+                class="navbar-toggle-btn"
+                id="toggleNavbarBtn"
+                onclick="toggleNavbarSuperior()"
+                aria-label="Ocultar o mostrar la barra superior"
+                aria-controls="navbarSuperior"
+                aria-expanded="true">
+
+            <i class="bi bi-list"></i>
+
+        </button>
+
     </nav>
 
+    <!-- CONTENIDO PRINCIPAL -->
     <div class="container mt-4">
+
         {% include 'alertas.html' %}
+
         {% block content %}
         {% endblock %}
+
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- SCRIPTS -->
     <footer>
+
         {% block footer_scripts %}
-        <!-- scripts o contenido variable en footer -->
+
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script src="{% static 'js/popper.min.js' %}"></script>
+
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
-        
+
+        <script src="{% static 'js/toggle_navbar.js' %}"></script>
+
         {% endblock %}
+
     </footer>
 
 </body>
-
 </html>

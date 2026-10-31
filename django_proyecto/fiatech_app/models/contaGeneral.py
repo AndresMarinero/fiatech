@@ -14,7 +14,6 @@ class Cuenta(models.Model):
         (1, 'Grupo'),
         (2, 'Subgrupo'),
         (3, 'Cuenta'),
-        (4, 'Subcuenta'),
     ]
     
     codigo = models.CharField(max_length=10, unique=True)
@@ -37,10 +36,8 @@ class Cuenta(models.Model):
             self.nivel = 1
         elif len(self.codigo) == 2:
             self.nivel = 2
-        elif len(self.codigo) == 4:
-            self.nivel = 3
         else:
-            self.nivel = 4
+            self.nivel = 3
         super().save(*args, **kwargs)
 
 class CentroCosto(models.Model):
