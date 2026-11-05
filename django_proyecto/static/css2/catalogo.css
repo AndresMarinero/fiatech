@@ -126,3 +126,532 @@
     color: #64748b;
     margin: 0;
 }
+
+
+/* ==========================================
+   CATALOGO DE CUENTAS - DISEÑO FORMAL
+   FIA-TECH
+========================================== */
+
+/* CONTENEDOR GENERAL */
+
+.catalogo-page {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+/* TITULO Y DESCRIPCION */
+
+.catalogo-page h1.h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.catalogo-page .text-muted {
+    color: #6b7280 !important;
+    font-size: 0.9rem;
+}
+
+/* BOTON INSTRUCCIONES */
+
+.catalogo-page .btn-outline-primary {
+    color: #2f4b66;
+    border-color: #b8c4d1;
+    background-color: #ffffff;
+    border-radius: 7px;
+    font-size: 0.88rem;
+    padding: 0.45rem 0.85rem;
+}
+
+.catalogo-page .btn-outline-primary:hover {
+    background-color: #eef3f7;
+    border-color: #9fb0c1;
+    color: #24384d;
+}
+
+/* ==========================================
+   TARJETAS ESTADISTICAS
+========================================== */
+
+.catalogo-page .catalogo-estadisticas {
+    margin-bottom: 0.6rem !important;
+}
+
+.catalogo-page .catalogo-stat-card {
+    border: 1px solid #d9e1e7;
+    border-radius: 9px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+.catalogo-page .catalogo-stat-card .card-body {
+    padding: 13px 15px;
+}
+
+.catalogo-page .catalogo-stat-accent {
+    height: 3px;
+    margin-bottom: 12px;
+    border-radius: 3px;
+}
+
+.catalogo-page .catalogo-stat-label {
+    color: #64748b;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.catalogo-page .catalogo-stat-number {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #263244;
+    margin: 0;
+}
+
+.catalogo-page .catalogo-stat-info {
+    gap: 5px;
+}
+
+.catalogo-page .catalogo-stat-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #f1f3f6;
+}
+
+.catalogo-page .catalogo-stat-icon {
+    font-size: 1.25rem;
+    color: #718096;
+}
+
+/* COLORES SOBRIOS DE LOS ACENTOS */
+
+.catalogo-page .stat-total .catalogo-stat-accent {
+    background-color: #7a99b8;
+}
+
+.catalogo-page .stat-activo .catalogo-stat-accent {
+    background-color: #5f87b2;
+}
+
+.catalogo-page .stat-pasivo .catalogo-stat-accent {
+    background-color: #8c7b5a;
+}
+
+.catalogo-page .stat-patrimonio .catalogo-stat-accent {
+    background-color: #6f8c96;
+}
+
+/* ==========================================
+   FILTROS
+========================================== */
+
+.catalogo-page .catalogo-filtros-card {
+    border: 1px solid #d9e1e7;
+    border-radius: 9px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+.catalogo-page .catalogo-filtros-card .card-body {
+    padding: 14px 16px;
+}
+
+.catalogo-page .form-label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.catalogo-page .form-control,
+.catalogo-page .form-select,
+.catalogo-page .input-group-text {
+    min-height: 38px;
+    border-color: #cfd8e3;
+    font-size: 0.9rem;
+}
+
+.catalogo-page .form-control:focus,
+.catalogo-page .form-select:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 0.15rem rgba(47,75,102,0.12);
+}
+
+/* ==========================================
+   LISTA DE CUENTAS
+========================================== */
+
+.catalogo-page .catalogo-list-card {
+    border: 1px solid #d9e1e7;
+    border-radius: 9px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.catalogo-page .catalogo-list-header {
+    background-color: #f3f4f6;
+    color: #263244;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid #dce1e7;
+}
+
+.catalogo-page .catalogo-list-header .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #263244;
+}
+
+/* ==========================================
+   TABLA CONTABLE
+========================================== */
+
+.catalogo-page .catalogo-list-card .table {
+    margin-bottom: 0;
+    font-size: 0.88rem;
+}
+
+.catalogo-page .catalogo-list-card .table th,
+.catalogo-page .catalogo-list-card .table td {
+    vertical-align: middle;
+    padding: 0.55rem 0.75rem;
+    border-color: #e5e7eb;
+}
+
+/* ENCABEZADO DE COLUMNAS */
+
+.catalogo-page .catalogo-list-card .table thead th {
+    --bs-table-bg: #120e38;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #120e38;
+    color: #ffffff;
+    box-shadow: none;
+
+    font-size: 0.86rem;
+    font-weight: 600;
+    border-bottom: none;
+}
+
+/* FILAS NORMALES */
+
+.catalogo-page .catalogo-list-card .table tbody tr:not(.table-primary):not(.table-info) td {
+    --bs-table-bg: #ffffff;
+    background-color: #ffffff;
+    color: #263244;
+}
+
+/* GRUPOS PRINCIPALES */
+
+.catalogo-page .catalogo-list-card .table tbody tr.table-primary td {
+    --bs-table-bg: #e2e8f0;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #e2e8f0;
+    box-shadow: none;
+
+    color: #263244;
+    font-weight: 700;
+}
+
+/* SUBGRUPOS */
+
+.catalogo-page .catalogo-list-card .table tbody tr.table-info td {
+    --bs-table-bg: #edf1f5;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #edf1f5;
+    box-shadow: none;
+
+    color: #263244;
+    font-weight: 600;
+}
+
+/* ==========================================
+   INSIGNIAS
+========================================== */
+
+.catalogo-page .badge {
+    border-radius: 5px;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+/* NIVEL SUBGRUPO */
+
+.catalogo-page .badge.bg-info {
+    background-color: #668796 !important;
+    color: #ffffff !important;
+}
+
+/* NIVEL CUENTA */
+
+.catalogo-page .badge.level3 {
+    background-color: #d4dce5;
+    color: #263244 !important;
+}
+
+/* TIPOS DE CUENTAS */
+
+.catalogo-page .badge.cuenta_activo {
+    background-color: #466b92;
+    color: #ffffff !important;
+}
+
+.catalogo-page .badge.cuenta_pasivo {
+    background-color: #857454;
+    color: #ffffff !important;
+}
+
+.catalogo-page .badge.cuenta_patrimonio {
+    background-color: #627c89;
+    color: #ffffff !important;
+}
+
+.catalogo-page .badge.cuenta_ingreso {
+    background-color: #4f7a61;
+    color: #ffffff !important;
+}
+
+.catalogo-page .badge.cuenta_gasto {
+    background-color: #986b6b;
+    color: #ffffff !important;
+}
+
+/* NATURALEZA DEUDORA / ACREEDORA */
+
+.catalogo-page .badge.bg-success {
+    background-color: #4f7a61 !important;
+}
+
+.catalogo-page .badge.bg-danger {
+    background-color: #986b6b !important;
+}
+
+/* ==========================================
+   ESPACIADOS
+========================================== */
+
+.catalogo-page .mb-4 {
+    margin-bottom: 1.15rem !important;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 767.98px) {
+
+    .catalogo-page {
+        max-width: 100%;
+    }
+
+    .catalogo-page h1.h3 {
+        font-size: 1.55rem;
+    }
+
+    .catalogo-page .catalogo-stat-number {
+        font-size: 1.4rem;
+    }
+
+    .catalogo-page .catalogo-list-card .table {
+        font-size: 0.82rem;
+    }
+}
+
+
+
+/* ==========================================
+   MODAL INSTRUCCIONES - CATALOGO DE CUENTAS
+   Estilo formal FIA-TECH
+========================================== */
+
+/* Contenedor del modal */
+.catalogo-instrucciones-modal .modal-content {
+    border: 1px solid #d9e1e7;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.14);
+}
+
+/* Encabezado gris formal */
+.catalogo-instrucciones-modal .catalogo-modal-header {
+    background-color: #f3f4f6;
+    color: #263244;
+    border-bottom: 1px solid #dce1e7;
+    padding: 15px 20px;
+}
+
+/* Título */
+.catalogo-instrucciones-modal .modal-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #263244;
+}
+
+/* Icono del título */
+.catalogo-instrucciones-modal .modal-title i {
+    color: #526278;
+}
+
+/* Botón de cerrar */
+.catalogo-instrucciones-modal .btn-close {
+    opacity: 0.65;
+    box-shadow: none;
+}
+
+.catalogo-instrucciones-modal .btn-close:hover {
+    opacity: 1;
+}
+
+/* Cuerpo del modal */
+.catalogo-instrucciones-modal .modal-body {
+    padding: 20px;
+    background-color: #ffffff;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+/* Títulos de secciones */
+.catalogo-instrucciones-modal .modal-body h6 {
+    color: #263244;
+    font-size: 0.94rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+/* Separación entre elementos */
+.catalogo-instrucciones-modal .modal-body ul {
+    margin-bottom: 18px;
+}
+
+.catalogo-instrucciones-modal .modal-body li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+/* Insignias generales */
+.catalogo-instrucciones-modal .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    border-radius: 5px;
+    padding: 5px 9px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+/* ==========================================
+   NIVELES DEL CATALOGO
+========================================== */
+
+.catalogo-instrucciones-modal .badge.level {
+    background-color: #e5e7eb;
+    color: #374151 !important;
+}
+
+.catalogo-instrucciones-modal .badge.level2 {
+    background-color: #dce5ed;
+    color: #34465b !important;
+}
+
+.catalogo-instrucciones-modal .badge.level3 {
+    background-color: #cdd9e5;
+    color: #263244 !important;
+}
+
+/* ==========================================
+   NATURALEZA DE LAS CUENTAS
+========================================== */
+
+.catalogo-instrucciones-modal .badge.deudora {
+    background-color: #e8f0eb;
+    color: #376e55 !important;
+}
+
+.catalogo-instrucciones-modal .badge.acreedora {
+    background-color: #f3e8e8;
+    color: #985c5c !important;
+}
+
+/* ==========================================
+   TIPOS DE CUENTAS
+========================================== */
+
+.catalogo-instrucciones-modal .badge.cuenta_activo {
+    background-color: #eaf0f6;
+    color: #476b90 !important;
+}
+
+.catalogo-instrucciones-modal .badge.cuenta_pasivo {
+    background-color: #f3eee5;
+    color: #806e4c !important;
+}
+
+.catalogo-instrucciones-modal .badge.cuenta_patrimonio {
+    background-color: #eaf0f3;
+    color: #607985 !important;
+}
+
+.catalogo-instrucciones-modal .badge.cuenta_ingreso {
+    background-color: #e8f0eb;
+    color: #376e55 !important;
+}
+
+.catalogo-instrucciones-modal .badge.cuenta_gasto {
+    background-color: #f3e8e8;
+    color: #985c5c !important;
+}
+
+/* ==========================================
+   PIE DEL MODAL
+========================================== */
+
+.catalogo-instrucciones-modal .modal-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
+}
+
+/* Botón Cerrar */
+.catalogo-instrucciones-modal .modal-footer .btn-secondary {
+    background-color: #34465b;
+    border-color: #34465b;
+    color: #ffffff;
+
+    border-radius: 7px;
+    font-size: 0.88rem;
+    padding: 8px 18px;
+}
+
+.catalogo-instrucciones-modal .modal-footer .btn-secondary:hover {
+    background-color: #26374a;
+    border-color: #26374a;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 575.98px) {
+
+    .catalogo-instrucciones-modal .modal-body {
+        padding: 16px;
+        font-size: 0.85rem;
+    }
+
+    .catalogo-instrucciones-modal .badge {
+        min-width: 68px;
+        font-size: 0.7rem;
+        padding: 4px 7px;
+    }
+
+    .catalogo-instrucciones-modal .modal-body li {
+        align-items: flex-start;
+    }
+}

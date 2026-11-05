@@ -1,0 +1,431 @@
+
+/* ==========================================
+   FIA-TECH - ESTADO DE CAPITAL
+   DISEÑO FORMAL INSTITUCIONAL
+========================================== */
+
+.estado-capital-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: #263244;
+}
+
+/* ==========================================
+   ENCABEZADO PRINCIPAL
+========================================== */
+
+.estado-capital-page .estado-capital-titulo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px !important;
+}
+
+.estado-capital-page .rounded-pill {
+    background: #f3f4f6 !important;
+    border: 1px solid #dce1e7;
+    border-radius: 7px !important;
+    color: #526278 !important;
+    font-size: 0.88rem;
+}
+
+.estado-capital-page .btn {
+    border-radius: 7px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 8px 14px;
+    box-shadow: none !important;
+}
+
+.estado-capital-page .btn-primary {
+    background: #34465b !important;
+    border-color: #34465b !important;
+    color: #ffffff !important;
+}
+
+.estado-capital-page .btn-success {
+    background: #355e4c !important;
+    border-color: #355e4c !important;
+    color: #ffffff !important;
+}
+
+.estado-capital-page .btn-primary:hover {
+    background: #26374a !important;
+    border-color: #26374a !important;
+}
+
+.estado-capital-page .btn-success:hover {
+    background: #294b3a !important;
+    border-color: #294b3a !important;
+}
+
+/* ==========================================
+   TARJETA MOVIMIENTO DE CAPITAL
+========================================== */
+
+.estado-capital-page .estado-capital-principal {
+    background: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+}
+
+.estado-capital-page .estado-capital-header {
+    background: #f3f4f6;
+    border-bottom: 1px solid #dce1e7;
+    padding: 13px 16px;
+    color: #263244;
+}
+
+.estado-capital-page .estado-capital-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #263244;
+}
+
+.estado-capital-page .estado-capital-header i {
+    color: #526278;
+}
+
+.estado-capital-page .estado-capital-principal > .card-body {
+    padding: 20px;
+}
+
+/* CAPITAL INICIAL Y UTILIDAD */
+
+.estado-capital-page .estado-capital-principal
+.card-body > .row.mb-4 {
+    margin-bottom: 18px !important;
+}
+
+.estado-capital-page .estado-capital-principal
+.card-body > .row h5 {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.estado-capital-page .estado-capital-principal
+.card-body > .row .fs-4 {
+    font-size: 1.2rem !important;
+    color: #263244;
+}
+
+.estado-capital-page .estado-capital-principal
+.card-body > .row .fs-4.text-success {
+    color: #376e55 !important;
+}
+
+.estado-capital-page .estado-capital-principal
+.card-body > .row .fs-4.text-danger {
+    color: #a55b5b !important;
+}
+
+.estado-capital-page .text-muted {
+    color: #64748b !important;
+}
+
+.estado-capital-page .text-success {
+    color: #376e55 !important;
+}
+
+.estado-capital-page .text-danger {
+    color: #a55b5b !important;
+}
+
+.estado-capital-page .text-primary {
+    color: #304b70 !important;
+}
+
+/* ==========================================
+   DISTRIBUCION DE LA UTILIDAD
+========================================== */
+
+.estado-capital-page .estado-capital-distribucion {
+    background: #f8fafc;
+    border: 1px solid #e1e6ec;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    margin-bottom: 18px !important;
+}
+
+.estado-capital-page .estado-capital-distribucion h6 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #263244;
+    margin-bottom: 12px !important;
+}
+
+.estado-capital-page .estado-capital-distribucion .row {
+    padding: 3px 0;
+}
+
+.estado-capital-page .estado-capital-distribucion span {
+    font-size: 0.87rem;
+}
+
+/* MENSAJE DE PERDIDA */
+
+.estado-capital-page .alert-warning {
+    background: #faf6eb;
+    border: 1px solid #eadfbe;
+    color: #65512e;
+    border-radius: 8px;
+    font-size: 0.88rem;
+}
+
+/* ==========================================
+   CAPITAL SOCIAL FINAL
+========================================== */
+
+.estado-capital-page .estado-capital-principal hr {
+    border-top: 1px solid #dce1e7;
+    opacity: 1;
+    margin: 16px 0 !important;
+}
+
+.estado-capital-page .estado-capital-final {
+    background: #e9edf3 !important;
+    border: 1px solid #dce1e7;
+    border-radius: 8px !important;
+    padding: 15px 18px !important;
+    margin: 0;
+}
+
+.estado-capital-page .estado-capital-final h4 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #263244;
+}
+
+.estado-capital-page .estado-capital-final .fs-3 {
+    font-size: 1.45rem !important;
+    color: #304b70 !important;
+}
+
+/* ==========================================
+   TARJETAS DE RESUMEN
+========================================== */
+
+.estado-capital-page .estado-capital-resumen {
+    background: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 9px;
+    box-shadow: 0 2px 6px rgba(15,23,42,0.04);
+    height: 100%;
+}
+
+.estado-capital-page .estado-capital-resumen .card-body {
+    padding: 17px 18px;
+}
+
+.estado-capital-page .estado-capital-resumen .card-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.estado-capital-page .estado-capital-resumen .h3 {
+    font-size: 1.45rem;
+    font-weight: 700;
+}
+
+.estado-capital-page .resumen-incremento {
+    border-left: 4px solid #688775;
+}
+
+.estado-capital-page .resumen-reservas {
+    border-left: 4px solid #607d9b;
+}
+
+/* ==========================================
+   DETALLE DE CUENTAS DE PATRIMONIO
+========================================== */
+
+.estado-capital-page .estado-capital-tabla-card {
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+}
+
+.estado-capital-page .estado-capital-tabla-header {
+    background: #f3f4f6;
+    border-bottom: 1px solid #dce1e7;
+    padding: 12px 16px;
+}
+
+.estado-capital-page .estado-capital-tabla-header h5 {
+    color: #263244;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.estado-capital-page .estado-capital-tabla-card .card-body {
+    padding: 0;
+}
+
+/* TABLA */
+
+.estado-capital-page .estado-capital-tabla {
+    width: 100%;
+    margin-bottom: 0;
+    font-size: 0.88rem;
+}
+
+.estado-capital-page .estado-capital-tabla th,
+.estado-capital-page .estado-capital-tabla td {
+    vertical-align: middle;
+    padding: 10px 13px;
+    border-color: #e5e7eb;
+}
+
+.estado-capital-page .estado-capital-tabla thead th {
+    --bs-table-bg: #120e38;
+    --bs-table-accent-bg: transparent;
+
+    background: #120e38 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.estado-capital-page .estado-capital-tabla tbody td {
+    --bs-table-bg: #ffffff;
+    background: #ffffff;
+    color: #263244;
+}
+
+.estado-capital-page .estado-capital-tabla
+tbody tr.estado-capital-total td {
+    --bs-table-bg: #e9edf3;
+    --bs-table-accent-bg: transparent;
+
+    background: #e9edf3 !important;
+    box-shadow: none !important;
+    color: #263244 !important;
+    font-weight: 700;
+}
+
+/* ==========================================
+   ESPACIADOS
+========================================== */
+
+.estado-capital-page .row > .col-lg-10 {
+    min-width: 0;
+}
+
+.estado-capital-page .card.mb-4 {
+    margin-bottom: 18px !important;
+}
+
+.estado-capital-page .row > .col-md-6.mb-4 {
+    margin-bottom: 18px !important;
+}
+
+/* ==========================================
+   MODAL SELECCIONAR PERIODO
+========================================== */
+
+.estado-capital-modal .modal-content {
+    border: 1px solid #d9e1e7;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 35px rgba(15,23,42,0.14);
+}
+
+.estado-capital-modal .estado-capital-modal-header {
+    background: #f3f4f6;
+    border-bottom: 1px solid #dce1e7;
+    padding: 14px 20px;
+}
+
+.estado-capital-modal .modal-title {
+    color: #263244;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.estado-capital-modal .modal-title i {
+    color: #526278;
+}
+
+.estado-capital-modal .modal-body {
+    padding: 20px;
+}
+
+.estado-capital-modal .form-label {
+    color: #374151;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.estado-capital-modal .form-select {
+    min-height: 38px;
+    border: 1px solid #cfd8e3;
+    border-radius: 7px;
+    font-size: 0.9rem;
+}
+
+.estado-capital-modal .form-select:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 0.15rem rgba(47,75,102,0.12);
+}
+
+.estado-capital-modal .modal-footer {
+    background: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
+    gap: 8px;
+}
+
+.estado-capital-modal .modal-footer .btn {
+    margin: 0;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 0.88rem;
+}
+
+.estado-capital-modal .btn-secondary {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.estado-capital-modal .btn-primary {
+    background: #34465b;
+    border-color: #34465b;
+    color: #ffffff;
+}
+
+.estado-capital-modal .btn-primary:hover {
+    background: #26374a;
+    border-color: #26374a;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 767.98px) {
+
+    .estado-capital-page .estado-capital-titulo {
+        font-size: 1.55rem;
+    }
+
+    .estado-capital-page
+    .estado-capital-principal > .card-body {
+        padding: 15px;
+    }
+
+    .estado-capital-page .estado-capital-final {
+        row-gap: 10px;
+    }
+
+    .estado-capital-page .estado-capital-final .col-md-4,
+    .estado-capital-page
+    .estado-capital-principal .col-md-4 {
+        text-align: left !important;
+    }
+}

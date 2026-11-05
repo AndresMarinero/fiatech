@@ -3,12 +3,16 @@
 
 {% block title %}Ajustes Contables{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css2/ajustesContables.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid py-4">
+<div class="container-fluid py-4 ajustes-contables-page">
     <!-- Encabezado -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 ajustes-page-header">
                 <div>
                     <h1 class="h3 mb-1">Ajustes Contables</h1>
                     {% if periodo_seleccionado %}
@@ -29,7 +33,7 @@
                         <i class="bi bi-plus-circle me-2"></i>Agregar Ajuste
                     </button>
                     {% else %}
-                    <button class="btn btn-primary" disabled title="Solo disponible para períodos activos">
+                    <button class="btn btn-primary" disabled title="Solo disponible para períodos cerrados">
                         <i class="bi bi-plus-circle me-2"></i>Agregar Ajuste
                     </button>
                     {% endif %}
@@ -85,10 +89,10 @@
     <!-- Tabla de ajustes MODIFICADA -->
     <div class="row">
         <div class="col-12">
-            <div class="card shadow-sm">
+            <div class="card ajustes-tabla-card">
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
+                        <table class="table table-hover mb-0 ajustes-tabla">
                             <thead class="table-dark">
                                 <tr>
                                     <th width="80">No.</th>
@@ -129,7 +133,7 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
-                            <tfoot class="table-active fw-bold">
+                            <tfoot class="ajustes-totales fw-bold">
                                 <tr>
                                     <td colspan="5" class="text-center">TOTALES</td>
                                     <td class="text-end text-success">$ {{ total_debe|floatformat:2 }}</td>
@@ -145,7 +149,7 @@
 </div>
 
 <!-- Modal Agregar Ajuste (MODIFICADO) -->
-<div class="modal fade" id="agregarAjusteModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade ajustes-agregar-modal" id="agregarAjusteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
@@ -262,7 +266,7 @@
 </div>
 
 <!-- Modal Seleccionar Periodo -->
-<div class="modal fade" id="seleccionarPeriodo" tabindex="-1" aria-hidden="true">
+<div class="modal fade ajustes-periodo-modal" id="seleccionarPeriodo" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -295,7 +299,7 @@
 </div>
 
 <!-- Modal Generar Estados Financieros -->
-<div class="modal fade" id="generarEstadosModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade ajustes-generar-modal" id="generarEstadosModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-info text-white">

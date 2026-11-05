@@ -1,0 +1,423 @@
+
+/* ==========================================
+   ESTADO DE RESULTADOS - FIA-TECH
+   DISEÑO FORMAL INSTITUCIONAL
+========================================== */
+
+.estado-resultado-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: #263244;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.estado-resultado-page .estado-resultado-encabezado {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.estado-resultado-page .estado-resultado-titulo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.estado-resultado-page .estado-resultado-encabezado
+> .card-body {
+    padding: 0;
+}
+
+.estado-resultado-page .estado-resultado-encabezado
+.text-center.mb-4 {
+    margin-bottom: 18px !important;
+}
+
+/* FECHA / PERIODO */
+
+.estado-resultado-page .estado-resultado-periodo {
+    background-color: #f3f4f6;
+    border: 1px solid #dce1e7;
+    border-radius: 7px;
+    padding: 8px 12px;
+    color: #526278;
+    font-size: 0.88rem;
+}
+
+.estado-resultado-page .estado-resultado-periodo i {
+    color: #607d9b;
+}
+
+/* BOTONES */
+
+.estado-resultado-page .estado-resultado-encabezado .btn {
+    border-radius: 7px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 8px 14px !important;
+    box-shadow: none !important;
+}
+
+.estado-resultado-page .estado-resultado-encabezado
+.btn-primary {
+    background-color: #34465b;
+    border-color: #34465b;
+    color: #ffffff;
+}
+
+.estado-resultado-page .estado-resultado-encabezado
+.btn-primary:hover {
+    background-color: #26374a;
+    border-color: #26374a;
+}
+
+.estado-resultado-page .estado-resultado-encabezado
+.btn-success {
+    background-color: #355e4c;
+    border-color: #355e4c;
+    color: #ffffff;
+}
+
+.estado-resultado-page .estado-resultado-encabezado
+.btn-success:hover {
+    background-color: #294b3a;
+    border-color: #294b3a;
+}
+
+/* ==========================================
+   TARJETA PRINCIPAL
+========================================== */
+
+.estado-resultado-page .estado-resultado-card {
+    max-width: 1000px;
+    background-color: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+}
+
+.estado-resultado-page .estado-resultado-card
+> .card-body {
+    padding: 20px;
+}
+
+/* ==========================================
+   TITULOS DE SECCION
+========================================== */
+
+.estado-resultado-page .estado-resultado-seccion {
+    background-color: #f3f4f6;
+    border: 1px solid #dce1e7;
+    border-radius: 7px;
+    padding: 12px 15px;
+
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #263244;
+}
+
+.estado-resultado-page .seccion-ingresos {
+    border-left: 4px solid #688775;
+}
+
+.estado-resultado-page .seccion-ingresos i {
+    color: #376e55;
+}
+
+.estado-resultado-page .seccion-gastos {
+    border-left: 4px solid #a37979;
+}
+
+.estado-resultado-page .seccion-gastos i {
+    color: #a55b5b;
+}
+
+/* ==========================================
+   TABLAS DE INGRESOS Y GASTOS
+========================================== */
+
+.estado-resultado-page .estado-resultado-tabla {
+    margin-bottom: 0;
+    width: 100%;
+    font-size: 0.88rem;
+    border-color: #e5e7eb;
+}
+
+.estado-resultado-page .estado-resultado-tabla th,
+.estado-resultado-page .estado-resultado-tabla td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* ENCABEZADO MORADO */
+
+.estado-resultado-page .estado-resultado-tabla
+thead th {
+    --bs-table-bg: #120e38;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #120e38 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-bottom: none;
+}
+
+/* FILAS ORDINARIAS */
+
+.estado-resultado-page .estado-resultado-tabla
+tbody td {
+    --bs-table-bg: #ffffff;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #ffffff;
+    color: #263244;
+}
+
+.estado-resultado-page .estado-resultado-tabla
+tbody tr:hover td {
+    --bs-table-bg: #f8fafc;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #f8fafc;
+}
+
+/* COLORES DE IMPORTES */
+
+.estado-resultado-page .estado-resultado-tabla
+.text-success {
+    color: #376e55 !important;
+}
+
+.estado-resultado-page .estado-resultado-tabla
+.text-danger {
+    color: #a55b5b !important;
+}
+
+.estado-resultado-page .text-muted {
+    color: #64748b !important;
+}
+
+/* ==========================================
+   FILAS DE TOTALES
+========================================== */
+
+.estado-resultado-page .estado-resultado-tabla
+tfoot.estado-resultado-totales td {
+    --bs-table-bg: #e9edf3;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #e9edf3 !important;
+    color: #263244 !important;
+    box-shadow: none !important;
+
+    font-weight: 700;
+    padding: 12px;
+    border-top: 1px solid #cbd5e1;
+    border-bottom: none;
+}
+
+/* ==========================================
+   UTILIDAD O PERDIDA BRUTA
+========================================== */
+
+.estado-resultado-page .estado-resultado-utilidad {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border: 1px solid;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.estado-resultado-page .estado-resultado-utilidad h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.estado-resultado-page .estado-resultado-importe {
+    display: inline-block;
+    padding: 8px 13px;
+    border-radius: 7px;
+
+    font-size: 1.1rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* RESULTADO POSITIVO */
+
+.estado-resultado-page .resultado-positivo {
+    background-color: #eef3ef;
+    border-color: #cbded2;
+    color: #376e55;
+}
+
+.estado-resultado-page .resultado-positivo
+.estado-resultado-importe {
+    background-color: #dfeae2;
+    color: #376e55;
+}
+
+/* RESULTADO NEGATIVO */
+
+.estado-resultado-page .resultado-negativo {
+    background-color: #faf0ef;
+    border-color: #e6c9c6;
+    color: #a55b5b;
+}
+
+.estado-resultado-page .resultado-negativo
+.estado-resultado-importe {
+    background-color: #f3e1df;
+    color: #984a4a;
+}
+
+/* ==========================================
+   ESPACIADOS
+========================================== */
+
+.estado-resultado-page .estado-resultado-card
+.mb-4 {
+    margin-bottom: 20px !important;
+}
+
+.estado-resultado-page .estado-resultado-card
+hr {
+    border-top: 1px solid #dce1e7;
+    opacity: 1;
+    margin: 18px 0 !important;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 767.98px) {
+
+    .estado-resultado-page .estado-resultado-titulo {
+        font-size: 1.55rem;
+    }
+
+    .estado-resultado-page .estado-resultado-card
+    > .card-body {
+        padding: 13px;
+    }
+
+    .estado-resultado-page .estado-resultado-tabla {
+        font-size: 0.8rem;
+    }
+
+    .estado-resultado-page .estado-resultado-tabla th,
+    .estado-resultado-page .estado-resultado-tabla td {
+        padding: 8px;
+    }
+
+    .estado-resultado-page .estado-resultado-utilidad {
+        padding: 13px;
+    }
+
+    .estado-resultado-page .estado-resultado-utilidad h5 {
+        font-size: 0.9rem;
+    }
+
+    .estado-resultado-page .estado-resultado-importe {
+        font-size: 1rem;
+    }
+}
+
+
+/* ==========================================
+   MODAL SELECCIONAR PERIODO
+   ESTADO DE RESULTADOS - FIA-TECH
+========================================== */
+
+.estado-resultado-modal .modal-content {
+    border: 1px solid #d9e1e7;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 35px rgba(15,23,42,0.14);
+}
+
+.estado-resultado-modal .estado-resultado-modal-header {
+    background-color: #f3f4f6;
+    border-bottom: 1px solid #dce1e7;
+    padding: 14px 20px;
+}
+
+.estado-resultado-modal .modal-title {
+    color: #263244;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.estado-resultado-modal .modal-body {
+    padding: 20px;
+}
+
+.estado-resultado-modal .form-label {
+    color: #374151;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.estado-resultado-modal .form-select {
+    min-height: 38px;
+    border: 1px solid #cfd8e3;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    color: #263244;
+}
+
+.estado-resultado-modal .form-select:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 0.15rem rgba(47,75,102,0.12);
+}
+
+.estado-resultado-modal .modal-footer {
+    background-color: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
+    gap: 8px;
+}
+
+.estado-resultado-modal .modal-footer .btn {
+    margin: 0;
+    padding: 8px 16px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 7px;
+    box-shadow: none;
+}
+
+.estado-resultado-modal .btn-secondary {
+    background-color: #e5e7eb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.estado-resultado-modal .btn-secondary:hover {
+    background-color: #d9dde3;
+    border-color: #cbd0d7;
+    color: #263244;
+}
+
+.estado-resultado-modal .btn-primary {
+    background-color: #34465b;
+    border-color: #34465b;
+    color: #ffffff;
+}
+
+.estado-resultado-modal .btn-primary:hover {
+    background-color: #26374a;
+    border-color: #26374a;
+}

@@ -1,0 +1,533 @@
+
+/* ==========================================
+   BALANCE GENERAL - FIA-TECH
+   DISEÑO FORMAL INSTITUCIONAL
+========================================== */
+
+.balance-general-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: #263244;
+}
+
+/* ==========================================
+   ENCABEZADO PRINCIPAL
+========================================== */
+
+.balance-general-page .balance-general-titulo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px !important;
+}
+
+/* PERIODO */
+
+.balance-general-page .rounded-pill {
+    background-color: #f3f4f6 !important;
+    color: #526278 !important;
+    border: 1px solid #dce1e7;
+    border-radius: 7px !important;
+    font-size: 0.88rem;
+}
+
+/* BOTONES */
+
+.balance-general-page .btn {
+    border-radius: 7px;
+    padding: 8px 14px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: none !important;
+}
+
+.balance-general-page .btn-primary {
+    background-color: #34465b !important;
+    border-color: #34465b !important;
+    color: #ffffff !important;
+}
+
+.balance-general-page .btn-success {
+    background-color: #355e4c !important;
+    border-color: #355e4c !important;
+    color: #ffffff !important;
+}
+
+.balance-general-page .btn-primary:hover {
+    background-color: #26374a !important;
+    border-color: #26374a !important;
+}
+
+.balance-general-page .btn-success:hover {
+    background-color: #294b3a !important;
+    border-color: #294b3a !important;
+}
+
+/* ==========================================
+   ALERTA DE BALANCE DESEQUILIBRADO
+========================================== */
+
+.balance-general-page .balance-general-alerta {
+    background-color: #faf6eb;
+    border: 1px solid #eadfbe;
+    border-left: 4px solid #b59b62;
+    color: #65512e;
+    border-radius: 8px;
+    padding: 13px 16px;
+}
+
+.balance-general-page .balance-general-alerta h5 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #65512e;
+}
+
+.balance-general-page .balance-general-alerta p {
+    font-size: 0.88rem;
+}
+
+/* ==========================================
+   TARJETA PRINCIPAL
+========================================== */
+
+.balance-general-page .balance-general-card {
+    background-color: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+}
+
+.balance-general-page .balance-general-header {
+    background-color: #f3f4f6;
+    color: #263244;
+    border-bottom: 1px solid #dce1e7;
+    padding: 12px 16px;
+}
+
+.balance-general-page .balance-general-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #263244;
+}
+
+.balance-general-page .balance-general-header i {
+    color: #526278;
+}
+
+/* ==========================================
+   TABLA
+========================================== */
+
+.balance-general-page .balance-general-tabla {
+    margin-bottom: 0;
+    font-size: 0.87rem;
+    min-width: 650px;
+    border-color: #e5e7eb;
+}
+
+.balance-general-page .balance-general-tabla th,
+.balance-general-page .balance-general-tabla td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    border-color: #e5e7eb;
+}
+
+/* ENCABEZADO MORADO INSTITUCIONAL */
+
+.balance-general-page .balance-general-tabla thead th {
+    --bs-table-bg: #120e38;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #120e38 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-bottom: none;
+}
+
+/* FILAS ORDINARIAS */
+
+.balance-general-page .balance-general-tabla
+tbody tr:not(.balance-seccion):not(.balance-subtotal):not(.balance-total-general) td {
+    --bs-table-bg: #ffffff;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #ffffff;
+    color: #263244;
+}
+
+.balance-general-page .balance-general-tabla
+tbody tr:not(.balance-seccion):not(.balance-subtotal):not(.balance-total-general):hover td {
+    --bs-table-bg: #f8fafc;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #f8fafc;
+    box-shadow: none;
+}
+
+/* ==========================================
+   SECCIONES CONTABLES
+========================================== */
+
+.balance-general-page .balance-general-tabla
+tr.balance-seccion td {
+    --bs-table-bg: #eef1f5;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #eef1f5 !important;
+    color: #34465b !important;
+    box-shadow: none !important;
+
+    padding: 11px 16px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border-bottom: 1px solid #dce1e7;
+}
+
+/* ACENTOS DISCRETOS */
+
+.balance-general-page .balance-general-tabla
+.seccion-activos td {
+    border-left: 4px solid #607d9b;
+}
+
+.balance-general-page .balance-general-tabla
+.seccion-pasivos td {
+    border-left: 4px solid #99815a;
+}
+
+.balance-general-page .balance-general-tabla
+.seccion-patrimonio td {
+    border-left: 4px solid #688775;
+}
+
+/* ==========================================
+   SUBTOTALES
+========================================== */
+
+.balance-general-page .balance-general-tabla
+tr.balance-subtotal td {
+    --bs-table-bg: #f3f4f6;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #f3f4f6 !important;
+    color: #263244;
+    box-shadow: none !important;
+
+    font-weight: 700;
+    padding: 11px 12px;
+}
+
+/* ==========================================
+   TOTAL GENERAL
+========================================== */
+
+.balance-general-page .balance-general-tabla
+tr.balance-total-general td {
+    --bs-table-bg: #e9edf3;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #e9edf3 !important;
+    color: #263244 !important;
+    box-shadow: none !important;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 14px 12px;
+    border-top: 2px solid #cbd5e1;
+}
+
+/* ==========================================
+   COLORES CONTABLES
+========================================== */
+
+.balance-general-page .text-success {
+    color: #376e55 !important;
+}
+
+.balance-general-page .text-danger {
+    color: #a55b5b !important;
+}
+
+.balance-general-page .text-primary {
+    color: #304b70 !important;
+}
+
+.balance-general-page .text-warning {
+    color: #92723d !important;
+}
+
+.balance-general-page .text-muted {
+    color: #64748b !important;
+}
+
+/* ==========================================
+   TARJETAS DE RESUMEN
+========================================== */
+
+.balance-general-page .balance-resumen-card {
+    background-color: #ffffff !important;
+    border: 1px solid #d9e1e7;
+    border-radius: 9px;
+    box-shadow: 0 2px 6px rgba(15,23,42,0.04);
+    height: 100%;
+}
+
+.balance-general-page .balance-resumen-card .card-body {
+    padding: 16px 14px;
+}
+
+.balance-general-page .balance-resumen-card .card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 9px;
+    color: #263244 !important;
+}
+
+.balance-general-page .balance-resumen-card .h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #263244;
+}
+
+.balance-general-page .resumen-debe {
+    border-left: 4px solid #607d9b;
+}
+
+.balance-general-page .resumen-haber {
+    border-left: 4px solid #99815a;
+}
+
+.balance-general-page .resumen-estado.estado-correcto {
+    border-left: 4px solid #688775;
+}
+
+.balance-general-page .resumen-estado.estado-incorrecto {
+    border-left: 4px solid #a55b5b;
+}
+
+.balance-general-page .resumen-estado.estado-correcto .h3 {
+    color: #376e55 !important;
+}
+
+.balance-general-page .resumen-estado.estado-incorrecto .h3 {
+    color: #a55b5b !important;
+}
+
+/* ==========================================
+   MENSAJE FINAL DEL BALANCE
+========================================== */
+
+.balance-general-page .balance-estado-final {
+    border: 1px solid #d9e1e7;
+    border-radius: 9px;
+    box-shadow: none;
+}
+
+.balance-general-page .balance-estado-final .card-body {
+    padding: 16px;
+}
+
+.balance-general-page .balance-estado-final .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.balance-general-page .balance-estado-final p {
+    font-size: 0.88rem;
+}
+
+.balance-general-page .balance-estado-final.estado-correcto {
+    background-color: #eef3ef !important;
+    border-color: #cbded2;
+}
+
+.balance-general-page .balance-estado-final.estado-incorrecto {
+    background-color: #faf0ef !important;
+    border-color: #e6c9c6;
+}
+
+/* ==========================================
+   ESPACIADOS COMPACTOS
+========================================== */
+
+.balance-general-page .row.mt-4 {
+    margin-top: 18px !important;
+}
+
+.balance-general-page .row.mt-3 {
+    margin-top: 10px !important;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 767.98px) {
+
+    .balance-general-page .balance-general-titulo {
+        font-size: 1.55rem;
+    }
+
+    .balance-general-page .balance-general-tabla {
+        font-size: 0.8rem;
+    }
+
+    .balance-general-page .balance-general-tabla th,
+    .balance-general-page .balance-general-tabla td {
+        padding: 8px 10px;
+    }
+}
+
+
+/* ==========================================
+   MODAL SELECCIONAR PERIODO
+========================================== */
+
+.balance-general-modal .modal-content {
+    border: 1px solid #d9e1e7;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 35px rgba(15,23,42,0.14);
+}
+
+.balance-general-modal .balance-general-modal-header {
+    background-color: #f3f4f6;
+    border-bottom: 1px solid #dce1e7;
+    padding: 14px 20px;
+}
+
+.balance-general-modal .modal-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #263244;
+}
+
+.balance-general-modal .modal-title i {
+    color: #526278;
+}
+
+.balance-general-modal .modal-body {
+    padding: 20px;
+}
+
+.balance-general-modal .form-label {
+    color: #374151;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.balance-general-modal .form-select {
+    min-height: 38px;
+    border: 1px solid #cfd8e3;
+    border-radius: 7px;
+    font-size: 0.9rem;
+}
+
+.balance-general-modal .form-select:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 0.15rem rgba(47,75,102,0.12);
+}
+
+.balance-general-modal .modal-footer {
+    background-color: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
+    gap: 8px;
+}
+
+.balance-general-modal .modal-footer .btn {
+    margin: 0;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 0.88rem;
+}
+
+.balance-general-modal .btn-secondary {
+    background-color: #e5e7eb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.balance-general-modal .btn-primary {
+    background-color: #34465b;
+    border-color: #34465b;
+    color: #ffffff;
+}
+
+.balance-general-modal .btn-primary:hover {
+    background-color: #26374a;
+    border-color: #26374a;
+}
+
+
+/* ==========================================
+   IMPRESION DEL BALANCE GENERAL
+========================================== */
+
+@media print {
+
+    @page {
+        size: A4 landscape;
+        margin: 12mm;
+    }
+
+    .balance-general-page {
+        max-width: none;
+        width: 100%;
+        padding: 0 !important;
+        margin: 0;
+    }
+
+    /* Ocultar botones del encabezado */
+    .balance-general-page
+    > .row:first-child .btn {
+        display: none !important;
+    }
+
+    /* Ocultar resumen y estado visual */
+    .balance-general-page .balance-general-card
+    ~ .row {
+        display: none !important;
+    }
+
+    /* Permitir que se imprima toda la tabla */
+    .balance-general-page .table-responsive {
+        overflow: visible !important;
+    }
+
+    .balance-general-page .balance-general-tabla {
+        min-width: 0;
+        width: 100%;
+        font-size: 9pt;
+    }
+
+    .balance-general-page .balance-general-card {
+        box-shadow: none;
+        border: 1px solid #d1d5db;
+    }
+
+    .balance-general-page .balance-general-tabla thead {
+        display: table-header-group;
+    }
+
+    .balance-general-page .balance-general-tabla tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .balance-general-page .balance-general-tabla
+    thead th {
+        background-color: #120e38 !important;
+        color: #ffffff !important;
+    }
+
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

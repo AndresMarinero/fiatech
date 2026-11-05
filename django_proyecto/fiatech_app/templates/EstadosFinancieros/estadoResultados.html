@@ -1,24 +1,28 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Estado de resultados{% endblock %}
+{% block title %}Estado de Resultados{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css2/estadoResultado.css' %}">
+{% endblock %}
 
 {% block content %}
 
 <!-- Contenedor más angosto y centrado -->
-<div class="container-sm mt-4">
+<div class="container-fluid py-4 estado-resultado-page">
     <!-- Encabezado -->
-    <div class="card border-0 mx-auto mb-4" style="max-width: 800px;">
+    <div class="estado-resultado-encabezado mb-4">
         <div class="card-body px-0">
             <!-- Título centrado -->
             <div class="text-center mb-4">
-                <h1 class="display-6 fw-bold text-dark mb-0">Estado de Resultados</h1>
+                <h1 class="h3 fw-bold mb-0 estado-resultado-titulo">Estado de Resultados</h1>
             </div>
 
             <!-- Fila centrada -->
             <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
                 <!-- Contenedor de fecha -->
-                <div class="bg-light text-dark px-3 py-2 rounded-3 border d-flex align-items-center">
+                <div class="estado-resultado-periodo d-flex align-items-center">
                     <i class="bi bi-calendar3 me-2"></i>
                     <span class="fw-medium small">
                         {% if fecha_inicio and fecha_fin %}
@@ -52,16 +56,16 @@
     {% endif %}
 
     <!-- Tabla de estados de resultados centrada -->
-    <div class="card shadow-sm mx-auto" style="max-width: 800px;">
+    <div class="card estado-resultado-card mx-auto">
         <div class="card-body">
             
             <!-- SECCIÓN DE INGRESOS -->
             <div class="mb-4">
-                <h5 class="text-success mb-3 border-bottom pb-2">
+                <h5 class="estado-resultado-seccion seccion-ingresos">
                     <i class="bi bi-arrow-up-circle me-2"></i>INGRESOS
                 </h5>
                 <div class="table-responsive">
-                    <table class="table table-sm align-middle">
+                    <table class="table table-sm align-middle estado-resultado-tabla">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col" width="15%">Código</th>
@@ -84,7 +88,7 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot class="table-success">
+                        <tfoot class="estado-resultado-totales">
                             <tr>
                                 <td colspan="2" class="text-end"><strong>TOTAL INGRESOS:</strong></td>
                                 <td class="text-end"><strong>$ {{ total_ingresos|floatformat:2 }}</strong></td>
@@ -96,11 +100,11 @@
 
             <!-- SECCIÓN DE GASTOS -->
             <div class="mb-4">
-                <h5 class="text-danger mb-3 border-bottom pb-2">
+                <h5 class="estado-resultado-seccion seccion-gastos">
                     <i class="bi bi-arrow-down-circle me-2"></i>GASTOS
                 </h5>
                 <div class="table-responsive">
-                    <table class="table table-sm align-middle">
+                    <table class="table table-sm align-middle estado-resultado-tabla">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col" width="15%">Código</th>
@@ -123,7 +127,7 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot class="table-danger">
+                        <tfoot class="estado-resultado-totales">
                             <tr>
                                 <td colspan="2" class="text-end"><strong>TOTAL GASTOS:</strong></td>
                                 <td class="text-end"><strong>$ {{ total_gastos|floatformat:2 }}</strong></td>
@@ -137,9 +141,9 @@
             <hr class="my-4">
 
             <!-- Sección de utilidad o pérdida -->
-            <div class="d-flex justify-content-between align-items-center p-3 border rounded mt-4 
-                        {% if utilidad_bruta >= 0 %}bg-success text-white{% else %}bg-danger text-white{% endif %} 
-                        shadow-sm">
+            <div class="estado-resultado-utilidad
+                {% if utilidad_bruta >= 0 %}resultado-positivo{% else %}resultado-negativo{% endif %}
+                d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h5 class="mb-0 fw-bold">
                     {% if utilidad_bruta >= 0 %}
                         <i class="bi bi-graph-up-arrow me-2"></i>UTILIDAD BRUTA:
@@ -147,7 +151,7 @@
                         <i class="bi bi-graph-down-arrow me-2"></i>PÉRDIDA BRUTA:
                     {% endif %}
                 </h5>
-                <span class="badge bg-light {% if utilidad_bruta >= 0 %}text-success{% else %}text-danger{% endif %} fs-6 px-3 py-2">
+                <span class="estado-resultado-importe">
                     $ {{ utilidad_bruta|floatformat:2 }}
                 </span>
             </div>
@@ -156,11 +160,11 @@
 </div>
 
 <!-- Modal para seleccionar período contable -->
-<div class="modal fade" id="seleccionarPeriodo" tabindex="-1" aria-labelledby="seleccionarPeriodoLabel"
+<div class="modal fade estado-resultado-modal" id="seleccionarPeriodo" tabindex="-1" aria-labelledby="seleccionarPeriodoModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header estado-resultado-modal-header">
                 <h5 class="modal-title" id="seleccionarPeriodoModalLabel">Seleccionar Período Contable</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -172,7 +176,7 @@
                         <select id="selectPeriodo" class="form-select" name="periodo_id" required>
                             <option value="">Seleccionar</option>
                             {% for periodo in periodos %}
-                                <option value="{{ periodo.id }}" {% if periodo.id == periodo_actual.id %}selected{% endif %}>
+                                <option value="{{ periodo.id }}" {% if periodo_actual and periodo.id == periodo_actual.id %}selected{% endif %}>
                                     {{ periodo.año }} ({{ periodo.fecha_inicio|date:"d/m/Y" }} - {{ periodo.fecha_fin|date:"d/m/Y" }})
                                     {% if periodo.estado == 'CERRADO' %} - CERRADO{% endif %}
                                 </option>
@@ -189,35 +193,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    :root {
-        --primary-color: #2c3e50;
-        --secondary-color: #3498db;
-        --light-bg: #f8f9fa;
-    }
-
-    .btn-period {
-        background: linear-gradient(135deg, var(--secondary-color), #2980b9);
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-period:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-    }
-    .period-display {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        display: inline-block;
-        margin-top: 0.5rem;
-    }
-</style>
 
 {% endblock %}
 

@@ -1,0 +1,268 @@
+
+/* ==========================================
+   ESTADOS FINANCIEROS - FIA-TECH
+   DISEÑO FORMAL Y COMPACTO
+========================================== */
+
+/* CONTENEDOR GENERAL */
+
+.estados-financieros-page {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.estados-financieros-page .estados-page-header {
+    margin-bottom: 6px;
+}
+
+.estados-financieros-page h1.h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.estados-financieros-page .text-muted {
+    color: #6b7280 !important;
+    font-size: 0.9rem;
+}
+
+/* ==========================================
+   TARJETAS FINANCIERAS
+========================================== */
+
+.estados-financieros-page .estado-financiero-card {
+    background-color: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+/* EFECTO HOVER DISCRETO */
+
+.estados-financieros-page .estado-financiero-card:hover {
+    transform: translateY(-3px);
+    border-color: #b9c6d4;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+/* CONTENIDO DE LA TARJETA */
+
+.estados-financieros-page .estado-financiero-body {
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100%;
+    padding: 20px 18px;
+    text-align: center;
+}
+
+.estados-financieros-page .estado-financiero-card .card-title {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #263244;
+    margin-top: 10px !important;
+    margin-bottom: 8px;
+}
+
+.estados-financieros-page .estado-financiero-card .card-text {
+    width: 100%;
+    text-align: center;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: #64748b !important;
+    margin-bottom: 14px;
+    flex-grow: 1;
+}
+
+/* ==========================================
+   ICONOS SVG
+========================================== */
+
+.estados-financieros-page .estado-financiero-card svg {
+     display: block;
+    width: 52px;
+    height: 52px;
+    margin-left: auto;
+    margin-right: auto; 
+
+}
+
+.estados-financieros-page .estado-financiero-card .btn {
+       margin-top: auto !important;
+}
+
+.estados-financieros-page .estado-financiero-card:hover svg {
+    transform: scale(1.04);
+}
+
+/* COLORES SOBRIOS POR TIPO */
+
+.estados-financieros-page svg.text-primary {
+    color: #607d9b !important;
+}
+
+.estados-financieros-page svg.text-success {
+    color: #688775 !important;
+}
+
+.estados-financieros-page svg.text-info {
+    color: #657e91 !important;
+}
+
+.estados-financieros-page svg.text-warning {
+    color: #99815a !important;
+}
+
+.estados-financieros-page svg.text-secondary {
+    color: #777e88 !important;
+}
+
+/* ==========================================
+   TITULOS DE TARJETAS
+========================================== */
+
+.estados-financieros-page .estado-financiero-card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #263244;
+
+    margin-top: 10px !important;
+    margin-bottom: 8px;
+}
+
+/* ==========================================
+   DESCRIPCIONES
+========================================== */
+
+.estados-financieros-page .estado-financiero-card .card-text {
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: #64748b !important;
+
+    margin-bottom: 14px;
+    flex-grow: 1;
+}
+
+/* ==========================================
+   BOTONES ACCEDER
+========================================== */
+
+.estados-financieros-page .estado-financiero-card .btn {
+    background-color: #34465b !important;
+    border: 1px solid #34465b !important;
+    color: #ffffff !important;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+
+    padding: 8px 20px;
+    border-radius: 7px;
+
+    margin-top: auto !important;
+    box-shadow: none !important;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.estados-financieros-page .estado-financiero-card .btn:hover {
+    background-color: #26374a !important;
+    border-color: #26374a !important;
+    color: #ffffff !important;
+}
+
+.estados-financieros-page .estado-financiero-card .btn:focus-visible {
+    outline: 2px solid #64748b;
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   ESPACIADO ENTRE TARJETAS
+========================================== */
+
+.estados-financieros-page .row.mb-4 {
+    margin-bottom: 0.6rem !important;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 991.98px) {
+
+    .estados-financieros-page .estado-financiero-body {
+        padding: 18px 15px;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .estados-financieros-page {
+        max-width: 100%;
+    }
+
+    .estados-financieros-page h1.h3 {
+        font-size: 1.55rem;
+    }
+
+    .estados-financieros-page .estado-financiero-card svg {
+        width: 46px;
+        height: 46px;
+    }
+
+    .estados-financieros-page .estado-financiero-body {
+        padding: 16px;
+    }
+}
+
+/* ACCESIBILIDAD: MOVIMIENTO REDUCIDO */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .estados-financieros-page .estado-financiero-card,
+    .estados-financieros-page .estado-financiero-card svg {
+        transition: none;
+    }
+
+    .estados-financieros-page .estado-financiero-card:hover,
+    .estados-financieros-page .estado-financiero-card:hover svg {
+        transform: none;
+    }
+}
+
+/* ==========================================
+   ENCABEZADO CENTRADO - ESTADOS FINANCIEROS
+========================================== */
+
+.estados-financieros-page .estados-page-header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.estados-financieros-page .estados-page-header h1 {
+    text-align: center;
+}
+
+.estados-financieros-page .estados-page-header p {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}

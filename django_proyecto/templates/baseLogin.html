@@ -49,26 +49,26 @@
             <!-- ENLACES A LOS MODULOS -->
             <div class="fiatech-nav-links">
 
-                <!-- LIBRO MAYOR -->
-                <a href="#" class="fiatech-nav-item">
-                    <i class="bi bi-journal-text"></i>
-                    <span>Libro Mayor</span>
-                </a>
-
                 <!-- CATALOGO DE CUENTAS -->
-                <a href="#" class="fiatech-nav-item">
+                <a href="{% url 'catalogoCuentas' %}" class="fiatech-nav-item">
                     <i class="bi bi-list-columns-reverse"></i>
                     <span>Catálogo de Cuentas</span>
                 </a>
 
+                 <!-- LIBRO MAYOR -->
+                <a href="{% url 'libro_mayor' %}" class="fiatech-nav-item">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Libro Mayor</span>
+                </a>
+
                 <!-- ESTADOS FINANCIEROS -->
-                <a href="#" class="fiatech-nav-item">
+                <a href="{% url 'estadosFinancieros' %}" class="fiatech-nav-item">
                     <i class="bi bi-bar-chart-line"></i>
                     <span>Estados Financieros</span>
                 </a>
 
                 <!-- GESTION DE COSTOS -->
-                <a href="#" class="fiatech-nav-item">
+                <a href="{% url 'costo' %}" class="fiatech-nav-item">
                     <i class="bi bi-calculator"></i>
                     <span>Gestión de Costos</span>
                 </a>

@@ -1,14 +1,23 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Estados Financieros{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css2/estadosFinancieros.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid py-4 estados-financieros-page">
     <!-- Encabezado -->
-    <div class="row mb-5">
-        <div class="col-12 text-center">
-            <h1 class="display-4 fw-bold mb-3">Estados Financieros</h1>
-            <p class="lead">Accede a todos los informes financieros necesarios para una gestión eficiente.</p>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="estados-page-header">
+                <h1 class="h3 mb-1">Estados Financieros</h1>
+                <p class="text-muted mb-0">
+                    Accede a todos los informes financieros necesarios para una gestión eficiente.
+                </p>
+            </div>
         </div>
     </div>
 
@@ -16,8 +25,8 @@
     <div class="row mb-4">
         <!-- Tarjeta 1: Balance de comprobación -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm border-0 transition-all-ease">
-                <div class="card-body text-center p-4">
+            <div class="card h-100 estado-financiero-card">
+                <div class="card h-100 estado-financiero-card">
                     <!-- Ilustración SVG -->
                     <div class="mb-3">
                         <svg width="120" height="120" viewBox="0 0 200 200" class="text-primary">
@@ -39,8 +48,8 @@
 
         <!-- Tarjeta 2: Estado de capital -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm border-0 transition-all-ease">
-                <div class="card-body text-center p-4">
+            <div class="card h-100 estado-financiero-card">
+                <div class="card h-100 estado-financiero-card">
                     <!-- Ilustración SVG -->
                     <div class="mb-3">
                         <svg width="120" height="120" viewBox="0 0 200 200" class="text-success">
@@ -60,8 +69,8 @@
 
         <!-- Tarjeta 3: Balance general -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm border-0 transition-all-ease">
-                <div class="card-body text-center p-4">
+            <div class="card h-100 estado-financiero-card">
+                <div class="card h-100 estado-financiero-card">
                     <!-- Ilustración SVG -->
                     <div class="mb-3">
                         <svg width="120" height="120" viewBox="0 0 200 200" class="text-info">
@@ -84,8 +93,8 @@
     <div class="row justify-content-center">
         <!-- Tarjeta 4: Estado de resultados -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm border-0 transition-all-ease">
-                <div class="card-body text-center p-4">
+            <div class="card h-100 estado-financiero-card">
+                <div class="card h-100 estado-financiero-card">
                     <!-- Ilustración SVG -->
                     <div class="mb-3">
                         <svg width="120" height="120" viewBox="0 0 200 200" class="text-warning">
@@ -107,8 +116,8 @@
 
         <!-- Tarjeta 5: Ajustes contables -->
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm border-0 transition-all-ease">
-                <div class="card-body text-center p-4">
+            <div class="card h-100 estado-financiero-card">
+                <div class="card h-100 estado-financiero-card">
                     <!-- Ilustración SVG -->
                     <div class="mb-3">
                         <svg width="120" height="120" viewBox="0 0 200 200" class="text-secondary">
@@ -132,46 +141,6 @@
         </div>
     </div>
 </div>
-
-<!-- Solo agregamos una clase mínima para la transición -->
-<style>
-    .transition-all-ease {
-        transition: all 0.3s ease;
-    }
-</style>
-
-<!-- Script para animaciones con Bootstrap -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Agregar efectos hover a las tarjetas
-        const cards = document.querySelectorAll('.transition-all-ease');
-        
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.classList.add('shadow-lg');
-                this.style.transform = 'translateY(-5px)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.classList.remove('shadow-lg');
-                this.style.transform = 'translateY(0)';
-            });
-        });
-        
-        // Agregar efectos a los botones
-        const buttons = document.querySelectorAll('.btn');
-        
-        buttons.forEach(button => {
-            button.addEventListener('mouseenter', function() {
-                this.classList.add('shadow');
-            });
-            
-            button.addEventListener('mouseleave', function() {
-                this.classList.remove('shadow');
-            });
-        });
-    });
-</script>
 {% endblock %}
 
 {% block footer_scripts %}

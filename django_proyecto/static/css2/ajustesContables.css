@@ -1,0 +1,496 @@
+
+/* ==========================================
+   AJUSTES CONTABLES - FIA-TECH
+   DISEÑO FORMAL INSTITUCIONAL
+========================================== */
+
+.ajustes-contables-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: #263244;
+}
+
+/* ENCABEZADO */
+
+.ajustes-contables-page h1.h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.ajustes-contables-page .text-muted {
+    color: #64748b !important;
+    font-size: 0.9rem;
+}
+
+.ajustes-contables-page .badge {
+    font-size: 0.72rem;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+
+.ajustes-contables-page .badge.bg-success {
+    background: #4f7a61 !important;
+}
+
+.ajustes-contables-page .badge.bg-secondary {
+    background: #64748b !important;
+}
+
+/* BOTONES SUPERIORES */
+
+.ajustes-contables-page .ajustes-page-header .btn {
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 7px;
+    padding: 8px 13px;
+    box-shadow: none !important;
+}
+
+.ajustes-contables-page .ajustes-page-header .btn-primary {
+    background: #34465b;
+    border-color: #34465b;
+    color: #fff;
+}
+
+.ajustes-contables-page .ajustes-page-header .btn-primary:hover {
+    background: #26374a;
+    border-color: #26374a;
+}
+
+.ajustes-contables-page .ajustes-page-header .btn-success {
+    background: #355e4c;
+    border-color: #355e4c;
+    color: #fff;
+}
+
+.ajustes-contables-page .ajustes-page-header .btn-success:hover {
+    background: #294b3a;
+    border-color: #294b3a;
+}
+
+.ajustes-contables-page .ajustes-page-header .btn-outline-primary {
+    background: #fff;
+    border-color: #b8c4d1;
+    color: #34465b;
+}
+
+.ajustes-contables-page .ajustes-page-header .btn-outline-primary:hover {
+    background: #eef3f7;
+    border-color: #9fb0c1;
+}
+
+.ajustes-contables-page .ajustes-page-header .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ALERTAS DE PERIODO */
+
+.ajustes-contables-page > .row .alert {
+    border-radius: 8px;
+    padding: 13px 16px;
+    font-size: 0.88rem;
+    margin-bottom: 0;
+}
+
+.ajustes-contables-page > .row .alert-info {
+    background: #eef3f7;
+    border: 1px solid #d7e3ec;
+    border-left: 4px solid #607d9b;
+    color: #34465b;
+}
+
+.ajustes-contables-page > .row .alert-warning {
+    background: #faf6eb;
+    border: 1px solid #eadfbe;
+    border-left: 4px solid #b59b62;
+    color: #65512e;
+}
+
+/* TARJETA PRINCIPAL */
+
+.ajustes-contables-page .ajustes-tabla-card {
+    background: #fff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+}
+
+/* TABLA */
+
+.ajustes-contables-page .ajustes-tabla {
+    margin-bottom: 0;
+    min-width: 850px;
+    font-size: 0.87rem;
+    border-color: #e5e7eb;
+}
+
+.ajustes-contables-page .ajustes-tabla th,
+.ajustes-contables-page .ajustes-tabla td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    border-color: #e5e7eb;
+}
+
+/* ENCABEZADO INSTITUCIONAL */
+
+.ajustes-contables-page .ajustes-tabla thead th {
+    --bs-table-bg: #120e38;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #120e38 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+}
+
+/* FILAS ORDINARIAS */
+
+.ajustes-contables-page .ajustes-tabla tbody td {
+    --bs-table-bg: #fff;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #fff;
+    color: #263244;
+}
+
+.ajustes-contables-page .ajustes-tabla.table-hover tbody tr:hover td {
+    --bs-table-bg: #f8fafc;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #f8fafc;
+    box-shadow: none;
+}
+
+/* DESCRIPCION */
+
+.ajustes-contables-page .ajustes-tabla .text-truncate {
+    max-width: 300px;
+}
+
+/* IMPORTES */
+
+.ajustes-contables-page .text-success {
+    color: #376e55 !important;
+}
+
+.ajustes-contables-page .text-danger {
+    color: #a55b5b !important;
+}
+
+/* TOTALES */
+
+.ajustes-contables-page .ajustes-tabla
+tfoot.ajustes-totales td {
+    --bs-table-bg: #e9edf3;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #e9edf3 !important;
+    color: #263244;
+    box-shadow: none !important;
+    padding: 12px;
+    font-weight: 700;
+}
+
+/* ESTADO VACIO */
+
+.ajustes-contables-page .ajustes-tabla
+tbody .display-4 {
+    font-size: 2.2rem;
+    color: #94a3b8 !important;
+}
+
+/* ==========================================
+   ESTILOS COMPARTIDOS DE LOS MODALES
+========================================== */
+
+.ajustes-agregar-modal .modal-content,
+.ajustes-periodo-modal .modal-content,
+.ajustes-generar-modal .modal-content {
+    background: #fff;
+    border: 1px solid #d9e1e7;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 35px rgba(15,23,42,0.14);
+}
+
+.ajustes-agregar-modal .modal-header,
+.ajustes-periodo-modal .modal-header,
+.ajustes-generar-modal .modal-header {
+    background: #f3f4f6 !important;
+    color: #263244 !important;
+    border-bottom: 1px solid #dce1e7;
+    padding: 14px 20px;
+}
+
+.ajustes-agregar-modal .modal-title,
+.ajustes-periodo-modal .modal-title,
+.ajustes-generar-modal .modal-title {
+    color: #263244;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.ajustes-agregar-modal .modal-title i,
+.ajustes-generar-modal .modal-title i {
+    color: #526278;
+}
+
+.ajustes-agregar-modal .modal-body,
+.ajustes-periodo-modal .modal-body,
+.ajustes-generar-modal .modal-body {
+    padding: 20px;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.ajustes-agregar-modal .form-label,
+.ajustes-periodo-modal .form-label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.ajustes-agregar-modal .form-control,
+.ajustes-agregar-modal .form-select,
+.ajustes-periodo-modal .form-select {
+    min-height: 38px;
+    border: 1px solid #cfd8e3;
+    border-radius: 7px;
+    background: #fff;
+    color: #263244;
+    font-size: 0.9rem;
+    box-shadow: none;
+}
+
+.ajustes-agregar-modal .form-control:focus,
+.ajustes-agregar-modal .form-select:focus,
+.ajustes-periodo-modal .form-select:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 0.15rem rgba(47,75,102,0.12);
+}
+
+.ajustes-agregar-modal .form-control[readonly] {
+    background: #f3f4f6;
+    color: #64748b;
+}
+
+.ajustes-agregar-modal textarea.form-control {
+    min-height: 65px;
+    resize: vertical;
+}
+
+.ajustes-agregar-modal .modal-body hr {
+    border: none;
+    border-top: 1px solid #dce1e7;
+    opacity: 1;
+    margin: 20px 0 !important;
+}
+
+.ajustes-agregar-modal .modal-body h6 {
+    color: #263244;
+    font-size: 0.94rem;
+    font-weight: 600;
+}
+
+/* PIE DE LOS MODALES */
+
+.ajustes-agregar-modal .modal-footer,
+.ajustes-periodo-modal .modal-footer,
+.ajustes-generar-modal .modal-footer {
+    background: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
+    gap: 8px;
+}
+
+.ajustes-agregar-modal .modal-footer .btn,
+.ajustes-periodo-modal .modal-footer .btn,
+.ajustes-generar-modal .modal-footer .btn {
+    border-radius: 7px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 8px 15px;
+    margin: 0;
+    box-shadow: none;
+}
+
+.ajustes-agregar-modal .modal-footer .btn-primary,
+.ajustes-periodo-modal .modal-footer .btn-primary,
+.ajustes-generar-modal .modal-footer .btn-info {
+    background: #34465b;
+    border-color: #34465b;
+    color: #fff;
+}
+
+.ajustes-agregar-modal .modal-footer .btn-primary:hover:not(:disabled),
+.ajustes-periodo-modal .modal-footer .btn-primary:hover,
+.ajustes-generar-modal .modal-footer .btn-info:hover {
+    background: #26374a;
+    border-color: #26374a;
+    color: #fff;
+}
+
+.ajustes-agregar-modal .modal-footer .btn-outline-secondary,
+.ajustes-periodo-modal .modal-footer .btn-secondary,
+.ajustes-generar-modal .modal-footer .btn-secondary {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.ajustes-agregar-modal .modal-footer .btn-primary:disabled {
+    background: #94a3b8;
+    border-color: #94a3b8;
+    opacity: 0.65;
+}
+
+/* ==========================================
+   MODAL AGREGAR AJUSTE
+========================================== */
+
+.ajustes-agregar-modal .modal-dialog {
+    max-width: 780px;
+}
+
+.ajustes-agregar-modal .cuenta-fila {
+    align-items: center;
+    margin-bottom: 10px !important;
+}
+
+.ajustes-agregar-modal .quitar-cuenta {
+    border-color: #d8b8b8;
+    color: #985c5c;
+    background: #fff;
+    border-radius: 6px;
+    min-height: 35px;
+}
+
+.ajustes-agregar-modal .quitar-cuenta:hover:not(:disabled) {
+    background: #f3e8e8;
+    color: #874d4d;
+}
+
+.ajustes-agregar-modal #agregarCuenta {
+    background: #fff;
+    color: #34465b;
+    border: 1px solid #b8c4d1;
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-size: 0.86rem;
+}
+
+.ajustes-agregar-modal #agregarCuenta:hover {
+    background: #eef3f7;
+}
+
+/* RESUMEN DEBE/HABER */
+
+.ajustes-agregar-modal .modal-body
+.alert-info {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #dce1e7;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.ajustes-agregar-modal .modal-body
+.alert-info strong {
+    color: #263244;
+}
+
+.ajustes-agregar-modal #diferencia {
+    color: #304b70 !important;
+}
+
+/* ESTADO DINAMICO DE BALANCE */
+
+.ajustes-agregar-modal #estadoBalance {
+    min-height: 60px;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+}
+
+.ajustes-agregar-modal #estadoBalance.alert-warning {
+    background: #faf6eb;
+    color: #65512e;
+    border: 1px solid #eadfbe;
+}
+
+.ajustes-agregar-modal #estadoBalance.alert-success {
+    background: #eef3ef;
+    color: #376e55;
+    border: 1px solid #cbded2;
+}
+
+/* ==========================================
+   MODAL GENERAR ESTADOS FINANCIEROS
+========================================== */
+
+.ajustes-generar-modal .modal-body
+> .text-center .display-4 {
+    font-size: 3rem;
+    color: #607d9b !important;
+}
+
+.ajustes-generar-modal .alert-info {
+    background: #eef3f7;
+    color: #34465b;
+    border: 1px solid #d7e3ec;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+.ajustes-generar-modal .alert-info li {
+    margin-bottom: 4px;
+}
+
+.ajustes-generar-modal .card.border-info {
+    background: #f8fafc;
+    border: 1px solid #dce1e7 !important;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.ajustes-generar-modal .card.border-info
+.card-body {
+    padding: 13px 15px !important;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 767.98px) {
+
+    .ajustes-contables-page h1.h3 {
+        font-size: 1.55rem;
+    }
+
+    .ajustes-contables-page .ajustes-page-header {
+        align-items: flex-start !important;
+    }
+
+    .ajustes-contables-page .ajustes-page-header
+    > .d-flex {
+        flex-wrap: wrap;
+    }
+
+    .ajustes-agregar-modal .modal-body,
+    .ajustes-periodo-modal .modal-body,
+    .ajustes-generar-modal .modal-body {
+        padding: 16px;
+    }
+
+    .ajustes-agregar-modal .cuenta-fila {
+        row-gap: 8px;
+    }
+}
