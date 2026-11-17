@@ -1044,3 +1044,119 @@
         align-items: flex-start;
     }
 }
+
+/* ==========================================
+   MODAL CREAR NUEVO PERIODO
+   FIA-TECH - DISEÑO FORMAL
+========================================== */
+
+.periodo-nuevo-modal .modal-content {
+    border: 1px solid #d9e1e7;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.14);
+}
+
+/* ENCABEZADO */
+
+.periodo-nuevo-modal .periodo-nuevo-header {
+    background-color: #f3f4f6;
+    border-bottom: 1px solid #dce1e7;
+    padding: 14px 20px;
+}
+
+.periodo-nuevo-modal .modal-title {
+    color: #263244;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.periodo-nuevo-modal .modal-title i {
+    color: #526278;
+}
+
+/* CUERPO */
+
+.periodo-nuevo-modal .modal-body {
+    padding: 20px;
+}
+
+.periodo-nuevo-modal .form-label {
+    color: #374151;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.periodo-nuevo-modal .form-control {
+    min-height: 38px;
+    border: 1px solid #cfd8e3;
+    border-radius: 7px;
+    color: #263244;
+    background-color: #ffffff;
+    font-size: 0.9rem;
+    box-shadow: none;
+}
+
+.periodo-nuevo-modal .form-control:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 0.15rem rgba(47, 75, 102, 0.12);
+}
+
+/* PIE DEL MODAL */
+
+.periodo-nuevo-modal .modal-footer {
+    background-color: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
+    gap: 8px;
+}
+
+.periodo-nuevo-modal .modal-footer .btn {
+    margin: 0;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: none;
+}
+
+/* BOTON CANCELAR */
+
+.periodo-nuevo-modal .btn-secondary {
+    background-color: #e5e7eb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.periodo-nuevo-modal .btn-secondary:hover {
+    background-color: #d9dde3;
+    border-color: #cbd0d7;
+    color: #263244;
+}
+
+/* BOTON CREAR PERIODO */
+
+.periodo-nuevo-modal .btn-success {
+    background-color: #355e4c;
+    border-color: #355e4c;
+    color: #ffffff;
+}
+
+.periodo-nuevo-modal .btn-success:hover {
+    background-color: #294b3a;
+    border-color: #294b3a;
+    color: #ffffff;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 575.98px) {
+    .periodo-nuevo-modal .modal-body {
+        padding: 16px;
+    }
+
+    .periodo-nuevo-modal .modal-title {
+        font-size: 0.98rem;
+    }
+}

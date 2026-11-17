@@ -20,13 +20,17 @@ def catalogo_cuentas(request):
     # Obtener todas las cuentas ordenadas por código
     cuentas = Cuenta.objects.all().order_by('codigo')
 
+    # Obtener exclusivamente las cuentas de nivel 3
+    cuentas_nivel = Cuenta.objects.filter(nivel=3)
+
+
     # Calcular estadísticas
-    total_cuentas = Cuenta.objects.filter(nivel__in=[3, 4]).count()
-    cuentas_activo = cuentas.filter(tipo='ACTIVO').count()
-    cuentas_pasivo = cuentas.filter(tipo='PASIVO').count()
-    cuentas_patrimonio = cuentas.filter(tipo='PATRIMONIO').count()
-    cuentas_ingreso = cuentas.filter(tipo='INGRESO').count()
-    cuentas_gasto = cuentas.filter(tipo='GASTO').count()
+    total_cuentas = cuentas_nivel.count()
+    cuentas_activo = cuentas_nivel.filter(tipo='ACTIVO').count()
+    cuentas_pasivo = cuentas_nivel.filter(tipo='PASIVO').count()
+    cuentas_patrimonio = cuentas_nivel.filter(tipo='PATRIMONIO').count()
+    cuentas_ingreso = cuentas_nivel.filter(tipo='INGRESO').count()
+    cuentas_gasto = cuentas_nivel.filter(tipo='GASTO').count()
 
     context = {
         'cuentas': cuentas,

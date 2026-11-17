@@ -1,86 +1,157 @@
+
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Contabilidad de Costos{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css2/menuCostos.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <!-- Jumbotron -->
-    <div class="jumbotron mb-4 bg-light rounded-3 px-4 py-4">
-        <div class="container text-center">
-            <h1 class="display-5 fw-bold">Sistema Costos ChivoBits</h1>
-            <p class="fs-5">Accede a las herramientas de gestión de costos</p>
-            <p class="text-muted">Usuario: <strong>Contador</strong></p>
+<div class="container-fluid py-4 menu-costos-page">
+
+    <!-- Encabezado principal -->
+    <div class="menu-costos-header text-center">
+
+        <h1 class="h3 fw-bold mb-2">
+            Sistema de Costos FIA-TECH
+        </h1>
+
+        <p class="text-muted mb-2">
+            Accede a las herramientas de gestión de costos
+        </p>
+
+        <div class="menu-costos-usuario">
+            <i class="bi bi-person-circle me-1"></i>
+            Usuario: <strong>Contador</strong>
         </div>
     </div>
 
-    <!-- Cards -->
-<div class="row mb-4 justify-content-center g-4">
-    <!-- Libro Mayor -->
-    <div class="col-12 col-sm-6 col-md-6 col-lg-3 d-flex">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="card-img-top text-white text-center py-4" style="background-color: #050B31; border-bottom: 1px solid #050B31;">
-                <i class="bi bi-calculator display-4"></i>
-            </div>
-            <div class="card-body d-flex flex-column text-center">
-                <h5 class="card-title fw-bold">Calculadora UCP</h5>
-                <p class="card-text">Consulta el esfuerzo-hombre, en horas y dias además de estimar tiempo</p>
-                <a href="{% url 'ucp' %}" class="btn mt-auto fw-bold text-white" style="background-color: #050B31; border-color: #050B31;">Acceder</a>
-            </div>
-        </div>
-    </div>
+    <!-- Tarjetas del menú de costos -->
+    <div class="row g-3 menu-costos-tarjetas">
 
-    <div class="col-12 col-sm-6 col-md-6 col-lg-3 d-flex">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="card-img-top text-white text-center py-4" style="background-color:#050B31; border-bottom: 1px solid #050B31">
-                <i class="bi bi-people-fill display-4"></i>
-            </div>
-            <div class="card-body d-flex flex-column text-center">
-                <h5 class="card-title fw-bold">Calcular CMO</h5>
-                <p class="card-text">Calcular costo directo de mano de obra, horas-hombre, dias-hombre</p>
-                <a href="{% url 'cmo' %}" class="btn mt-auto fw-bold text-white" style="background-color: #050B31; border-color: #050B31;">Acceder</a>
-            </div>
-        </div>
-    </div>
+        <!-- Calculadora UCP -->
+        <div class="col-12 col-md-6">
+            <div class="card h-100 menu-costos-card">
+                <div class="card-body menu-costos-body">
 
-    <div class="col-12 col-sm-6 col-md-6 col-lg-3 d-flex">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="card-img-top text-white text-center py-4" style="background-color: #050B31; border-bottom: 1px solid #050B31;">
-                <i class="bi bi-currency-dollar display-4"></i>
-            </div>
-            <div class="card-body d-flex flex-column text-center">
-                <h5 class="card-title fw-bold">Calcular CIF</h5>
-                <p class="card-text">Calcular los costos indirectos de fabricación prorroteado por departamentos</p>
-                <a href="{% url 'cif' %}" class="btn mt-auto fw-bold text-white" style="background-color: #050B31; border-color: #050B31;">Acceder</a>
-            </div>
-        </div>
-    </div>
+                    <div class="menu-costos-icon icon-ucp">
+                        <i class="bi bi-calculator"></i>
+                    </div>
 
-    <div class="col-12 col-sm-6 col-md-6 col-lg-3 d-flex">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="card-img-top text-white text-center py-4" style="background-color: #050B31; border-bottom: 1px solid #050B31;">
-                <i class="bi bi-currency-dollar display-4"></i>
-            </div>
-            <div class="card-body d-flex flex-column text-center">
-                <h5 class="card-title fw-bold">Calcular Costo Total</h5>
-                <p class="card-text">Suma de costos directos e indirectos para establecer precio de venta respecto a su costo total</p>
-                <a href="{% url 'costo_total' %}" class="btn mt-auto fw-bold text-white" style="background-color: #050B31; border-color: #050B31;">Acceder</a>
+                    <h5 class="card-title">
+                        Calculadora UCP
+                    </h5>
+
+                    <p class="card-text">
+                        Consulta el esfuerzo-hombre en horas y días,
+                        además de estimar el tiempo de desarrollo.
+                    </p>
+
+                    <a href="{% url 'ucp' %}"
+                       class="btn menu-costos-btn">
+                        Acceder
+                    </a>
+
+                </div>
             </div>
         </div>
+
+        <!-- Calcular CMO -->
+        <div class="col-12 col-md-6">
+            <div class="card h-100 menu-costos-card">
+                <div class="card-body menu-costos-body">
+
+                    <div class="menu-costos-icon icon-cmo">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <h5 class="card-title">
+                        Calcular CMO
+                    </h5>
+
+                    <p class="card-text">
+                        Calcula el costo directo de mano de obra,
+                        las horas-hombre y los días-hombre.
+                    </p>
+
+                    <a href="{% url 'cmo' %}"
+                       class="btn menu-costos-btn">
+                        Acceder
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Calcular CIF -->
+        <div class="col-12 col-md-6">
+            <div class="card h-100 menu-costos-card">
+                <div class="card-body menu-costos-body">
+
+                    <div class="menu-costos-icon icon-cif">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+
+                    <h5 class="card-title">
+                        Calcular CIF
+                    </h5>
+
+                    <p class="card-text">
+                        Calcula los costos indirectos de fabricación
+                        prorrateados por departamentos.
+                    </p>
+
+                    <!--href="{% url 'cif' %}"-->
+                    <a 
+                       class="btn menu-costos-btn">
+                        Acceder
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Calcular Costo Total -->
+        <div class="col-12 col-md-6">
+            <div class="card h-100 menu-costos-card">
+                <div class="card-body menu-costos-body">
+
+                    <div class="menu-costos-icon icon-total">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+
+                    <h5 class="card-title">
+                        Calcular Costo Total
+                    </h5>
+
+                    <p class="card-text">
+                        Suma los costos directos e indirectos para
+                        establecer el precio de venta con respecto
+                        al costo total.
+                    </p>
+
+                    <!--href="{% url 'costo_total' %}"-->
+                    <a 
+                       class="btn menu-costos-btn">
+                        Acceder
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
 
 </div>
 {% endblock %}
 
 {% block footer_scripts %}
-{{ block.super }} <!-- si quieres mantener lo que está en base.html -->
-<!-- Js para validar formulario recordando que debe de agregar la clase "needs-validation" al form 
-         y también el atributo "novalidate" y debajo de cada input que quiere validar ponen <div class="invalid-feedback">aca ponen el mensaje que quieren que se muestre</div> 
-         -->
-<script type="text/javascript" th:src="@{/js/formValidacion.js}"></script>
-<!-- Js para hacer funcionar modal de eliminación aparte de agregarle la clase delete-btn al boton de eliminar -->
-<script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
-<!-- Js para hacer funcionar los toltips y en el boton que lo vayan a implentar debe de poner lo siguiente -> data-bs-placement="top" (puede ser: top, right, bottom,left ) 
-         title="El titulo que quieren que salga" (debe de ser corto) data-bs-t="tooltip" -->
-<script type="text/javascript" th:src="@{/js/tooltips.js}"></script>
+{{ block.super }}
+
+<script src="{% static 'js/formValidacion.js' %}"></script>
+<script src="{% static 'js/modalEliminacion.js' %}"></script>
+<script src="{% static 'js/tooltips.js' %}"></script>
+
 {% endblock %}

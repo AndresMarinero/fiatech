@@ -221,40 +221,103 @@
 </div>
 
 <!-- Modal Nuevo Periodo -->
-<div class="modal fade" id="nuevoPeriodoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+
+<!-- Modal Crear Nuevo Período Contable -->
+<div class="modal fade periodo-nuevo-modal"
+     id="nuevoPeriodoModal"
+     tabindex="-1"
+     aria-labelledby="nuevoPeriodoModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Crear Nuevo Periodo Contable</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+
+            <!-- Encabezado -->
+            <div class="modal-header periodo-nuevo-header">
+                <h5 class="modal-title" id="nuevoPeriodoModalLabel">
+                    <i class="bi bi-calendar-plus me-2"></i>
+                    Crear Nuevo Período Contable
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
             </div>
+
+            <!-- Formulario -->
             <form method="post" action="{% url 'crear_periodo_contable' %}">
                 {% csrf_token %}
+
                 <div class="modal-body">
+
+                    <!-- Año -->
                     <div class="mb-3">
-                        <label for="año" class="form-label">Año *</label>
-                        <input type="number" class="form-control" id="año" name="año"
-                            value="{% now 'Y' %}" min="2021" max="{% now 'Y' %}" required>
+                        <label for="año" class="form-label">
+                            Año *
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               id="año"
+                               name="año"
+                               value="{% now 'Y' %}"
+                               min="2021"
+                               max="{% now 'Y' %}"
+                               required>
+                    </div>
+
+                    <!-- Fechas -->
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label for="fecha_inicio" class="form-label">
+                                Fecha Inicio *
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   id="fecha_inicio"
+                                   name="fecha_inicio"
+                                   required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="fecha_fin" class="form-label">
+                                Fecha Fin *
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   id="fecha_fin"
+                                   name="fecha_fin"
+                                   required>
+                        </div>
 
                     </div>
-                    <div class="mb-3">
-                        <label for="fecha_inicio" class="form-label">Fecha Inicio *</label>
-                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="fecha_fin" class="form-label">Fecha Fin *</label>
-                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
-                    </div>
+
                 </div>
+
+                <!-- Botones -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Crear Periodo</button>
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-success">
+                        <i class="bi bi-check-lg me-1"></i>
+                        Crear Período
+                    </button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
+
 
 <!-- Modal Nueva Transacción -->
 <div class="modal fade libro-transaccion-modal" id="nuevaTransaccionModal" tabindex="-1" aria-hidden="true">

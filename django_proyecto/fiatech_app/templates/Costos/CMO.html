@@ -3,43 +3,21 @@
 
 {% block title %}Calculadora de Mano de Obra Directa{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css2/calculadoraCMO.css' %}">
+{% endblock %}
+
 {% block content %}
-<style>
-    .bg-pepe{
-        background-color: #050B31;
-        color: #ffffff;              /* text-white */
-        text-align: center;          /* text-center */
-        border-radius: 0.25rem;      /* rounded */
-        margin-bottom: 1.5rem;       /* mb-4 */
-        padding: 1.5rem;             /* p-4 */
-        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); /* shadow */
-        border-radius: 10px;
-    }
 
-    /* --- CAMBIO: Estilos para la nueva lista de checkboxes --- */
-    #team-checkbox-list {
-        height: 200px;
-        overflow-y: auto;
-        border: 1px solid #ced4da; /* Color de borde estándar de Bootstrap */
-        border-radius: 0.25rem;    /* Borde redondeado de Bootstrap */
-        padding: 0.75rem;
-        background-color: #ffffff;
-    }
-    #team-checkbox-list .form-check {
-        margin-bottom: 0.5rem; /* Espacio entre cada empleado */
-    }
-    /* --- Fin del Cambio --- */
-
-</style>
-<div class="container">
-    <header class="bg-pepe">
-        <h1 class="display-4 fw-bold">Calculadora de Mano de Obra Directa</h1>
-        <p class="lead">Cálculo de costos reales de empleados con prestaciones sociales</p>
+<div class="container-fluid py-4 calculadora-cmo-page">
+    <header class="cmo-page-header text-center">
+        <h1 class="h3 fw-bold mb-2">Calculadora de Mano de Obra Directa</h1>
+        <p class="text-muted mb-0">Cálculo de costos reales de empleados con prestaciones sociales</p>
     </header>
     
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 cmo-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">1. Datos del Empleado</h2>
+            <h2 class="card-title h4 cmo-section-title">1. Datos del Empleado</h2>
             
             <div class="row g-3 mb-4">
                 <div class="col-md-6 col-lg-3">
@@ -108,15 +86,15 @@
             </div>
             
             <div class="text-center">
-                <button class="btn btn-dark fw-bold me-2" id="add-employee-btn">Agregar Empleado</button>
-                <button class="btn btn-warning fw-bold" id="clear-form-btn">Limpiar Formulario</button>
+                <button class="btn cmo-btn-primary me-2" id="add-employee-btn">Agregar Empleado</button>
+                <button class="btn cmo-btn-secondary" id="clear-form-btn">Limpiar Formulario</button>
             </div>
         </div>
     </div>
     
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 cmo-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">2. Armar Equipo de Trabajo</h2>
+            <h2 class="card-title h4 cmo-section-title">2. Armar Equipo de Trabajo</h2>
             
             <div class="row g-3">
                 <div class="col-md-9">
@@ -129,17 +107,17 @@
                         <button class="btn btn-outline-secondary w-100 mb-2" id="select-all-team-btn">Seleccionar Todos</button>
                         <button class="btn btn-outline-secondary w-100" id="deselect-all-team-btn">Deseleccionar Todos</button>
                     </div>
-                    <button class="btn btn-dark fw-bold w-100" id="calculate-team-btn">Calcular Equipo Seleccionado</button>
+                    <button class="btn cmo-btn-primary w-100" id="calculate-team-btn">Calcular Equipo Seleccionado</button>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 cmo-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">3. Cálculos por Empleado (Equipo Seleccionado)</h2>
+            <h2 class="card-title h4 cmo-section-title">3. Cálculos por Empleado (Equipo Seleccionado)</h2>
             <div class="table-responsive">
-                <table class="table table-striped table-hover" id="calculations-table">
+                <table class="table table-striped table-hover cmo-table" id="calculations-table">
                     <thead class="table-dark">
                         <tr>
                             <th>Empleado</th>
@@ -159,11 +137,11 @@
         </div>
     </div>
     
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 cmo-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">4. Totales Generales (Equipo Seleccionado)</h2>
+            <h2 class="card-title h4 cmo-section-title">4. Totales Generales (Equipo Seleccionado)</h2>
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered cmo-table cmo-total-table">
                     <thead class="table-dark">
                         <tr>
                             <th>Concepto</th>
@@ -191,7 +169,7 @@
                             <td>Total AFP</td>
                             <td id="total-afp">$0.00</td>
                         </tr>
-                        <tr class="table-primary fw-bold">
+                        <tr class="cmo-grand-total fw-bold">
                             <td>Costo Total Mano de Obra</td>
                             <td id="total-costo">$0.00</td>
                         </tr>
@@ -201,14 +179,15 @@
         </div>
     </div>
     
-    <div class="text-center mt-4">
-        <button class="btn btn-dark fw-bold me-2" id="calculate-all-btn">Calcular Equipo</button>
-        <button class="btn btn-warning fw-bold" id="clear-all-btn">Limpiar Empleados Agregados</button>
+    <div class="text-center mt-4 cmo-final-actions">
+        <button class="btn cmo-btn-primary me-2" id="calculate-all-btn">Calcular Equipo</button>
+        <button class="btn cmo-btn-secondary" id="clear-all-btn">Limpiar Empleados Agregados</button>
     </div>
 </div>
 {% endblock %}
 
 {% block footer_scripts %}
+{{ block.super }}
 <script>
     // Array para almacenar la MASTER LIST de empleados
     let employees = [];

@@ -1,0 +1,234 @@
+
+/* ==========================================
+   MENU CONTABILIDAD DE COSTOS - FIA-TECH
+   DISEÑO FORMAL Y COMPACTO
+========================================== */
+
+/* CONTENEDOR GENERAL */
+
+.menu-costos-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: #263244;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.menu-costos-page .menu-costos-header {
+    margin-bottom: 25px;
+}
+
+.menu-costos-page .menu-costos-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.menu-costos-page .menu-costos-header p {
+    font-size: 0.9rem;
+    color: #64748b !important;
+}
+
+.menu-costos-page .menu-costos-usuario {
+    display: inline-flex;
+    align-items: center;
+
+    background-color: #f3f4f6;
+    border: 1px solid #dce1e7;
+    border-radius: 7px;
+
+    padding: 6px 12px;
+    font-size: 0.84rem;
+    color: #526278;
+}
+
+.menu-costos-page .menu-costos-usuario strong {
+    margin-left: 4px;
+    color: #263244;
+}
+
+/* ==========================================
+   TARJETAS DEL MENU
+========================================== */
+
+.menu-costos-page .menu-costos-card {
+    background-color: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+/* HOVER DISCRETO */
+
+.menu-costos-page .menu-costos-card:hover {
+    transform: translateY(-3px);
+    border-color: #b9c6d4;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+/* ==========================================
+   CONTENIDO DE LAS TARJETAS
+========================================== */
+
+.menu-costos-page .menu-costos-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100%;
+    padding: 22px 20px;
+    text-align: center;
+}
+
+/* ==========================================
+   ICONOS
+========================================== */
+
+.menu-costos-page .menu-costos-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+    background-color: #f3f4f6;
+}
+
+.menu-costos-page .menu-costos-icon i {
+    font-size: 1.9rem;
+}
+
+/* COLORES SOBRIOS POR MODULO */
+
+.menu-costos-page .icon-ucp {
+    color: #607d9b;
+    background-color: #edf2f7;
+}
+
+.menu-costos-page .icon-cmo {
+    color: #688775;
+    background-color: #eef3ef;
+}
+
+.menu-costos-page .icon-cif {
+    color: #657e91;
+    background-color: #eef2f6;
+}
+
+.menu-costos-page .icon-total {
+    color: #99815a;
+    background-color: #f6f2e9;
+}
+
+/* ==========================================
+   TITULOS Y DESCRIPCIONES
+========================================== */
+
+.menu-costos-page .menu-costos-card .card-title {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #263244;
+
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.menu-costos-page .menu-costos-card .card-text {
+    width: 100%;
+    text-align: center;
+
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: #64748b;
+
+    margin-bottom: 14px;
+    flex-grow: 1;
+}
+
+/* ==========================================
+   BOTONES ACCEDER
+========================================== */
+
+.menu-costos-page .menu-costos-btn {
+    background-color: #34465b;
+    border: 1px solid #34465b;
+    color: #ffffff;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 24px;
+    border-radius: 7px;
+
+    width: 540px;
+    margin-top: auto;
+    box-shadow: none;
+
+    border-radius: 10px;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.menu-costos-page .menu-costos-btn:hover {
+    background-color: #26374a;
+    border-color: #26374a;
+    color: #ffffff;
+}
+
+.menu-costos-page .menu-costos-btn:focus-visible {
+    outline: 2px solid #64748b;
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 767.98px) {
+
+    .menu-costos-page .menu-costos-header h1 {
+        font-size: 1.55rem;
+    }
+
+    .menu-costos-page .menu-costos-body {
+        padding: 18px 16px;
+    }
+
+    .menu-costos-page .menu-costos-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .menu-costos-page .menu-costos-icon i {
+        font-size: 1.7rem;
+    }
+}
+
+/* ACCESIBILIDAD */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .menu-costos-page .menu-costos-card {
+        transition: none;
+    }
+
+    .menu-costos-page .menu-costos-card:hover {
+        transform: none;
+    }
+}

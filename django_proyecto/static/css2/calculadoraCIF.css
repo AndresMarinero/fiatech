@@ -1,0 +1,43 @@
+/* FIA-TECH · Calculadora CIF · Diseño formal */
+.calculadora-cif-page { max-width: 1180px; margin: 0 auto; color: #263244; }
+.calculadora-cif-page .cif-page-header { margin-bottom: 24px; padding: 6px 12px; }
+.calculadora-cif-page .cif-page-header h1 { font-size: 1.8rem; line-height: 1.3; color: #1f2937; font-weight: 700; }
+.calculadora-cif-page .cif-page-header p { font-size: .9rem; color: #64748b !important; margin-bottom: 0; }
+.calculadora-cif-page .cif-section-card { border: 1px solid #d9e1e7; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(15,23,42,.04); overflow: hidden; }
+.calculadora-cif-page .cif-section-card > .card-body { padding: 20px; }
+.calculadora-cif-page .cif-section-title { background: #f3f4f6; border: 1px solid #dce1e7; border-left: 4px solid #607d9b; border-radius: 7px; font-size: 1rem; font-weight: 600; color: #263244; padding: 12px 15px; margin-bottom: 18px; }
+.calculadora-cif-page .form-label, .cif-allocation-modal .form-label { color: #374151; font-size: .88rem; font-weight: 600; margin-bottom: 6px; }
+.calculadora-cif-page .form-control, .calculadora-cif-page .form-select, .cif-allocation-modal .form-control, .cif-allocation-modal .form-select { min-height: 37px; font-size: .87rem; color: #263244; background-color: #fff; border: 1px solid #cfd8e3; border-radius: 7px; box-shadow: none; }
+.calculadora-cif-page .form-control:focus, .calculadora-cif-page .form-select:focus, .cif-allocation-modal .form-control:focus, .cif-allocation-modal .form-select:focus { border-color: #7f95aa; box-shadow: 0 0 0 .15rem rgba(47,75,102,.12); }
+.calculadora-cif-page #departments-table { min-width: 960px; }
+.calculadora-cif-page #departments-table input[type=number] { width: 110px; min-width: 88px; padding: 7px 8px; text-align: right; }
+.calculadora-cif-page #allocation-table { min-width: 760px; }
+.calculadora-cif-page .cif-tabla { font-size: .86rem; margin-bottom: 0; border-color: #e5e7eb; }
+.calculadora-cif-page .cif-tabla th, .calculadora-cif-page .cif-tabla td { padding: 10px 12px; vertical-align: middle; border-color: #e5e7eb; }
+.calculadora-cif-page .cif-tabla thead th { --bs-table-bg: #120e38; --bs-table-color: #fff; --bs-table-accent-bg: transparent; background-color: #120e38 !important; color: #fff !important; box-shadow: none !important; border-color: #120e38 !important; font-size: .83rem; font-weight: 600; }
+.calculadora-cif-page .cif-tabla tbody td { --bs-table-bg: #fff; --bs-table-accent-bg: transparent; background-color: #fff; box-shadow: none; color: #263244; }
+.calculadora-cif-page .cif-tabla tbody tr:nth-child(odd) td { --bs-table-bg: #f8fafc; background-color: #f8fafc; }
+.calculadora-cif-page .cif-tabla tbody tr:hover td { --bs-table-bg: #eef2f6; --bs-table-accent-bg: transparent; background-color: #eef2f6; }
+.calculadora-cif-page .cif-tabla tfoot td { --bs-table-bg: #e9edf3; --bs-table-accent-bg: transparent; --bs-table-color: #263244; background-color: #e9edf3 !important; color: #263244 !important; box-shadow: none !important; border-top: 1px solid #cbd5e1; font-weight: 700; }
+.calculadora-cif-page .btn, .cif-allocation-modal .btn:not(.btn-close) { border-radius: 7px; padding: 8px 14px; font-size: .85rem; font-weight: 500; box-shadow: none !important; }
+.calculadora-cif-page .btn-dark, .calculadora-cif-page .btn-success, .calculadora-cif-page .btn-info, .cif-allocation-modal .btn-dark { background: #34465b; color: #fff; border-color: #34465b; }
+.calculadora-cif-page .btn-dark:hover, .calculadora-cif-page .btn-success:hover, .calculadora-cif-page .btn-info:hover, .cif-allocation-modal .btn-dark:hover { background: #26374a; color: #fff; border-color: #26374a; }
+.calculadora-cif-page .btn-warning { background: #e5e7eb; color: #374151; border-color: #d1d5db; }
+.calculadora-cif-page .btn-warning:hover { background: #d9dde3; color: #263244; border-color: #cbd0d7; }
+.calculadora-cif-page .btn-danger, .cif-allocation-modal .btn-danger { background: #a55b5b; border-color: #a55b5b; color: #fff; }
+.calculadora-cif-page .btn-danger:hover, .cif-allocation-modal .btn-danger:hover { background: #8e4747; border-color: #8e4747; color: #fff; }
+.calculadora-cif-page .action-btn { margin: 2px; padding: 6px 10px; font-size: .8rem; white-space: nowrap; }
+/* Modal personalizado: JS original abre con style.display = 'flex'.
+   Delimitado por ID para no modificar los modales de Bootstrap del sitio. */
+#allocation-modal.cif-allocation-modal { display: none; position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1100; background: rgba(15,23,42,.55); align-items: center; justify-content: center; overflow-y: auto; padding: 16px; }
+#allocation-modal.cif-allocation-modal .cif-modal-content { display: block; width: 100%; max-width: 780px; max-height: calc(100vh - 32px); overflow-y: auto; background: #fff; padding: 0; margin: auto; border: 1px solid #d9e1e7; border-radius: 12px; box-shadow: 0 14px 35px rgba(15,23,42,.18); }
+#allocation-modal.cif-allocation-modal .cif-modal-header { background: #f3f4f6; padding: 15px 20px; margin: 0; border-bottom: 1px solid #dce1e7; }
+#allocation-modal.cif-allocation-modal .modal-title { font-size: 1.05rem; font-weight: 600; color: #263244; }
+#allocation-modal.cif-allocation-modal .allocation-form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; padding: 20px; }
+#allocation-modal.cif-allocation-modal .departments-list { max-height: 240px; overflow-y: auto; border: 1px solid #dce1e7; border-radius: 7px; padding: 8px 12px; }
+#allocation-modal.cif-allocation-modal .department-item { display: flex; gap: 10px; align-items: center; padding: 8px 4px; border-bottom: 1px solid #eef1f5; font-size: .85rem; color: #263244; }
+#allocation-modal.cif-allocation-modal .department-item:last-child { border-bottom: none; }
+#allocation-modal.cif-allocation-modal .department-name { flex: 1; cursor: pointer; }
+#allocation-modal.cif-allocation-modal input[type=checkbox] { accent-color: #34465b; }
+#allocation-modal.cif-allocation-modal .cif-modal-footer { background: #f8fafc; border-top: 1px solid #e5e7eb; padding: 12px 20px; gap: 8px; }
+@media (max-width: 767.98px) { .calculadora-cif-page .cif-page-header h1 { font-size: 1.5rem; } .calculadora-cif-page .cif-section-card > .card-body { padding: 14px; } .calculadora-cif-page .cif-section-title { font-size: .92rem; padding: 11px 12px; } #allocation-modal.cif-allocation-modal .allocation-form { grid-template-columns: 1fr; padding: 16px; } .calculadora-cif-page .cif-tabla { font-size: .79rem; } }

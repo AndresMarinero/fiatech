@@ -3,40 +3,30 @@
 
 {% block title %}Calculadora UCP - Puntos de Casos de Uso{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css2/calculadoraUCP.css' %}">
+{% endblock %}
+
 {% block content %}
-<style>
-    /*Esto permite ocultar todas las secciones y mostrar solo las activas.*/
-    .section {
-        display: none;
-    }
 
-    .section.active {
-        display: block;
-    }
-    .bg-pepe{
-        background-color: #050B31;
-        color: #ffffff;              /* text-white */
-        text-align: center;          /* text-center */
-        border-radius: 0.25rem;      /* rounded */
-        margin-bottom: 1.5rem;       /* mb-4 */
-        padding: 1.5rem;             /* p-4 */
-        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); /* shadow */
-        border-radius: 10px;
-    }
-</style>
+<div class="container-fluid py-4 calculadora-ucp-page">
+    <header class="ucp-page-header text-center">
+        <h1 class="h3 fw-bold mb-2">
+            Calculadora de Puntos de Casos de Uso (UCP)
+        </h1>
 
-<div class="container">
-    <header class="bg-pepe">
-        <h1 class="display-4 fw-bold">Calculadora de Puntos de Casos de Uso (UCP)</h1>
-        <p class="lead">Estimación de esfuerzo para proyectos de software basada en el método de Puntos de Casos de Uso</p>
+        <p class="text-muted mb-0">
+            Estimación de esfuerzo para proyectos de software basada
+            en el método de Puntos de Casos de Uso
+        </p>
     </header>
     
-    <div class="section card mb-4 shadow-sm">
+    <div class="section card mb-4 ucp-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">1. Actores (UAW - Unadjusted Actor Weight)</h2>
+            <h2 card-title h4 ucp-section-title">1. Actores (UAW - Unadjusted Actor Weight)</h2>
             <p class="card-text">Clasifique los actores del sistema según su complejidad:</p>
             
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover ucp-tabla">
                 <thead class="table-dark">
                     <tr>
                         <th>Tipo de Actor</th>
@@ -74,12 +64,12 @@
         </div>
     </div>
     
-    <div class="section card mb-4 shadow-sm">
+    <div class="section card mb-4 ucp-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">2. Casos de Uso (UUCW - Unadjusted Use Case Weight)</h2>
+            <h2 class="h4 ucp-section-title">2. Casos de Uso (UUCW - Unadjusted Use Case Weight)</h2>
             <p class="card-text">Clasifique los casos de uso según su complejidad (por transacciones o clases de análisis):</p>
             
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover ucp-tabla">
                 <thead class="table-dark">
                     <tr>
                         <th>Complejidad</th>
@@ -117,12 +107,12 @@
         </div>
     </div>
     
-    <div class="section card mb-4 shadow-sm">
+    <div class="section card mb-4 ucp-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">3. Factores Técnicos (TCF - Technical Complexity Factor)</h2>
+            <h2 class="card-title h4 ucp-section-title">3. Factores Técnicos (TCF - Technical Complexity Factor)</h2>
             <p class="card-text">Evalúe cada factor técnico del proyecto (0 = irrelevante, 5 = impacto fuerte):</p>
             
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover ucp-tabla">
                 <thead class="table-dark">
                     <tr>
                         <th>Factor</th>
@@ -144,12 +134,12 @@
         </div>
     </div>
     
-    <div class="section card mb-4 shadow-sm">
+    <div class="section card mb-4 ucp-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">4. Factores Ambientales (EF - Environmental Factor)</h2>
+            <h2 class="card-title h4 ucp-section-title">4. Factores Ambientales (EF - Environmental Factor)</h2>
             <p class="card-text">Evalúe cada factor ambiental del equipo de desarrollo (0 = bajo, 5 = alto):</p>
             
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover ucp-tabla">
                 <thead class="table-dark">
                     <tr>
                         <th>Factor</th>
@@ -171,13 +161,13 @@
         </div>
     </div>
     
-    <div class="section card mb-4 shadow-sm">
+    <div class="section card mb-4 ucp-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">5. Cálculo de Horas-Persona (CF)</h2>
+            <h2 class="card-title h4 ucp-section-title">5. Cálculo de Horas-Persona (CF)</h2>
             
             <div class="row">
                 <div class="col-md-6">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered ucp-tabla">
                         <thead class="table-dark">
                             <tr>
                                 <th>Factor</th>
@@ -200,7 +190,7 @@
                     </table>
                 </div>
                 <div class="col-md-6">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered ucp-tabla">
                         <thead class="table-dark">
                             <tr>
                                 <th>Suma de Factores</th>
@@ -238,9 +228,9 @@
         </div>
     </div>
     
-    <div class="section card mb-4 shadow-sm">
+    <div class="section card mb-4 ucp-section-card">
         <div class="card-body">
-            <h2 class="card-title h4 border-bottom pb-2 mb-3">6. Cálculo Final y Esfuerzo Estimado</h2>
+            <h2 class="card-title h4 ucp-section-title">6. Cálculo Final y Esfuerzo Estimado</h2>
             
             <div class="alert alert-secondary text-center mb-3">
                 <div class="fw-bold">UUCP (Unadjusted Use Case Points)</div>
@@ -279,9 +269,17 @@
             </div>
             
             <div class="text-center mt-4">
-                <button class="btn btn-dark btn-lg fw-bold me-2" id="calculate-btn">Calcular Estimación</button>
-                <button class="btn btn-warning btn-lg fw-bold" id="reset-btn">Reiniciar Valores</button>
-            </div>
+                <button type="button"
+                        class="btn ucp-btn-calcular me-2"
+                        id="calculate-btn">
+                    <i class="bi bi-calculator me-2"></i>Calcular Estimación
+                </button>
+
+                <button type="button"
+                        class="btn ucp-btn-reiniciar"
+                        id="reset-btn">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reiniciar Valores
+                </button>
         </div>
     </div>
     <!--

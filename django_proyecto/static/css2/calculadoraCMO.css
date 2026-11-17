@@ -1,0 +1,238 @@
+/* =====================================================
+   FIA-TECH | CALCULADORA DE MANO DE OBRA DIRECTA (CMO)
+   Diseño formal, compacto y aislado de otras vistas
+===================================================== */
+.calculadora-cmo-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: #263244;
+}
+
+/* Encabezado principal */
+.calculadora-cmo-page .cmo-page-header {
+    margin-bottom: 24px;
+    padding: 8px 12px;
+}
+.calculadora-cmo-page .cmo-page-header h1 {
+    color: #1f2937;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+.calculadora-cmo-page .cmo-page-header p {
+    color: #64748b !important;
+    font-size: .9rem;
+    line-height: 1.55;
+}
+
+/* Tarjetas de las cuatro secciones */
+.calculadora-cmo-page .cmo-section-card {
+    background: #fff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, .04);
+}
+.calculadora-cmo-page .cmo-section-card > .card-body {
+    padding: 20px;
+}
+.calculadora-cmo-page .cmo-section-title {
+    background: #f3f4f6;
+    color: #263244;
+    border: 1px solid #dce1e7;
+    border-left: 4px solid #607d9b;
+    border-radius: 7px;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 13px 15px;
+    margin-bottom: 18px;
+}
+
+/* Etiquetas y controles */
+.calculadora-cmo-page .form-label {
+    color: #374151;
+    font-size: .87rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.calculadora-cmo-page .form-control,
+.calculadora-cmo-page .form-select {
+    min-height: 38px;
+    border: 1px solid #cfd8e3;
+    border-radius: 7px;
+    background: #fff;
+    color: #263244;
+    font-size: .89rem;
+    box-shadow: none;
+}
+.calculadora-cmo-page .form-control:focus,
+.calculadora-cmo-page .form-select:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 .15rem rgba(47, 75, 102, .12);
+}
+.calculadora-cmo-page .form-control[readonly] {
+    background: #f3f4f6;
+    color: #526278;
+}
+
+/* Selector de empleados: scroll propio, sin perder checkboxes */
+.calculadora-cmo-page #team-checkbox-list {
+    height: 200px;
+    overflow-y: auto;
+    padding: 12px 15px;
+    background: #f8fafc;
+    border: 1px solid #dce1e7;
+    border-radius: 8px;
+}
+.calculadora-cmo-page #team-checkbox-list .form-check {
+    padding-top: 4px;
+    padding-bottom: 5px;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #edf0f4;
+}
+.calculadora-cmo-page #team-checkbox-list .form-check:last-child {
+    border-bottom: 0;
+}
+.calculadora-cmo-page #team-checkbox-list .form-check-label {
+    color: #374151;
+    font-size: .87rem;
+    cursor: pointer;
+}
+.calculadora-cmo-page #team-checkbox-list .form-check-input {
+    border-color: #b8c4d1;
+    cursor: pointer;
+}
+.calculadora-cmo-page #team-checkbox-list .form-check-input:checked {
+    background-color: #34465b;
+    border-color: #34465b;
+}
+.calculadora-cmo-page #team-checkbox-list .form-check-input:focus {
+    box-shadow: 0 0 0 .15rem rgba(47, 75, 102, .12);
+}
+
+/* Tablas de cálculos y totales */
+.calculadora-cmo-page .table-responsive {
+    border-radius: 7px;
+}
+.calculadora-cmo-page .cmo-table {
+    width: 100%;
+    margin-bottom: 0;
+    font-size: .86rem;
+    border-color: #e5e7eb;
+}
+.calculadora-cmo-page .cmo-table th,
+.calculadora-cmo-page .cmo-table td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    border-color: #e5e7eb;
+}
+.calculadora-cmo-page .cmo-table thead th {
+    --bs-table-bg: #120e38;
+    --bs-table-color: #fff;
+    --bs-table-accent-bg: transparent;
+    background: #120e38 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    border-color: #120e38;
+    font-size: .84rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.calculadora-cmo-page .cmo-table tbody td {
+    --bs-table-bg: #fff;
+    --bs-table-accent-bg: transparent;
+    color: #263244;
+    background: #fff;
+    box-shadow: none;
+}
+.calculadora-cmo-page .cmo-table.table-striped tbody tr:nth-of-type(odd) td {
+    --bs-table-bg: #f8fafc;
+    background: #f8fafc;
+}
+.calculadora-cmo-page .cmo-table.table-hover tbody tr:hover td {
+    --bs-table-bg: #eef2f6;
+    background: #eef2f6;
+    box-shadow: none;
+}
+.calculadora-cmo-page #calculations-table {
+    min-width: 850px;
+}
+.calculadora-cmo-page .cmo-total-table {
+    max-width: 100%;
+}
+.calculadora-cmo-page .cmo-total-table .cmo-grand-total td {
+    --bs-table-bg: #e9edf3;
+    --bs-table-accent-bg: transparent;
+    background: #e9edf3 !important;
+    color: #263244 !important;
+    box-shadow: none !important;
+    border-top: 2px solid #cbd5e1;
+    padding: 12px;
+}
+.calculadora-cmo-page #total-costo {
+    font-weight: 700;
+    color: #304b70 !important;
+}
+
+/* Botones de acciones */
+.calculadora-cmo-page .btn {
+    border-radius: 7px;
+    font-size: .86rem;
+    font-weight: 500;
+    padding: 8px 14px;
+    box-shadow: none !important;
+}
+.calculadora-cmo-page .cmo-btn-primary {
+    background: #34465b;
+    border: 1px solid #34465b;
+    color: #fff;
+}
+.calculadora-cmo-page .cmo-btn-primary:hover {
+    background: #26374a;
+    border-color: #26374a;
+    color: #fff;
+}
+.calculadora-cmo-page .cmo-btn-secondary,
+.calculadora-cmo-page .btn-outline-secondary {
+    background: #e5e7eb;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+.calculadora-cmo-page .cmo-btn-secondary:hover,
+.calculadora-cmo-page .btn-outline-secondary:hover {
+    background: #d9dde3;
+    border-color: #cbd0d7;
+    color: #263244;
+}
+/* Los botones Eliminar se crean por JS; estilo local sin cambiar JS */
+.calculadora-cmo-page #calculations-table .btn-danger {
+    background: #a55b5b;
+    border-color: #a55b5b;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: .8rem;
+}
+.calculadora-cmo-page #calculations-table .btn-danger:hover {
+    background: #8e4c4c;
+    border-color: #8e4c4c;
+}
+.calculadora-cmo-page .btn:focus-visible {
+    outline: 2px solid #64748b;
+    outline-offset: 3px;
+}
+.calculadora-cmo-page .cmo-final-actions {
+    margin-bottom: 10px;
+}
+
+/* Pantallas pequeñas */
+@media (max-width: 767.98px) {
+    .calculadora-cmo-page .cmo-page-header h1 { font-size: 1.55rem; }
+    .calculadora-cmo-page .cmo-section-card > .card-body { padding: 14px; }
+    .calculadora-cmo-page .cmo-section-title { padding: 11px 12px; font-size: .92rem; }
+    .calculadora-cmo-page .cmo-table { font-size: .8rem; }
+    .calculadora-cmo-page .cmo-table th,
+    .calculadora-cmo-page .cmo-table td { padding: 8px; }
+    .calculadora-cmo-page .cmo-final-actions .btn { margin: 5px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .calculadora-cmo-page .btn { transition: none; }
+}

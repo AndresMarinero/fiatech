@@ -1,0 +1,269 @@
+
+/* ==========================================
+   MENU PRINCIPAL - FIA-TECH
+   DISEÑO FORMAL Y COMPACTO
+========================================== */
+
+/* CONTENEDOR GENERAL */
+
+.menu-principal-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: #263244;
+}
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.menu-principal-page .menu-page-header {
+    margin-bottom: 25px;
+}
+
+.menu-principal-page .menu-page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.menu-principal-page .menu-page-header p {
+    font-size: 0.9rem;
+    color: #64748b !important;
+}
+
+.menu-principal-page .menu-usuario {
+    display: inline-flex;
+    align-items: center;
+
+    background: #f3f4f6;
+    border: 1px solid #dce1e7;
+    border-radius: 7px;
+
+    padding: 6px 12px;
+    font-size: 0.84rem;
+    color: #526278;
+}
+
+.menu-principal-page .menu-usuario strong {
+    color: #263244;
+    margin-left: 4px;
+}
+
+/* ==========================================
+   TARJETAS DEL MENU
+========================================== */
+
+.menu-principal-page .menu-principal-card {
+    background: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+/* HOVER DISCRETO */
+
+.menu-principal-page .menu-principal-card:hover {
+    transform: translateY(-3px);
+    border-color: #b9c6d4;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+/* CONTENIDO DE LAS TARJETAS */
+
+.menu-principal-page .menu-principal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100%;
+    padding: 22px 20px;
+    text-align: center;
+}
+
+/* ==========================================
+   ICONOS
+========================================== */
+
+.menu-principal-page .menu-principal-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+    background: #f3f4f6;
+}
+
+.menu-principal-page .menu-principal-icon i {
+    font-size: 1.9rem;
+}
+
+/* COLORES SOBRIOS POR MODULO */
+
+.menu-principal-page .icon-catalogo {
+    color: #607d9b;
+    background: #edf2f7;
+}
+
+.menu-principal-page .icon-libro {
+    color: #688775;
+    background: #eef3ef;
+}
+
+.menu-principal-page .icon-estados {
+    color: #657e91;
+    background: #eef2f6;
+}
+
+.menu-principal-page .icon-costos {
+    color: #99815a;
+    background: #f6f2e9;
+}
+
+/* ==========================================
+   TITULOS Y DESCRIPCIONES
+========================================== */
+
+.menu-principal-page .menu-principal-card .card-title {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #263244;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.menu-principal-page .menu-principal-card .card-text {
+    width: 100%;
+    text-align: center;
+
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: #64748b;
+
+    margin-bottom: 14px;
+    flex-grow: 1;
+}
+
+/* ==========================================
+   BOTONES ACCEDER
+========================================== */
+
+.menu-principal-page .menu-principal-btn {
+    background: #34465b;
+    border: 1px solid #34465b;
+    color: #ffffff;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 24px;
+    border-radius: 7px;
+
+    margin-top: auto;
+    box-shadow: none;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.menu-principal-page a.menu-principal-btn:hover {
+    background: #26374a;
+    border-color: #26374a;
+    color: #ffffff;
+}
+
+.menu-principal-page a.menu-principal-btn:focus-visible {
+    outline: 2px solid #64748b;
+    outline-offset: 3px;
+}
+
+/* BOTON SIN FUNCIONALIDAD HABILITADA */
+
+.menu-principal-page .menu-btn-inactivo {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+    color: #64748b;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ==========================================
+   INFORMACION INFERIOR
+========================================== */
+
+.menu-principal-page .menu-info-footer {
+    margin-top: 22px;
+    padding: 16px 20px;
+
+    background: #f3f4f6;
+    border: 1px solid #dce1e7;
+    border-radius: 9px;
+}
+
+.menu-principal-page .menu-info-footer h5 {
+    color: #263244;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.menu-principal-page .menu-info-footer p {
+    color: #64748b;
+    font-size: 0.86rem;
+    margin-bottom: 5px;
+}
+
+.menu-principal-page .menu-info-footer small {
+    color: #64748b;
+    font-size: 0.78rem;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 767.98px) {
+
+    .menu-principal-page .menu-page-header h1 {
+        font-size: 1.55rem;
+    }
+
+    .menu-principal-page .menu-principal-body {
+        padding: 18px 16px;
+    }
+
+    .menu-principal-page .menu-principal-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .menu-principal-page .menu-principal-icon i {
+        font-size: 1.7rem;
+    }
+}
+
+/* ACCESIBILIDAD */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .menu-principal-page .menu-principal-card {
+        transition: none;
+    }
+
+    .menu-principal-page .menu-principal-card:hover {
+        transform: none;
+    }
+}

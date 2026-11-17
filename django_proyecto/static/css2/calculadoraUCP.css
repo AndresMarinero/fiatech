@@ -1,0 +1,382 @@
+
+/* ==========================================
+   CALCULADORA UCP - FIA-TECH
+   DISEÑO FORMAL Y COMPACTO
+========================================== */
+
+/* CONTENEDOR GENERAL */
+
+.calculadora-ucp-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    color: #263244;
+}
+
+/* ==========================================
+   VISIBILIDAD DE SECCIONES
+   IMPORTANTE: NO ELIMINAR
+========================================== */
+
+.calculadora-ucp-page .section {
+    display: none;
+}
+
+.calculadora-ucp-page .section.active {
+    display: block;
+}
+
+/* ==========================================
+   ENCABEZADO PRINCIPAL
+========================================== */
+
+.calculadora-ucp-page .ucp-page-header {
+    margin-bottom: 25px;
+    padding: 8px 15px;
+}
+
+.calculadora-ucp-page .ucp-page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.3;
+}
+
+.calculadora-ucp-page .ucp-page-header p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #64748b !important;
+}
+
+/* ==========================================
+   TARJETAS DE SECCIONES
+========================================== */
+
+.calculadora-ucp-page .ucp-section-card {
+    background-color: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+}
+
+.calculadora-ucp-page .ucp-section-card > .card-body {
+    padding: 20px;
+}
+
+/* ==========================================
+   TITULOS DE SECCION
+========================================== */
+
+.calculadora-ucp-page .ucp-section-title {
+    background-color: #f3f4f6;
+    border: 1px solid #dce1e7;
+    border-left: 4px solid #607d9b;
+    border-radius: 7px;
+
+    color: #263244;
+    font-size: 1rem;
+    font-weight: 600;
+
+    padding: 13px 15px;
+    margin-bottom: 15px;
+}
+
+.calculadora-ucp-page .ucp-section-card .card-text {
+    color: #64748b;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+/* ==========================================
+   TABLAS
+========================================== */
+
+.calculadora-ucp-page .table-responsive {
+    border-radius: 7px;
+}
+
+.calculadora-ucp-page .ucp-tabla {
+    width: 100%;
+    margin-bottom: 16px;
+    font-size: 0.87rem;
+    border-color: #e5e7eb;
+}
+
+.calculadora-ucp-page .ucp-tabla th,
+.calculadora-ucp-page .ucp-tabla td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    border-color: #e5e7eb;
+}
+
+/* ENCABEZADOS MORADOS */
+
+.calculadora-ucp-page .ucp-tabla thead th {
+    --bs-table-bg: #120e38;
+    --bs-table-accent-bg: transparent;
+    --bs-table-color: #ffffff;
+
+    background-color: #120e38 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-color: #120e38;
+}
+
+/* FILAS Y EFECTO HOVER */
+
+.calculadora-ucp-page .ucp-tabla tbody td {
+    --bs-table-bg: #ffffff;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #ffffff;
+    color: #263244;
+    box-shadow: none;
+}
+
+.calculadora-ucp-page .ucp-tabla.table-striped
+tbody tr:nth-of-type(odd) td {
+    --bs-table-bg: #f8fafc;
+    background-color: #f8fafc;
+}
+
+.calculadora-ucp-page .ucp-tabla.table-hover
+tbody tr:hover td {
+    --bs-table-bg: #eef2f6;
+    --bs-table-accent-bg: transparent;
+
+    background-color: #eef2f6;
+    box-shadow: none;
+}
+
+/* ==========================================
+   CAMPOS NUMERICOS Y SELECTORES
+========================================== */
+
+.calculadora-ucp-page .form-control,
+.calculadora-ucp-page .form-select {
+    border: 1px solid #cfd8e3;
+    border-radius: 7px;
+    background-color: #ffffff;
+    color: #263244;
+
+    min-height: 38px;
+    font-size: 0.88rem;
+    box-shadow: none;
+}
+
+.calculadora-ucp-page .form-control:focus,
+.calculadora-ucp-page .form-select:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 0.15rem rgba(47,75,102,0.12);
+}
+
+.calculadora-ucp-page .ucp-tabla
+input[type="number"] {
+    width: 90px !important;
+    min-width: 75px;
+    text-align: center;
+}
+
+.calculadora-ucp-page .ucp-tabla .form-select {
+    width: 90px;
+    min-width: 75px;
+    padding-right: 25px;
+}
+
+.calculadora-ucp-page .form-label {
+    color: #374151;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* ==========================================
+   RECUADROS DE RESULTADOS
+========================================== */
+
+.calculadora-ucp-page .ucp-section-card
+.alert-secondary {
+    background-color: #e9edf3;
+    border: 1px solid #dce1e7;
+    border-radius: 8px;
+
+    color: #263244;
+    padding: 14px 16px;
+    font-size: 0.88rem;
+}
+
+.calculadora-ucp-page .alert-secondary
+.fw-bold {
+    color: #263244;
+    font-weight: 600 !important;
+}
+
+.calculadora-ucp-page .alert-secondary
+.h3 {
+    color: #304b70 !important;
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin: 7px 0 0;
+}
+
+/* TEXTO DE INTERPRETACIONES */
+
+.calculadora-ucp-page #tcf-interpretation,
+.calculadora-ucp-page #ef-interpretation {
+    color: #526278;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ==========================================
+   QUINTA SECCION: CALCULO CF
+========================================== */
+
+.calculadora-ucp-page .ucp-section-card
+.alert-secondary .alert-heading {
+    color: #263244;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.calculadora-ucp-page .ucp-section-card hr {
+    border-top: 1px solid #dce1e7;
+    opacity: 1;
+}
+
+/* ==========================================
+   SEXTA SECCION: RESULTADO FINAL
+========================================== */
+
+.calculadora-ucp-page #uucp-result,
+.calculadora-ucp-page #ucp-result,
+.calculadora-ucp-page #effort-result,
+.calculadora-ucp-page #duration-result {
+    color: #304b70 !important;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* INTERPRETACION DE RESULTADOS */
+
+.calculadora-ucp-page .alert-success {
+    background-color: #eef3ef;
+    border: 1px solid #cbded2;
+    border-left: 4px solid #688775;
+    border-radius: 8px;
+
+    color: #376e55;
+    padding: 16px;
+}
+
+.calculadora-ucp-page .alert-success .alert-heading {
+    color: #376e55;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.calculadora-ucp-page .alert-success p {
+    margin-bottom: 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   BOTONES FINALES
+========================================== */
+
+.calculadora-ucp-page .ucp-btn-calcular,
+.calculadora-ucp-page .ucp-btn-reiniciar {
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 10px 17px;
+    border-radius: 7px;
+    box-shadow: none;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+/* CALCULAR */
+
+.calculadora-ucp-page .ucp-btn-calcular {
+    background-color: #34465b;
+    border: 1px solid #34465b;
+    color: #ffffff;
+}
+
+.calculadora-ucp-page .ucp-btn-calcular:hover {
+    background-color: #26374a;
+    border-color: #26374a;
+    color: #ffffff;
+}
+
+/* REINICIAR */
+
+.calculadora-ucp-page .ucp-btn-reiniciar {
+    background-color: #e5e7eb;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.calculadora-ucp-page .ucp-btn-reiniciar:hover {
+    background-color: #d9dde3;
+    border-color: #cbd0d7;
+    color: #263244;
+}
+
+/* ACCESIBILIDAD */
+
+.calculadora-ucp-page .ucp-btn-calcular:focus-visible,
+.calculadora-ucp-page .ucp-btn-reiniciar:focus-visible {
+    outline: 2px solid #64748b;
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 767.98px) {
+
+    .calculadora-ucp-page .ucp-page-header h1 {
+        font-size: 1.55rem;
+    }
+
+    .calculadora-ucp-page .ucp-section-card
+    > .card-body {
+        padding: 14px;
+    }
+
+    .calculadora-ucp-page .ucp-section-title {
+        font-size: 0.92rem;
+        padding: 11px 12px;
+    }
+
+    .calculadora-ucp-page .ucp-tabla {
+        font-size: 0.8rem;
+    }
+
+    .calculadora-ucp-page .ucp-tabla th,
+    .calculadora-ucp-page .ucp-tabla td {
+        padding: 8px;
+    }
+
+    .calculadora-ucp-page .ucp-btn-calcular,
+    .calculadora-ucp-page .ucp-btn-reiniciar {
+        margin: 5px 0 !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .calculadora-ucp-page .ucp-btn-calcular,
+    .calculadora-ucp-page .ucp-btn-reiniciar {
+        transition: none;
+    }
+}

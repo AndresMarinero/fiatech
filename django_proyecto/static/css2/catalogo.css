@@ -242,6 +242,15 @@
     background-color: #6f8c96;
 }
 
+.catalogo-page .stat-ingreso .catalogo-stat-accent {
+    background-color: #4f7a61;
+}
+
+/* GASTOS */
+.catalogo-page .stat-gasto .catalogo-stat-accent {
+    background-color: #986b6b;
+}
+
 /* ==========================================
    FILTROS
 ========================================== */
