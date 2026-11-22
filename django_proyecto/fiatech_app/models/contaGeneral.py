@@ -83,6 +83,12 @@ class PeriodoContable(models.Model):
         
         return total_debe == total_haber
 
+    @property
+    def estado_visible(self):
+        if self.estado == 'ACTIVO':
+            return 'En proceso'
+        return self.get_estado_display()
+
 class Transaccion(models.Model):
     fecha = models.DateField()
     cuenta = models.ForeignKey(Cuenta, on_delete=models.RESTRICT)

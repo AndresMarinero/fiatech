@@ -1,0 +1,21 @@
+{% if periodo_actual %}
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <span class="badge {% if periodo_actual.estado == 'ACTIVO' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+        {{ periodo_actual.año }} · {{ periodo_actual.estado_visible }}
+    </span>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'balance_comprobacion' %}?periodo_id={{ periodo_actual.id }}">Balance de comprobación</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'estado_resultados' %}?periodo_id={{ periodo_actual.id }}">Estado de resultados</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'estado_capital' %}?periodo_id={{ periodo_actual.id }}">Estado de capital</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'balance_general' %}?periodo_id={{ periodo_actual.id }}">Balance general</a>
+    {% if periodo_actual.estado == 'ACTIVO' %}
+    <a class="btn btn-sm btn-secondary ms-auto" href="{% url 'libro_mayor' %}?periodo_id={{ periodo_actual.id }}">
+        <i class="bi bi-arrow-left"></i> Volver al Libro Mayor
+    </a>
+    {% endif %}
+</div>
+{% if periodo_actual.estado == 'ACTIVO' %}
+<div class="alert alert-warning py-2">
+    Período en proceso: las cifras son provisionales y cambian si se registran más transacciones.
+</div>
+{% endif %}
+{% endif %}

@@ -123,7 +123,7 @@ def crear_ajuste(request):
             total_debe = sum(Decimal(
                 str(cuenta['monto'])) for cuenta in cuentas_afectadas if cuenta['tipo'] == 'debe')
             total_haber = sum(Decimal(str(
-                cuenta['monto'])) for cuenta in cuentas_afectadas if cuenta['tipo'] == 'haber')
+                cuenta['monto'])) for cuenta in cuentas_afectadas if cuenta['tipo'] == 'hnaber')
 
             if total_debe != total_haber:
                 print("ERROR: Ajuste desbalanceado")

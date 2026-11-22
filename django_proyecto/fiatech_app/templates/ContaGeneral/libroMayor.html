@@ -40,17 +40,20 @@
                     </button>
                     {% endif %}
 
-
-
-                    <!-- Botón Nueva Transacción (solo si el periodo SELECCIONADO está activo) -->
-{% if periodo_seleccionado and periodo_seleccionado.estado == 'ACTIVO' %}
-<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaTransaccionModal">
-    <i class="bi bi-plus-circle me-2"></i>Nueva Transacción
-</button>
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmarCierreModal">
-    <i class="bi bi-check-circle me-2"></i>Finalizar Período
-</button>
-{% endif %}
+                    <!-- Botones solo si el periodo SELECCIONADO está activo -->
+                    {% if periodo_seleccionado and periodo_seleccionado.estado == 'ACTIVO' %}
+                    <!-- NUEVO: Visualizar estados financieros (periodo en proceso) -->
+                    <a href="{% url 'balance_comprobacion' %}?periodo_id={{ periodo_seleccionado.id }}"
+                        class="btn btn-outline-primary">
+                        <i class="bi bi-bar-chart me-2"></i>Visualizar Estados Financieros
+                    </a>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaTransaccionModal">
+                        <i class="bi bi-plus-circle me-2"></i>Nueva Transacción
+                    </button>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmarCierreModal">
+                        <i class="bi bi-check-circle me-2"></i>Finalizar Período
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -219,8 +222,6 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Nuevo Periodo -->
 
 <!-- Modal Crear Nuevo Período Contable -->
 <div class="modal fade periodo-nuevo-modal"
@@ -550,12 +551,12 @@
 
                     </button>
 
+
                 </div>
 
             </form>
 
         </div>
-
     </div>
 
 </div>
