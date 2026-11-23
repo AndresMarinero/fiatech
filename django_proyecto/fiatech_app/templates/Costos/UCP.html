@@ -1,337 +1,682 @@
 {% extends 'base.html' %}
+
 {% load static %}
+
+
 
 {% block title %}Calculadora UCP - Puntos de Casos de Uso{% endblock %}
 
+
+
 {% block extra_css %}
+
 <link rel="stylesheet" href="{% static 'css2/calculadoraUCP.css' %}">
+
 {% endblock %}
+
+
 
 {% block content %}
 
+
+
 <div class="container-fluid py-4 calculadora-ucp-page">
-    <header class="ucp-page-header text-center">
-        <h1 class="h3 fw-bold mb-2">
-            Calculadora de Puntos de Casos de Uso (UCP)
-        </h1>
 
-        <p class="text-muted mb-0">
-            Estimación de esfuerzo para proyectos de software basada
-            en el método de Puntos de Casos de Uso
-        </p>
-    </header>
-    
-    <div class="section card mb-4 ucp-section-card">
-        <div class="card-body">
-            <h2 card-title h4 ucp-section-title">1. Actores (UAW - Unadjusted Actor Weight)</h2>
-            <p class="card-text">Clasifique los actores del sistema según su complejidad:</p>
-            
-            <table class="table table-striped table-hover ucp-tabla">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Tipo de Actor</th>
-                        <th>Descripción</th>
-                        <th>Peso</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Simple</strong></td>
-                        <td>Sistemas externos que se comunican mediante API (Ej: Sistema de Pagos)</td>
-                        <td>1</td>
-                        <td><input type="number" id="actor-simple" min="0" value="0" class="form-control w-auto"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Medio</strong></td>
-                        <td>Interactúan mediante protocolos específicos (Ej: ERP, Sistema Legacy)</td>
-                        <td>2</td>
-                        <td><input type="number" id="actor-medium" min="0" value="0" class="form-control w-auto"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Complejo</strong></td>
-                        <td>Interfaz gráfica completa (UI/UX) (Ej: Usuario Final, Administrador)</td>
-                        <td>3</td>
-                        <td><input type="number" id="actor-complex" min="0" value="0" class="form-control w-auto"></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div class="alert alert-secondary text-center">
-                <div class="fw-bold">UAW (Unadjusted Actor Weight)</div>
-                <div class="h3 text-primary" id="uaw-result">0</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="section card mb-4 ucp-section-card">
-        <div class="card-body">
-            <h2 class="h4 ucp-section-title">2. Casos de Uso (UUCW - Unadjusted Use Case Weight)</h2>
-            <p class="card-text">Clasifique los casos de uso según su complejidad (por transacciones o clases de análisis):</p>
-            
-            <table class="table table-striped table-hover ucp-tabla">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Complejidad</th>
-                        <th>Descripción</th>
-                        <th>Peso</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Simple</strong></td>
-                        <td>1-3 transacciones o 1-5 clases de análisis (Ej: Consultar Saldo)</td>
-                        <td>5</td>
-                        <td><input type="number" id="uc-simple" min="0" value="0" class="form-control w-auto"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Medio</strong></td>
-                        <td>4-7 transacciones o 6-10 clases (Ej: Realizar Transferencia)</td>
-                        <td>10</td>
-                        <td><input type="number" id="uc-medium" min="0" value="0" class="form-control w-auto"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Complejo</strong></td>
-                        <td>>7 transacciones o >10 clases (Ej: Solicitar Préstamo)</td>
-                        <td>15</td>
-                        <td><input type="number" id="uc-complex" min="0" value="0" class="form-control w-auto"></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div class="alert alert-secondary text-center">
-                <div class="fw-bold">UUCW (Unadjusted Use Case Weight)</div>
-                <div class="h3 text-primary" id="uucw-result">0</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="section card mb-4 ucp-section-card">
-        <div class="card-body">
-            <h2 class="card-title h4 ucp-section-title">3. Factores Técnicos (TCF - Technical Complexity Factor)</h2>
-            <p class="card-text">Evalúe cada factor técnico del proyecto (0 = irrelevante, 5 = impacto fuerte):</p>
-            
-            <table class="table table-striped table-hover ucp-tabla">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Factor</th>
-                        <th>Descripción</th>
-                        <th>Peso</th>
-                        <th>Valor (0-5)</th>
-                    </tr>
-                </thead>
-                <tbody id="technical-factors-table">
-                    <!-- Los factores técnicos se generarán con JavaScript -->
-                </tbody>
-            </table>
-            
-            <div class="alert alert-secondary text-center">
-                <div class="fw-bold">TCF (Technical Complexity Factor)</div>
-                <div class="h3 text-primary" id="tcf-result">0.60</div>
-                <div id="tcf-interpretation" class="mt-2"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="section card mb-4 ucp-section-card">
-        <div class="card-body">
-            <h2 class="card-title h4 ucp-section-title">4. Factores Ambientales (EF - Environmental Factor)</h2>
-            <p class="card-text">Evalúe cada factor ambiental del equipo de desarrollo (0 = bajo, 5 = alto):</p>
-            
-            <table class="table table-striped table-hover ucp-tabla">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Factor</th>
-                        <th>Descripción</th>
-                        <th>Peso</th>
-                        <th>Valor (0-5)</th>
-                    </tr>
-                </thead>
-                <tbody id="environmental-factors-table">
-                    <!-- Los factores ambientales se generarán con JavaScript -->
-                </tbody>
-            </table>
-            
-            <div class="alert alert-secondary text-center">
-                <div class="fw-bold">EF (Environmental Factor)</div>
-                <div class="h3 text-primary" id="ef-result">1.40</div>
-                <div id="ef-interpretation" class="mt-2"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="section card mb-4 ucp-section-card">
-        <div class="card-body">
-            <h2 class="card-title h4 ucp-section-title">5. Cálculo de Horas-Persona (CF)</h2>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <table class="table table-bordered ucp-tabla">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Factor</th>
-                                <th>Filtro</th>
-                                <th>Condición</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>E1 a E6</td>
-                                <td>Factor < 3</td>
-                                <td>Cuentan si son menores a 3</td>
-                            </tr>
-                            <tr>
-                                <td>E7 a E8</td>
-                                <td>Factor > 3</td>
-                                <td>Cuentan si son mayores a 3</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-6">
-                    <table class="table table-bordered ucp-tabla">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Suma de Factores</th>
-                                <th>CF (Horas por UCP)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>≤ 2</td>
-                                <td>20 horas</td>
-                            </tr>
-                            <tr>
-                                <td>3 - 4</td>
-                                <td>28 horas</td>
-                            </tr>
-                            <tr>
-                                <td>≥ 5</td>
-                                <td>36 horas</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="alert alert-secondary">
-                <h5 class="alert-heading">Cálculo Detallado del CF:</h5>
-                <div class="mb-1">Factores E1-E6 < 3: <span id="ef-low-count">0</span> factores</div>
-                <div class="mb-1">Factores E7-E8 > 3: <span id="ef-high-count">0</span> factores</div>
-                <div>Suma Total: <span id="ef-sum">0</span></div>
-            </div>
-            
-            <div class="alert alert-secondary">
-                <div class="fw-bold">CF Calculado Automáticamente: <span id="auto-cf-value">20</span> horas por UCP</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="section card mb-4 ucp-section-card">
-        <div class="card-body">
-            <h2 class="card-title h4 ucp-section-title">6. Cálculo Final y Esfuerzo Estimado</h2>
-            
-            <div class="alert alert-secondary text-center mb-3">
-                <div class="fw-bold">UUCP (Unadjusted Use Case Points)</div>
-                <div class="h3 text-primary" id="uucp-result">0</div>
-            </div>
-            
-            <div class="alert alert-secondary text-center mb-3">
-                <div class="fw-bold">UCP (Use Case Points)</div>
-                <div class="h3 text-primary" id="ucp-result">0</div>
-            </div>
-            
-            <div class="alert alert-secondary text-center mb-3">
-                <div class="fw-bold">Esfuerzo Estimado (horas)</div>
-                <div class="h3 text-primary" id="effort-result">0</div>
-            </div>
-            
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <label for="team-size" class="form-label">Tamaño del equipo:</label>
-                    <input type="number" id="team-size" min="1" max="10" value="2" class="form-control">
-                </div>
-                <div class="col-md-6">
-                    <label for="hours-per-day" class="form-label">Horas productivas por día por desarrollador:</label>
-                    <input type="number" id="hours-per-day" min="4" max="8" value="6" step="0.5" class="form-control">
-                </div>
-            </div>
-            
-            <div class="alert alert-secondary text-center mb-3">
-                <div class="fw-bold">Duración Estimada (días calendario)</div>
-                <div class="h3 text-primary" id="duration-result">0</div>
-            </div>
-            
-            <div class="alert alert-success">
-                <h5 class="alert-heading">Interpretación de Resultados</h5>
-                <p id="duration-interpretation"></p>
-            </div>
-            
-            <div class="text-center mt-4">
-                <button type="button"
-                        class="btn ucp-btn-calcular me-2"
-                        id="calculate-btn">
-                    <i class="bi bi-calculator me-2"></i>Calcular Estimación
-                </button>
+    <header class="ucp-page-header text-center">
 
-                <button type="button"
-                        class="btn ucp-btn-reiniciar"
-                        id="reset-btn">
-                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reiniciar Valores
-                </button>
-        </div>
-    </div>
-    <!--
-    <footer class="text-center text-muted mt-5 py-3">
-        <p>Calculadora UCP - Método de Puntos de Casos de Uso para estimación de proyectos de software</p>
-        <p>Basado en la metodología de Gustav Karner</p>
-    </footer>
-    -->
+        <h1 class="h3 fw-bold mb-2">
+
+            Calculadora de Puntos de Casos de Uso (UCP)
+
+        </h1>
+
+
+
+        <p class="text-muted mb-0">
+
+            Estimación de esfuerzo para proyectos de software basada
+
+            en el método de Puntos de Casos de Uso
+
+        </p>
+
+    </header>
+
+
+
+    <div class="section card mb-4 ucp-section-card">
+
+        <div class="card-body">
+
+            <h2 class="card-title h4 ucp-section-title">1. Actores (UAW - Unadjusted Actor Weight)</h2>
+
+            <p class="card-text">Clasifique los actores del sistema según su complejidad:</p>
+
+
+
+            <table class="table table-striped table-hover ucp-tabla">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Tipo de Actor</th>
+
+                        <th>Descripción</th>
+
+                        <th>Peso</th>
+
+                        <th>Cantidad</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td><strong>Simple</strong></td>
+
+                        <td>Sistemas externos que se comunican mediante API (Ej: Sistema de Pagos)</td>
+
+                        <td>1</td>
+
+                        <td><input type="number" id="actor-simple" min="0" value="0" class="form-control w-auto"></td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><strong>Medio</strong></td>
+
+                        <td>Interactúan mediante protocolos específicos (Ej: ERP, Sistema Legacy)</td>
+
+                        <td>2</td>
+
+                        <td><input type="number" id="actor-medium" min="0" value="0" class="form-control w-auto"></td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><strong>Complejo</strong></td>
+
+                        <td>Interfaz gráfica completa (UI/UX) (Ej: Usuario Final, Administrador)</td>
+
+                        <td>3</td>
+
+                        <td><input type="number" id="actor-complex" min="0" value="0" class="form-control w-auto"></td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+
+
+            <div class="alert alert-secondary text-center">
+
+                <div class="fw-bold">UAW (Unadjusted Actor Weight)</div>
+
+                <div class="h3 text-primary" id="uaw-result">0</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="section card mb-4 ucp-section-card">
+
+        <div class="card-body">
+
+            <h2 class="h4 ucp-section-title">2. Casos de Uso (UUCW - Unadjusted Use Case Weight)</h2>
+
+            <p class="card-text">Clasifique los casos de uso según su complejidad (por transacciones o clases de análisis):</p>
+
+
+
+            <table class="table table-striped table-hover ucp-tabla">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Complejidad</th>
+
+                        <th>Descripción</th>
+
+                        <th>Peso</th>
+
+                        <th>Cantidad</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td><strong>Simple</strong></td>
+
+                        <td>1-3 transacciones o 1-5 clases de análisis (Ej: Consultar Saldo)</td>
+
+                        <td>5</td>
+
+                        <td><input type="number" id="uc-simple" min="0" value="0" class="form-control w-auto"></td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><strong>Medio</strong></td>
+
+                        <td>4-7 transacciones o 6-10 clases (Ej: Realizar Transferencia)</td>
+
+                        <td>10</td>
+
+                        <td><input type="number" id="uc-medium" min="0" value="0" class="form-control w-auto"></td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><strong>Complejo</strong></td>
+
+                        <td>>7 transacciones o >10 clases (Ej: Solicitar Préstamo)</td>
+
+                        <td>15</td>
+
+                        <td><input type="number" id="uc-complex" min="0" value="0" class="form-control w-auto"></td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+
+
+            <div class="alert alert-secondary text-center">
+
+                <div class="fw-bold">UUCW (Unadjusted Use Case Weight)</div>
+
+                <div class="h3 text-primary" id="uucw-result">0</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="section card mb-4 ucp-section-card">
+
+        <div class="card-body">
+
+            <h2 class="card-title h4 ucp-section-title">3. Factores Técnicos (TCF - Technical Complexity Factor)</h2>
+
+            <p class="card-text">Evalúe cada factor técnico del proyecto (0 = irrelevante, 5 = impacto fuerte):</p>
+
+
+
+            <div class="ucp-factor-wrap" role="region" aria-label="Factores técnicos" tabindex="0">
+                <div class="ucp-factor-grid" role="table" aria-label="Factores técnicos">
+                    <div class="ucp-factor-head" role="row">
+                        <div role="columnheader">Factor</div>
+                        <div role="columnheader">Descripción</div>
+                        <div role="columnheader">Peso</div>
+                        <div role="columnheader">Valor (0-5)</div>
+                    </div>
+                    <div id="technical-factors-table" class="ucp-factor-body" role="rowgroup"></div>
+                </div>
+            </div>
+
+
+
+            <div class="alert alert-secondary text-center">
+
+                <div class="fw-bold">TCF (Technical Complexity Factor)</div>
+
+                <div class="h3 text-primary" id="tcf-result">0.60</div>
+
+                <div id="tcf-interpretation" class="mt-2"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="section card mb-4 ucp-section-card">
+
+        <div class="card-body">
+
+            <h2 class="card-title h4 ucp-section-title">4. Factores Ambientales (EF - Environmental Factor)</h2>
+
+            <p class="card-text">Evalúe cada factor ambiental del equipo de desarrollo (0 = bajo, 5 = alto):</p>
+
+
+
+            <div class="ucp-factor-wrap" role="region" aria-label="Factores ambientales" tabindex="0">
+                <div class="ucp-factor-grid" role="table" aria-label="Factores ambientales">
+                    <div class="ucp-factor-head" role="row">
+                        <div role="columnheader">Factor</div>
+                        <div role="columnheader">Descripción</div>
+                        <div role="columnheader">Peso</div>
+                        <div role="columnheader">Valor (0-5)</div>
+                    </div>
+                    <div id="environmental-factors-table" class="ucp-factor-body" role="rowgroup"></div>
+                </div>
+            </div>
+
+
+
+            <div class="alert alert-secondary text-center">
+
+                <div class="fw-bold">EF (Environmental Factor)</div>
+
+                <div class="h3 text-primary" id="ef-result">1.40</div>
+
+                <div id="ef-interpretation" class="mt-2"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="section card mb-4 ucp-section-card">
+
+        <div class="card-body">
+
+            <h2 class="card-title h4 ucp-section-title">5. Cálculo de Horas-Persona (CF)</h2>
+
+
+
+            <div class="ucp-cf-tables">
+
+                <div class="ucp-cf-table">
+
+                    <table class="table table-bordered ucp-tabla">
+
+                        <thead class="table-dark">
+
+                            <tr>
+
+                                <th>Factor</th>
+
+                                <th>Filtro</th>
+
+                                <th>Condición</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>E1 a E6</td>
+
+                                <td>Factor &lt; 3</td>
+
+                                <td>Cuentan si son menores a 3</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>E7 a E8</td>
+
+                                <td>Factor > 3</td>
+
+                                <td>Cuentan si son mayores a 3</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="ucp-cf-table">
+
+                    <table class="table table-bordered ucp-tabla">
+
+                        <thead class="table-dark">
+
+                            <tr>
+
+                                <th>Suma de Factores</th>
+
+                                <th>CF (Horas por UCP)</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>≤ 2</td>
+
+                                <td>20 horas</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>3 - 4</td>
+
+                                <td>28 horas</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>≥ 5</td>
+
+                                <td>36 horas</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="ucp-cf-details">
+<div class="alert alert-secondary">
+
+                <h5 class="alert-heading">Cálculo Detallado del CF:</h5>
+
+                <div class="mb-1">Factores E1-E6 &lt; 3: <span id="ef-low-count">0</span> factores</div>
+
+                <div class="mb-1">Factores E7-E8 > 3: <span id="ef-high-count">0</span> factores</div>
+
+                <div>Suma Total: <span id="ef-sum">0</span></div>
+
+            </div>
+
+
+
+            <div class="alert alert-secondary">
+
+                <div class="fw-bold">CF Calculado Automáticamente: <span id="auto-cf-value">20</span> horas por UCP</div>
 </div>
+</div><!-- /.ucp-cf-details -->
+
+        </div>
+
+    </div>
+
+
+
+    <div class="section card mb-4 ucp-section-card">
+
+        <div class="card-body">
+
+            <h2 class="card-title h4 ucp-section-title">6. Cálculo Final y Esfuerzo Estimado</h2>
+<div class="ucp-results-grid">
+
+
+
+
+            <div class="alert alert-secondary text-center mb-3">
+
+                <div class="fw-bold">UUCP (Unadjusted Use Case Points)</div>
+
+                <div class="h3 text-primary" id="uucp-result">0</div>
+
+            </div>
+
+
+
+            <div class="alert alert-secondary text-center mb-3">
+
+                <div class="fw-bold">UCP (Use Case Points)</div>
+
+                <div class="h3 text-primary" id="ucp-result">0</div>
+
+            </div>
+
+
+
+            <div class="alert alert-secondary text-center mb-3">
+
+                <div class="fw-bold">Esfuerzo Estimado (horas)</div>
+
+                <div class="h3 text-primary" id="effort-result">0</div>
+
+            </div>
+</div>
+
+
+
+
+            <div class="row mb-3 ucp-config-row">
+
+                <div class="col-md-6">
+
+                    <label for="team-size" class="form-label">Tamaño del equipo:</label>
+
+                    <input type="number" id="team-size" min="1" max="10" value="2" class="form-control">
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label for="hours-per-day" class="form-label">Horas productivas por día por desarrollador:</label>
+
+                    <input type="number" id="hours-per-day" min="4" max="8" value="6" step="0.5" class="form-control">
+
+                </div>
+
+            </div>
+
+
+
+            <div class="alert alert-secondary text-center mb-3">
+
+                <div class="fw-bold">Duración Estimada (días laborables)</div>
+
+                <div class="h3 text-primary" id="duration-result">0</div>
+
+            </div>
+
+
+
+            <div class="alert alert-success">
+
+                <h5 class="alert-heading">Interpretación de Resultados</h5>
+
+                <p id="duration-interpretation"></p>
+
+            </div>
+
+            <!-- Estimación económica vinculada al esfuerzo UCP -->
+            <div class="card mt-4 mb-3" id="ucp-cost-section">
+                <div class="card-body">
+                    <h3 class="ucp-cost-heading">7. Estimación del costo de desarrollo</h3>
+                    <p class="ucp-cost-desc">El tamaño del equipo, las horas por jornada y la distribución del esfuerzo se sincronizan automáticamente con el cálculo UCP. Puede cambiar los puestos y las horas asignadas de manera individual.</p>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="ucp-cost-day-hours" class="form-label">Horas por jornada (sincronizadas con UCP)</label>
+                            <input type="number" id="ucp-cost-day-hours" class="form-control bg-light" min="1" max="24" step="0.5" value="6" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Esfuerzo UCP a distribuir</label>
+                            <div class="form-control bg-light" id="ucp-cost-effort" aria-live="polite">0.00 horas</div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle ucp-tabla ucp-cost-table">
+                            <thead class="table-dark">
+                                <tr><th>Integrante / puesto</th><th style="min-width:130px;">Horas asignadas</th><th>Tarifa diaria</th><th>Tarifa por hora</th><th>Costo estimado</th><th>Acción</th></tr>
+                            </thead>
+                            <tbody id="ucp-cost-members"></tbody>
+                            <tfoot>
+                                <tr><th>Total</th><th id="ucp-cost-total-hours">0.00 h</th><th colspan="2">Costo de mano de obra estimado</th><th id="ucp-cost-total">$0.00</th><th></th></tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap mb-3">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="ucp-cost-add">+ Agregar integrante</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="ucp-cost-distribute">Distribuir horas equitativamente</button>
+                    </div>
+                    <div class="alert alert-secondary mb-0" id="ucp-cost-status" role="status">Primero calcule el esfuerzo UCP.</div>
+                    <p class="ucp-cost-note mt-2 mb-0">Estimación de mano de obra a tarifa diaria, sin prestaciones ni costos indirectos. Por decisión de configuración, la tarifa por hora utiliza las horas productivas elegidas en UCP como divisor del precio diario; confirme que ese supuesto corresponda a su política de costos.</p>
+                </div>
+            </div>
+
+
+
+
+            <div class="text-center mt-4">
+
+                <button type="button"
+
+                        class="btn ucp-btn-calcular me-2"
+
+                        id="calculate-btn">
+
+                    <i class="bi bi-calculator me-2"></i>Calcular Estimación
+
+                </button>
+
+
+
+                <button type="button"
+
+                        class="btn ucp-btn-reiniciar"
+
+                        id="reset-btn">
+
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reiniciar Valores
+
+                </button>
+
+        </div>
+
+    </div>
+
+    <!--
+
+    <footer class="text-center text-muted mt-5 py-3">
+
+        <p>Calculadora UCP - Método de Puntos de Casos de Uso para estimación de proyectos de software</p>
+
+        <p>Basado en la metodología de Gustav Karner</p>
+
+    </footer>
+
+    -->
+
+</div>
+
+
+</div> <!-- fin contenedor calculadora-ucp-page -->
+
 {% endblock %}
 
+
+
 {% block footer_scripts %}
+
 <script>
-    // Datos de factores técnicos
-    const technicalFactors = [
-        { id: 'T1', name: 'Sistema Distribuido', description: '¿Requiere arquitectura distribuida?', weight: 2 },
-        { id: 'T2', name: 'Objetivos de Performance', description: '¿Requiere alto rendimiento/tiempo real?', weight: 1 },
-        { id: 'T3', name: 'Eficiencia del Usuario Final', description: '¿Cuánto impacto en la productividad del usuario?', weight: 1 },
-        { id: 'T4', name: 'Complejidad de Procesamiento Interno', description: '¿Algoritmos/complejidad computacional?', weight: 1 },
-        { id: 'T5', name: 'Código Reutilizable', description: '¿Se puede reutilizar código existente?', weight: 1 },
-        { id: 'T6', name: 'Facilidad de Instalación', description: '¿Complejidad del despliegue?', weight: 0.5 },
-        { id: 'T7', name: 'Facilidad de Uso', description: '¿Interfaz amigable?', weight: 0.5 },
-        { id: 'T8', name: 'Portabilidad', description: '¿Debe ejecutarse en múltiples plataformas?', weight: 2 },
-        { id: 'T9', name: 'Facilidad de Cambio', description: '¿Frecuencia de modificaciones?', weight: 1 },
-        { id: 'T10', name: 'Concurrencia', description: '¿Múltiples usuarios simultáneos?', weight: 1 },
-        { id: 'T11', name: 'Características de Seguridad', description: '¿Nivel de seguridad requerido?', weight: 1 },
-        { id: 'T12', name: 'Acceso a Datos de Terceros', description: '¿Integración con sistemas externos?', weight: 1 },
-        { id: 'T13', name: 'Facilidad de Entrenamiento', description: '¿Es fácil de aprender?', weight: 1 }
-    ];
 
-    // Datos de factores ambientales
-    const environmentalFactors = [
-        { id: 'E1', name: 'Familiaridad con el Proyecto', description: 'Conocimiento del dominio, negocio y tecnología', weight: 1.5 },
-        { id: 'E2', name: 'Experiencia en Aplicaciones Similares', description: 'Experiencia técnica en tecnologías y arquitecturas similares', weight: 0.5 },
-        { id: 'E3', name: 'Experiencia en Orientación a Objetos', description: 'Habilidad en principios OOP y patrones de diseño', weight: 1 },
-        { id: 'E4', name: 'Capacidad del Analista Líder', description: 'Habilidades de análisis, comunicación y liderazgo', weight: 0.5 },
-        { id: 'E5', name: 'Motivación del Equipo', description: 'Nivel de compromiso, entusiasmo y ownership', weight: 1 },
-        { id: 'E6', name: 'Estabilidad de Requisitos', description: 'Grado en que los requisitos están definidos y son estables', weight: 2 },
-        { id: 'E7', name: 'Personal Part-Time', description: 'Porcentaje de equipo que trabaja part-time', weight: -1 },
-        { id: 'E8', name: 'Dificultad del Lenguaje de Programación', description: 'Complejidad del lenguaje y herramientas', weight: -1 }
-    ];
+    // Datos de factores técnicos
 
-    // Generar factores técnicos en la tabla
-    const technicalFactorsTable = document.getElementById('technical-factors-table');
-    technicalFactors.forEach(factor => {
-        const row = document.createElement('tr');
+    const technicalFactors = [
+
+        { id: 'T1', name: 'Sistema Distribuido', description: '¿Requiere arquitectura distribuida?', weight: 2 },
+
+        { id: 'T2', name: 'Objetivos de Performance', description: '¿Requiere alto rendimiento/tiempo real?', weight: 1 },
+
+        { id: 'T3', name: 'Eficiencia del Usuario Final', description: '¿Cuánto impacto en la productividad del usuario?', weight: 1 },
+
+        { id: 'T4', name: 'Complejidad de Procesamiento Interno', description: '¿Algoritmos/complejidad computacional?', weight: 1 },
+
+        { id: 'T5', name: 'Código Reutilizable', description: '¿Se puede reutilizar código existente?', weight: 1 },
+
+        { id: 'T6', name: 'Facilidad de Instalación', description: '¿Complejidad del despliegue?', weight: 0.5 },
+
+        { id: 'T7', name: 'Facilidad de Uso', description: '¿Interfaz amigable?', weight: 0.5 },
+
+        { id: 'T8', name: 'Portabilidad', description: '¿Debe ejecutarse en múltiples plataformas?', weight: 2 },
+
+        { id: 'T9', name: 'Facilidad de Cambio', description: '¿Frecuencia de modificaciones?', weight: 1 },
+
+        { id: 'T10', name: 'Concurrencia', description: '¿Múltiples usuarios simultáneos?', weight: 1 },
+
+        { id: 'T11', name: 'Características de Seguridad', description: '¿Nivel de seguridad requerido?', weight: 1 },
+
+        { id: 'T12', name: 'Acceso a Datos de Terceros', description: '¿Integración con sistemas externos?', weight: 1 },
+
+        { id: 'T13', name: 'Facilidad de Entrenamiento', description: '¿Es fácil de aprender?', weight: 1 }
+
+    ];
+
+
+
+    // Datos de factores ambientales
+
+    const environmentalFactors = [
+
+        { id: 'E1', name: 'Familiaridad con el Proyecto', description: 'Conocimiento del dominio, negocio y tecnología', weight: 1.5 },
+
+        { id: 'E2', name: 'Experiencia en Aplicaciones Similares', description: 'Experiencia técnica en tecnologías y arquitecturas similares', weight: 0.5 },
+
+        { id: 'E3', name: 'Experiencia en Orientación a Objetos', description: 'Habilidad en principios OOP y patrones de diseño', weight: 1 },
+
+        { id: 'E4', name: 'Capacidad del Analista Líder', description: 'Habilidades de análisis, comunicación y liderazgo', weight: 0.5 },
+
+        { id: 'E5', name: 'Motivación del Equipo', description: 'Nivel de compromiso, entusiasmo y ownership', weight: 1 },
+
+        { id: 'E6', name: 'Estabilidad de Requisitos', description: 'Grado en que los requisitos están definidos y son estables', weight: 2 },
+
+        { id: 'E7', name: 'Personal Part-Time', description: 'Porcentaje de equipo que trabaja part-time', weight: -1 },
+
+        { id: 'E8', name: 'Dificultad del Lenguaje de Programación', description: 'Complejidad del lenguaje y herramientas', weight: -1 }
+
+    ];
+
+
+
+    // Generar factores técnicos en la tabla
+
+    const technicalFactorsTable = document.getElementById('technical-factors-table');
+
+    technicalFactors.forEach(factor => {
+
+        const row = document.createElement('div');
+        row.className = 'ucp-factor-row';
+        row.setAttribute('role', 'row');
         row.innerHTML = `
-            <td><strong>${factor.id}</strong>: ${factor.name}</td>
-            <td>${factor.description}</td>
-            <td>${factor.weight}</td>
-            <td>
-                <select id="${factor.id}" class="form-select">
+            <div class="ucp-factor-name" role="cell"><strong>${factor.id}</strong>: ${factor.name}</div>
+            <div class="ucp-factor-description" role="cell">${factor.description}</div>
+            <div class="ucp-factor-weight" role="cell">${factor.weight}</div>
+            <div class="ucp-factor-value" role="cell">
+                <select id="${factor.id}" class="form-select" aria-label="Valor del factor ${factor.id}">
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -339,28 +684,44 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                 </select>
-            </td>
+            </div>
         `;
-        technicalFactorsTable.appendChild(row);
-        
-        // Agregar evento al combobox
-        const select = document.getElementById(factor.id);
-        select.addEventListener('change', function() {
-            calculateTCF();
-            calculateEstimation();
-        });
-    });
 
-    // Generar factores ambientales en la tabla
-    const environmentalFactorsTable = document.getElementById('environmental-factors-table');
-    environmentalFactors.forEach(factor => {
-        const row = document.createElement('tr');
+        technicalFactorsTable.appendChild(row);
+
+
+
+        // Agregar evento al combobox
+
+        const select = document.getElementById(factor.id);
+
+        select.addEventListener('change', function() {
+
+            calculateTCF();
+
+            calculateEstimation();
+
+        });
+
+    });
+
+
+
+    // Generar factores ambientales en la tabla
+
+    const environmentalFactorsTable = document.getElementById('environmental-factors-table');
+
+    environmentalFactors.forEach(factor => {
+
+        const row = document.createElement('div');
+        row.className = 'ucp-factor-row';
+        row.setAttribute('role', 'row');
         row.innerHTML = `
-            <td><strong>${factor.id}</strong>: ${factor.name}</td>
-            <td>${factor.description}</td>
-            <td>${factor.weight}</td>
-            <td>
-                <select id="${factor.id}" class="form-select">
+            <div class="ucp-factor-name" role="cell"><strong>${factor.id}</strong>: ${factor.name}</div>
+            <div class="ucp-factor-description" role="cell">${factor.description}</div>
+            <div class="ucp-factor-weight" role="cell">${factor.weight}</div>
+            <div class="ucp-factor-value" role="cell">
+                <select id="${factor.id}" class="form-select" aria-label="Valor del factor ${factor.id}">
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -368,222 +729,599 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                 </select>
-            </td>
+            </div>
         `;
-        environmentalFactorsTable.appendChild(row);
-        
-        // Agregar evento al combobox
-        const select = document.getElementById(factor.id);
-        select.addEventListener('change', function() {
-            calculateEF();
+
+        environmentalFactorsTable.appendChild(row);
+
+
+
+        // Agregar evento al combobox
+
+        const select = document.getElementById(factor.id);
+
+        select.addEventListener('change', function() {
+
+            calculateEF();
+
+            calculateEstimation();
+
+        });
+
+    });
+
+
+
+    // Calcular UAW
+
+    function calculateUAW() {
+
+        const simple = parseInt(document.getElementById('actor-simple').value) || 0;
+
+        const medium = parseInt(document.getElementById('actor-medium').value) || 0;
+
+        const complex = parseInt(document.getElementById('actor-complex').value) || 0;
+
+
+
+        const uaw = (simple * 1) + (medium * 2) + (complex * 3);
+
+        document.getElementById('uaw-result').textContent = uaw;
+
+        return uaw;
+
+    }
+
+
+
+    // Calcular UUCW
+
+    function calculateUUCW() {
+
+        const simple = parseInt(document.getElementById('uc-simple').value) || 0;
+
+        const medium = parseInt(document.getElementById('uc-medium').value) || 0;
+
+        const complex = parseInt(document.getElementById('uc-complex').value) || 0;
+
+
+
+        const uucw = (simple * 5) + (medium * 10) + (complex * 15);
+
+        document.getElementById('uucw-result').textContent = uucw;
+
+        return uucw;
+
+    }
+
+
+
+    // Calcular TCF
+
+    function calculateTCF() {
+
+        let tFactor = 0;
+
+
+
+        technicalFactors.forEach(factor => {
+
+            const value = parseInt(document.getElementById(factor.id).value) || 0;
+
+            tFactor += value * factor.weight;
+
+        });
+
+
+
+        const tcf = 0.6 + (0.01 * tFactor);
+
+        document.getElementById('tcf-result').textContent = tcf.toFixed(2);
+
+
+
+        // Interpretación del TCF
+
+        let interpretation = '';
+
+        if (tcf < 0.85) {
+
+            interpretation = 'Ambiente técnico MUY FAVORABLE';
+
+        } else if (tcf <= 1.15) {
+
+            interpretation = 'Ambiente técnico NEUTRAL';
+
+        } else {
+
+            interpretation = 'Ambiente técnico DESFAVORABLE/COMPLEJO';
+
+        }
+
+        document.getElementById('tcf-interpretation').textContent = interpretation;
+
+
+
+        return tcf;
+
+    }
+
+
+
+    // Calcular EF y CF automático
+
+    function calculateEF() {
+
+        let eFactor = 0;
+
+        let efSum = 0;
+
+        let efLowCount = 0; // E1-E6 < 3
+
+        let efHighCount = 0; // E7-E8 > 3
+
+
+
+        environmentalFactors.forEach((factor, index) => {
+
+            const value = parseInt(document.getElementById(factor.id).value) || 0;
+
+            eFactor += value * factor.weight;
+
+
+
+            // Calcular para CF
+
+            if (index < 6) { // E1 a E6
+
+                if (value < 3) {
+
+                    efLowCount++;
+
+                    efSum += value;
+
+                }
+
+            } else { // E7 a E8
+
+                if (value > 3) {
+
+                    efHighCount++;
+
+                    efSum += value;
+
+                }
+
+            }
+
+        });
+
+
+
+        const ef = 1.4 + (-0.03 * eFactor);
+
+        document.getElementById('ef-result').textContent = ef.toFixed(2);
+
+
+
+        // Mostrar detalles del cálculo del CF
+
+        document.getElementById('ef-low-count').textContent = efLowCount;
+
+        document.getElementById('ef-high-count').textContent = efHighCount;
+
+        document.getElementById('ef-sum').textContent = efSum;
+
+
+
+        // Calcular CF automático basado en la suma
+
+        let autoCF;
+
+        if (efSum <= 2) {
+
+            autoCF = 20;
+
+        } else if (efSum <= 4) {
+
+            autoCF = 28;
+
+        } else {
+
+            autoCF = 36;
+
+        }
+
+        document.getElementById('auto-cf-value').textContent = autoCF;
+
+
+
+        // Interpretación del EF
+
+        let interpretation = '';
+
+        if (ef > 1.10) {
+
+            interpretation = 'Ambiente ALTAMENTE FAVORABLE (equipo experto, estable)';
+
+        } else if (ef >= 0.90) {
+
+            interpretation = 'Ambiente NEUTRAL';
+
+        } else {
+
+            interpretation = 'Ambiente DESFAVORABLE (equipo inexperto, condiciones pobres)';
+
+        }
+
+        document.getElementById('ef-interpretation').textContent = interpretation;
+
+
+
+        return {ef, autoCF};
+
+    }
+
+
+
+    
+    // Costos UCP: tarifas diarias de la calculadora CMO.
+    const ucpCostRates = [
+        { key: 'jefe', label: 'Jefe de desarrollo / Líder de proyecto', daily: 66.67 },
+        { key: 'analista', label: 'Analista de sistemas', daily: 60.00 },
+        { key: 'senior', label: 'Programador senior', daily: 60.00 },
+        { key: 'junior', label: 'Programador junior', daily: 53.33 },
+        { key: 'qa', label: 'Tester / QA', daily: 53.33 },
+        { key: 'ux', label: 'Diseñador UX/UI', daily: 53.33 },
+        { key: 'otro', label: 'Otro (tarifa editable)', daily: 0 }
+    ];
+
+    const ucpCostMembers = document.getElementById('ucp-cost-members');
+    const ucpCostDayHours = document.getElementById('ucp-cost-day-hours');
+    const ucpCostCurrency = value => new Intl.NumberFormat('en-US', {
+        style: 'currency', currency: 'USD'
+    }).format(value);
+    let ucpCostEffort = 0;
+
+    function addCostMember(role = 'junior', hours = 0) {
+        const row = document.createElement('tr');
+        const roleCell = document.createElement('td');
+        const roleSelect = document.createElement('select');
+        roleSelect.className = 'form-select ucp-cost-role';
+        ucpCostRates.forEach(rate => {
+            const option = document.createElement('option');
+            option.value = rate.key;
+            option.textContent = rate.label;
+            roleSelect.appendChild(option);
+        });
+        roleSelect.value = role;
+        roleCell.appendChild(roleSelect);
+        const hoursCell = document.createElement('td');
+        const hoursInput = document.createElement('input');
+        hoursInput.type = 'number';
+        hoursInput.className = 'form-control ucp-cost-hours';
+        hoursInput.min = '0';
+        hoursInput.step = '0.01';
+        hoursInput.value = hours.toFixed(2);
+        hoursCell.appendChild(hoursInput);
+        const rateCell = document.createElement('td');
+        const rateInput = document.createElement('input');
+        rateInput.type = 'number';
+        rateInput.className = 'form-control ucp-cost-daily';
+        rateInput.min = '0';
+        rateInput.step = '0.01';
+        rateCell.appendChild(rateInput);
+        const hourlyCell = document.createElement('td');
+        hourlyCell.className = 'ucp-cost-hourly';
+        const totalCell = document.createElement('td');
+        totalCell.className = 'fw-bold ucp-cost-subtotal';
+        const actionCell = document.createElement('td');
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-outline-danger btn-sm';
+        removeBtn.textContent = 'Quitar';
+        removeBtn.addEventListener('click', () => {
+            const teamInput = document.getElementById('team-size');
+            const currentCount = ucpCostMembers.querySelectorAll('tr').length;
+            if (currentCount <= 1) return;
+            row.remove();
+            teamInput.value = currentCount - 1;
             calculateEstimation();
         });
+        actionCell.appendChild(removeBtn);
+        [roleCell, hoursCell, rateCell, hourlyCell, totalCell, actionCell].forEach(cell => row.appendChild(cell));
+        ucpCostMembers.appendChild(row);
+        function syncDaily() {
+            const selected = ucpCostRates.find(rate => rate.key === roleSelect.value);
+            rateInput.value = selected.daily.toFixed(2);
+            rateInput.readOnly = selected.key !== 'otro';
+            updateCostEstimator();
+        }
+        roleSelect.addEventListener('change', syncDaily);
+        hoursInput.addEventListener('input', updateCostEstimator);
+        rateInput.addEventListener('input', updateCostEstimator);
+        syncDaily();
+    }
+
+    function distributeCostHours() {
+        const rows = [...ucpCostMembers.querySelectorAll('tr')];
+        if (!rows.length) return;
+        // Centésimas: la suma de las horas asignadas coincide con las horas UCP redondeadas.
+        const cents = Math.round(ucpCostEffort * 100);
+        const base = Math.floor(cents / rows.length);
+        let remainder = cents - (base * rows.length);
+        rows.forEach(row => {
+            const share = base + (remainder-- > 0 ? 1 : 0);
+            row.querySelector('.ucp-cost-hours').value = (share / 100).toFixed(2);
+        });
+        updateCostEstimator();
+    }
+
+    function updateCostEstimator(effort) {
+        if (typeof effort === 'number') ucpCostEffort = Number.isFinite(effort) ? Math.max(0, effort) : 0;
+        const dayHours = Number(ucpCostDayHours.value);
+        const validDayHours = Number.isFinite(dayHours) && dayHours > 0;
+        let totalHours = 0;
+        let totalCost = 0;
+        let invalid = !validDayHours;
+        ucpCostMembers.querySelectorAll('tr').forEach(row => {
+            const hours = Number(row.querySelector('.ucp-cost-hours').value);
+            const daily = Number(row.querySelector('.ucp-cost-daily').value);
+            if (!Number.isFinite(hours) || hours < 0 || !Number.isFinite(daily) || daily <= 0) invalid = true;
+            const subtotal = validDayHours ? (hours * daily / dayHours) : 0;
+            row.querySelector('.ucp-cost-hourly').textContent = validDayHours ? ucpCostCurrency(daily / dayHours) : '—';
+            row.querySelector('.ucp-cost-subtotal').textContent = ucpCostCurrency(subtotal);
+            totalHours += hours;
+            totalCost += subtotal;
+        });
+        const diff = Math.round((ucpCostEffort - totalHours) * 100) / 100;
+        const status = document.getElementById('ucp-cost-status');
+        document.getElementById('ucp-cost-effort').textContent = ucpCostEffort.toFixed(2) + ' horas';
+        document.getElementById('ucp-cost-total-hours').textContent = totalHours.toFixed(2) + ' h';
+        document.getElementById('ucp-cost-total').textContent = invalid ? '—' : ucpCostCurrency(totalCost);
+        if (!ucpCostMembers.children.length) {
+            status.className = 'alert alert-warning mb-0';
+            status.textContent = 'Agregue al menos un integrante.';
+        } else if (invalid) {
+            status.className = 'alert alert-warning mb-0';
+            status.textContent = 'Revise las horas de la jornada y las tarifas: deben ser mayores que cero.';
+        } else if (Math.abs(diff) > 0.01) {
+            status.className = 'alert alert-warning mb-0';
+            status.textContent = diff > 0
+                ? `Faltan ${diff.toFixed(2)} horas-persona por asignar.`
+                : `Se asignaron ${Math.abs(diff).toFixed(2)} horas-persona de más.`;
+        } else {
+            status.className = 'alert alert-success mb-0';
+            status.textContent = 'Las horas-persona están distribuidas. Costo estimado de mano de obra: ' + ucpCostCurrency(totalCost);
+        }
+    }
+
+    // Mantiene los puestos y tarifas elegidos al modificar la cantidad de integrantes.
+    // Sólo agrega o quita las filas necesarias; luego distribuye exactamente las horas UCP.
+    function synchronizeCostTeam(effort) {
+        const teamInput = document.getElementById('team-size');
+        const dayInput = document.getElementById('hours-per-day');
+        const desired = Math.max(1, Math.min(10, Math.trunc(Number(teamInput.value) || 1)));
+        const dayHours = Number(dayInput.value);
+        ucpCostDayHours.value = dayHours > 0 ? dayHours : '';
+        ucpCostEffort = Number.isFinite(effort) && effort > 0 ? effort : 0;
+
+        let rows = ucpCostMembers.querySelectorAll('tr');
+        while (rows.length < desired) {
+            addCostMember(rows.length === 0 ? 'senior' : 'junior', 0);
+            rows = ucpCostMembers.querySelectorAll('tr');
+        }
+        while (rows.length > desired) {
+            rows[rows.length - 1].remove();
+            rows = ucpCostMembers.querySelectorAll('tr');
+        }
+        // Reparto en centésimas para que el total coincida sin desfase de redondeo.
+        distributeCostHours();
+    }
+
+    document.getElementById('ucp-cost-add').addEventListener('click', () => {
+        const size = document.getElementById('team-size');
+        if (Number(size.value) >= 10) return;
+        size.value = (ucpCostMembers.querySelectorAll('tr').length + 1);
+        calculateEstimation();
     });
-
-    // Calcular UAW
-    function calculateUAW() {
-        const simple = parseInt(document.getElementById('actor-simple').value) || 0;
-        const medium = parseInt(document.getElementById('actor-medium').value) || 0;
-        const complex = parseInt(document.getElementById('actor-complex').value) || 0;
-        
-        const uaw = (simple * 1) + (medium * 2) + (complex * 3);
-        document.getElementById('uaw-result').textContent = uaw;
-        return uaw;
-    }
-
-    // Calcular UUCW
-    function calculateUUCW() {
-        const simple = parseInt(document.getElementById('uc-simple').value) || 0;
-        const medium = parseInt(document.getElementById('uc-medium').value) || 0;
-        const complex = parseInt(document.getElementById('uc-complex').value) || 0;
-        
-        const uucw = (simple * 5) + (medium * 10) + (complex * 15);
-        document.getElementById('uucw-result').textContent = uucw;
-        return uucw;
-    }
-
-    // Calcular TCF
-    function calculateTCF() {
-        let tFactor = 0;
-        
-        technicalFactors.forEach(factor => {
-            const value = parseInt(document.getElementById(factor.id).value) || 0;
-            tFactor += value * factor.weight;
-        });
-        
-        const tcf = 0.6 + (0.01 * tFactor);
-        document.getElementById('tcf-result').textContent = tcf.toFixed(2);
-        
-        // Interpretación del TCF
-        let interpretation = '';
-        if (tcf < 0.85) {
-            interpretation = 'Ambiente técnico MUY FAVORABLE';
-        } else if (tcf <= 1.15) {
-            interpretation = 'Ambiente técnico NEUTRAL';
-        } else {
-            interpretation = 'Ambiente técnico DESFAVORABLE/COMPLEJO';
-        }
-        document.getElementById('tcf-interpretation').textContent = interpretation;
-        
-        return tcf;
-    }
-
-    // Calcular EF y CF automático
-    function calculateEF() {
-        let eFactor = 0;
-        let efSum = 0;
-        let efLowCount = 0; // E1-E6 < 3
-        let efHighCount = 0; // E7-E8 > 3
-        
-        environmentalFactors.forEach((factor, index) => {
-            const value = parseInt(document.getElementById(factor.id).value) || 0;
-            eFactor += value * factor.weight;
-            
-            // Calcular para CF
-            if (index < 6) { // E1 a E6
-                if (value < 3) {
-                    efLowCount++;
-                    efSum += value;
-                }
-            } else { // E7 a E8
-                if (value > 3) {
-                    efHighCount++;
-                    efSum += value;
-                }
-            }
-        });
-        
-        const ef = 1.4 + (-0.03 * eFactor);
-        document.getElementById('ef-result').textContent = ef.toFixed(2);
-        
-        // Mostrar detalles del cálculo del CF
-        document.getElementById('ef-low-count').textContent = efLowCount;
-        document.getElementById('ef-high-count').textContent = efHighCount;
-        document.getElementById('ef-sum').textContent = efSum;
-        
-        // Calcular CF automático basado en la suma
-        let autoCF;
-        if (efSum <= 2) {
-            autoCF = 20;
-        } else if (efSum <= 4) {
-            autoCF = 28;
-        } else {
-            autoCF = 36;
-        }
-        document.getElementById('auto-cf-value').textContent = autoCF;
-        
-        // Interpretación del EF
-        let interpretation = '';
-        if (ef > 1.10) {
-            interpretation = 'Ambiente ALTAMENTE FAVORABLE (equipo experto, estable)';
-        } else if (ef >= 0.90) {
-            interpretation = 'Ambiente NEUTRAL';
-        } else {
-            interpretation = 'Ambiente DESFAVORABLE (equipo inexperto, condiciones pobres)';
-        }
-        document.getElementById('ef-interpretation').textContent = interpretation;
-        
-        return {ef, autoCF};
-    }
+    document.getElementById('ucp-cost-distribute').addEventListener('click', distributeCostHours);
 
     // Calcular estimación completa
-    function calculateEstimation() {
-        const uaw = calculateUAW();
-        const uucw = calculateUUCW();
-        const tcf = calculateTCF();
-        const {ef, autoCF} = calculateEF();
-        
-        const uucp = uaw + uucw;
-        const ucp = uucp * tcf * ef;
-        
-        document.getElementById('uucp-result').textContent = uucp.toFixed(2);
-        document.getElementById('ucp-result').textContent = ucp.toFixed(2);
-        
-        const effort = ucp * autoCF;
-        document.getElementById('effort-result').textContent = Math.round(effort);
-        
-        const teamSize = parseInt(document.getElementById('team-size').value) || 2;
-        const hoursPerDay = parseFloat(document.getElementById('hours-per-day').value) || 6;
-        const duration = effort / (teamSize * hoursPerDay);
-        document.getElementById('duration-result').textContent = Math.round(duration);
-        
-        // Interpretación de la duración
-        let interpretation = '';
-        const weeks = Math.ceil(duration / 5); // Asumiendo 5 días laborales por semana
-        if (teamSize === 1) {
-            interpretation = `Un desarrollador tardaría aproximadamente ${weeks} semanas (${Math.round(duration)} días) en completar el proyecto.`;
-        } else {
-            interpretation = `${teamSize} desarrolladores tardarían aproximadamente ${weeks} semanas (${Math.round(duration)} días) en completar el proyecto.`;
+
+    function calculateEstimation() {
+
+        const uaw = calculateUAW();
+
+        const uucw = calculateUUCW();
+
+        const tcf = calculateTCF();
+
+        const {ef, autoCF} = calculateEF();
+
+
+
+        const uucp = uaw + uucw;
+
+        const ucp = uucp * tcf * ef;
+
+
+
+        document.getElementById('uucp-result').textContent = uucp.toFixed(2);
+
+        document.getElementById('ucp-result').textContent = ucp.toFixed(2);
+
+
+
+        const effort = ucp * autoCF;
+
+        document.getElementById('effort-result').textContent = Math.round(effort);
+
+
+
+        const teamSize = parseInt(document.getElementById('team-size').value) || 2;
+
+        const hoursPerDay = parseFloat(document.getElementById('hours-per-day').value) || 6;
+
+        const duration = effort / (teamSize * hoursPerDay);
+
+        document.getElementById('duration-result').textContent = Math.round(duration);
+
+
+
+        // Interpretación de la duración
+
+        let interpretation = '';
+
+        const weeks = Math.ceil(duration / 5); // Asumiendo 5 días laborales por semana
+
+        if (teamSize === 1) {
+
+            interpretation = `Un desarrollador tardaría aproximadamente ${weeks} semanas (${Math.round(duration)} días) en completar el proyecto.`;
+
+        } else {
+
+            interpretation = `${teamSize} desarrolladores tardarían aproximadamente ${weeks} semanas (${Math.round(duration)} días) en completar el proyecto.`;
+
+        }
+
+        document.getElementById('duration-interpretation').textContent = interpretation;
+        synchronizeCostTeam(effort);
+
+    }
+
+
+
+    // Reiniciar valores
+
+    function resetValues() {
+
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+
+            if (!input.closest('#ucp-cost-section') && input.id !== 'team-size' && input.id !== 'hours-per-day') {
+
+                input.value = 0;
+
+            }
+
+        });
+
+
+
+        document.querySelectorAll('select').forEach(select => {
+            if (select.closest('#ucp-cost-section')) return;
+
+            select.value = '0';
+
+        });
+
+
+
+        calculateEstimation();
+
+    }
+
+
+
+    // Event Listeners para inputs numéricos
+
+    document.querySelectorAll('.form-control').forEach(input => {
+
+        if (!input.closest('#ucp-cost-section')) input.addEventListener('input', calculateEstimation);
+
+    });
+
+
+
+    // Event Listeners para botones
+
+    document.getElementById('calculate-btn').addEventListener('click', calculateEstimation);
+
+    document.getElementById('reset-btn').addEventListener('click', resetValues);
+
+
+
+    // Calcular inicialmente
+
+    calculateEstimation();
+
+
+
+    // ---- CONTROL DE VISIBILIDAD DE SECCIONES ---- //
+
+    const sections = document.querySelectorAll('.section');
+
+    sections.forEach((sec, i) => {
+
+        if (i === 0) sec.classList.add('active'); // solo la primera visible al inicio
+
+    });
+
+
+
+    function checkSectionProgress() {
+
+        // 1️⃣ Sección 1 - Actores
+
+        const a1 = parseInt(document.getElementById('actor-simple').value) || 0;
+
+        const a2 = parseInt(document.getElementById('actor-medium').value) || 0;
+
+        const a3 = parseInt(document.getElementById('actor-complex').value) || 0;
+
+        if (a1 + a2 + a3 > 0) sections[1].classList.add('active'); // mostrar sección 2
+
+
+
+        // 2️⃣ Sección 2 - Casos de uso
+
+        const uc1 = parseInt(document.getElementById('uc-simple').value) || 0;
+
+        const uc2 = parseInt(document.getElementById('uc-medium').value) || 0;
+
+        const uc3 = parseInt(document.getElementById('uc-complex').value) || 0;
+
+        if (uc1 + uc2 + uc3 > 0) sections[2].classList.add('active'); // mostrar TCF
+
+
+
+        // 3️⃣ Sección 3 - Factores técnicos
+
+        const someTechnicalSelected = Array.from(document.querySelectorAll('#technical-factors-table select'))
+
+            .some(sel => parseInt(sel.value) > 0);
+
+        if (someTechnicalSelected) sections[3].classList.add('active'); // mostrar EF
+
+
+
+        const someEnvironmentalSelected = Array.from(document.querySelectorAll('#environmental-factors-table select'))
+
+            .some(sel => parseInt(sel.value) > 0);
+
+        if (someEnvironmentalSelected) sections[4].classList.add('active'); // mostrar CF
+        // Sección 6: mostrar resultados y costos al empezar a evaluar EF.
+        // ef-sum puede ser cero para factores válidos; no debe ocultar el resultado.
+        if (someEnvironmentalSelected) {
+            sections[5].classList.add('active');
         }
-        document.getElementById('duration-interpretation').textContent = interpretation;
-    }
 
-    // Reiniciar valores
-    function resetValues() {
-        document.querySelectorAll('input[type="number"]').forEach(input => {
-            if (input.id !== 'team-size' && input.id !== 'hours-per-day') {
-                input.value = 0;
-            }
-        });
-        
-        document.querySelectorAll('select').forEach(select => {
-            select.value = '0';
-        });
-        
-        calculateEstimation();
-    }
 
-    // Event Listeners para inputs numéricos
-    document.querySelectorAll('.form-control').forEach(input => {
-        input.addEventListener('input', calculateEstimation);
-    });
+    }
 
-    // Event Listeners para botones
-    document.getElementById('calculate-btn').addEventListener('click', calculateEstimation);
-    document.getElementById('reset-btn').addEventListener('click', resetValues);
 
-    // Calcular inicialmente
-    calculateEstimation();
 
-    // ---- CONTROL DE VISIBILIDAD DE SECCIONES ---- //
-    const sections = document.querySelectorAll('.section');
-    sections.forEach((sec, i) => {
-        if (i === 0) sec.classList.add('active'); // solo la primera visible al inicio
-    });
+    // Vincular con cambios de input
 
-    function checkSectionProgress() {
-        // 1️⃣ Sección 1 - Actores
-        const a1 = parseInt(document.getElementById('actor-simple').value) || 0;
-        const a2 = parseInt(document.getElementById('actor-medium').value) || 0;
-        const a3 = parseInt(document.getElementById('actor-complex').value) || 0;
-        if (a1 + a2 + a3 > 0) sections[1].classList.add('active'); // mostrar sección 2
+    document.querySelectorAll('input, select').forEach(el => {
+        if (el.closest('#ucp-cost-section')) return;
 
-        // 2️⃣ Sección 2 - Casos de uso
-        const uc1 = parseInt(document.getElementById('uc-simple').value) || 0;
-        const uc2 = parseInt(document.getElementById('uc-medium').value) || 0;
-        const uc3 = parseInt(document.getElementById('uc-complex').value) || 0;
-        if (uc1 + uc2 + uc3 > 0) sections[2].classList.add('active'); // mostrar TCF
+        el.addEventListener('input', checkSectionProgress);
 
-        // 3️⃣ Sección 3 - Factores técnicos
-        const someTechnicalSelected = Array.from(document.querySelectorAll('#technical-factors-table select'))
-            .some(sel => parseInt(sel.value) > 0);
-        if (someTechnicalSelected) sections[3].classList.add('active'); // mostrar EF
+        el.addEventListener('change', checkSectionProgress);
 
-        // 4️⃣ Sección 4 - Factores ambientales
-        const someEnvironmentalSelected = Array.from(document.querySelectorAll('#environmental-factors-table select'))
-            .some(sel => parseInt(sel.value) > 0);
-        if (someEnvironmentalSelected) sections[4].classList.add('active'); // mostrar CF
+    });
 
-        // 5️⃣ Sección 5 - CF
-        if (document.getElementById('ef-sum').textContent !== '0') {
-            sections[5].classList.add('active'); // mostrar cálculo final
-        }
-    }
-
-    // Vincular con cambios de input
-    document.querySelectorAll('input, select').forEach(el => {
-        el.addEventListener('input', checkSectionProgress);
-        el.addEventListener('change', checkSectionProgress);
-    });
 </script>
+
 {% endblock %}

@@ -1,382 +1,427 @@
-
-/* ==========================================
-   CALCULADORA UCP - FIA-TECH
-   DISEÑO FORMAL Y COMPACTO
-========================================== */
-
-/* CONTENEDOR GENERAL */
-
+/* =========================================================
+   FIA-TECH · CALCULADORA UCP
+   Versión formal, compacta y responsiva
+   Conserva la visibilidad progresiva de las secciones
+   ========================================================= */
 .calculadora-ucp-page {
+    --ucp-ink: #263244;
+    --ucp-muted: #64748b;
+    --ucp-line: #d9e1e7;
+    --ucp-soft: #f3f4f6;
+    --ucp-violet: #120e38;
+    --ucp-action: #34465b;
     max-width: 1180px;
     margin: 0 auto;
-    color: #263244;
+    padding-top: 14px !important;
+    padding-bottom: 26px !important;
+    color: var(--ucp-ink);
+    font-size: .86rem;
 }
 
-/* ==========================================
-   VISIBILIDAD DE SECCIONES
-   IMPORTANTE: NO ELIMINAR
-========================================== */
+/* CRÍTICO: no eliminar; controla los pasos del formulario. */
+.calculadora-ucp-page .section { display: none; }
+.calculadora-ucp-page .section.active { display: block; }
 
-.calculadora-ucp-page .section {
-    display: none;
+/* =========================================================
+   DEFENSA: anula pseudo-elementos heredados de otros CSS que
+   crean "celdas fantasma" y desplazan las columnas.
+   ========================================================= */
+.calculadora-ucp-page table.ucp-tabla::before,
+.calculadora-ucp-page table.ucp-tabla::after,
+.calculadora-ucp-page table.ucp-tabla thead::before,
+.calculadora-ucp-page table.ucp-tabla thead::after,
+.calculadora-ucp-page table.ucp-tabla tbody::before,
+.calculadora-ucp-page table.ucp-tabla tbody::after,
+.calculadora-ucp-page table.ucp-tabla tfoot::before,
+.calculadora-ucp-page table.ucp-tabla tfoot::after,
+.calculadora-ucp-page table.ucp-tabla tr::before,
+.calculadora-ucp-page table.ucp-tabla tr::after,
+.calculadora-ucp-page .ucp-cf-grid::before,
+.calculadora-ucp-page .ucp-cf-grid::after,
+.calculadora-ucp-page .ucp-cf-details::before,
+.calculadora-ucp-page .ucp-cf-details::after,
+.calculadora-ucp-page .ucp-results-grid::before,
+.calculadora-ucp-page .ucp-results-grid::after {
+    content: none !important;
+    display: none !important;
 }
 
-.calculadora-ucp-page .section.active {
-    display: block;
-}
-
-/* ==========================================
-   ENCABEZADO PRINCIPAL
-========================================== */
-
-.calculadora-ucp-page .ucp-page-header {
-    margin-bottom: 25px;
-    padding: 8px 15px;
-}
-
+/* Encabezado */
+.calculadora-ucp-page .ucp-page-header { margin-bottom: 18px; padding: 4px 12px 6px; }
 .calculadora-ucp-page .ucp-page-header h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #1f2937;
-    line-height: 1.3;
+    font-size: 1.43rem; font-weight: 700; color: #1f2937;
+    line-height: 1.3; margin-bottom: 5px !important;
 }
-
 .calculadora-ucp-page .ucp-page-header p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: #64748b !important;
+    color: var(--ucp-muted) !important; font-size: .83rem; line-height: 1.45;
 }
 
-/* ==========================================
-   TARJETAS DE SECCIONES
-========================================== */
-
+/* Tarjetas */
 .calculadora-ucp-page .ucp-section-card {
-    background-color: #ffffff;
-    border: 1px solid #d9e1e7;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+    background: #fff; border: 1px solid var(--ucp-line);
+    border-radius: 9px; overflow: hidden;
+    box-shadow: 0 2px 7px rgba(15,23,42,.035);
+    margin-bottom: 14px !important;
+}
+.calculadora-ucp-page .ucp-section-card > .card-body { padding: 14px 17px; }
+.calculadora-ucp-page .ucp-section-title,
+.calculadora-ucp-page #ucp-cost-section .ucp-cost-heading {
+    background: var(--ucp-soft); border: 1px solid #dce1e7;
+    border-left: 4px solid #607d9b; border-radius: 6px;
+    color: var(--ucp-ink); font-size: .95rem; font-weight: 650;
+    padding: 10px 12px; margin: 0 0 10px;
+}
+.calculadora-ucp-page .ucp-section-card .card-text,
+.calculadora-ucp-page #ucp-cost-section .ucp-cost-desc {
+    color: var(--ucp-muted); font-size: .81rem; line-height: 1.5; margin-bottom: 10px;
 }
 
-.calculadora-ucp-page .ucp-section-card > .card-body {
-    padding: 20px;
-}
-
-/* ==========================================
-   TITULOS DE SECCION
-========================================== */
-
-.calculadora-ucp-page .ucp-section-title {
-    background-color: #f3f4f6;
-    border: 1px solid #dce1e7;
-    border-left: 4px solid #607d9b;
-    border-radius: 7px;
-
-    color: #263244;
-    font-size: 1rem;
-    font-weight: 600;
-
-    padding: 13px 15px;
-    margin-bottom: 15px;
-}
-
-.calculadora-ucp-page .ucp-section-card .card-text {
-    color: #64748b;
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin-bottom: 15px;
-}
-
-/* ==========================================
-   TABLAS
-========================================== */
-
-.calculadora-ucp-page .table-responsive {
-    border-radius: 7px;
-}
-
+/* Tablas (comportamiento natural de tabla, sin forzar display) */
+.calculadora-ucp-page .table-responsive { border-radius: 6px; overflow-x: auto; }
 .calculadora-ucp-page .ucp-tabla {
-    width: 100%;
-    margin-bottom: 16px;
-    font-size: 0.87rem;
-    border-color: #e5e7eb;
+    width: 100%; border-color: #e5e7eb; margin-bottom: 10px;
+    font-size: .81rem;
 }
-
 .calculadora-ucp-page .ucp-tabla th,
 .calculadora-ucp-page .ucp-tabla td {
-    padding: 10px 12px;
-    vertical-align: middle;
-    border-color: #e5e7eb;
+    padding: 6px 10px; vertical-align: middle; border-color: #e5e7eb;
+    line-height: 1.35;
 }
-
-/* ENCABEZADOS MORADOS */
-
 .calculadora-ucp-page .ucp-tabla thead th {
     --bs-table-bg: #120e38;
     --bs-table-accent-bg: transparent;
-    --bs-table-color: #ffffff;
-
-    background-color: #120e38 !important;
-    color: #ffffff !important;
-    box-shadow: none !important;
-
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-color: #120e38;
+    --bs-table-color: #fff;
+    background: #120e38 !important; color: #fff !important;
+    border-color: #120e38 !important;
+    box-shadow: none !important; font-size: .79rem; font-weight: 600;
+    white-space: nowrap; padding: 8px 10px;
 }
-
-/* FILAS Y EFECTO HOVER */
-
 .calculadora-ucp-page .ucp-tabla tbody td {
-    --bs-table-bg: #ffffff;
-    --bs-table-accent-bg: transparent;
-
-    background-color: #ffffff;
-    color: #263244;
-    box-shadow: none;
+    --bs-table-bg: #fff; --bs-table-accent-bg: transparent;
+    background: #fff; color: var(--ucp-ink); box-shadow: none;
+}
+.calculadora-ucp-page .ucp-tabla.table-striped tbody tr:nth-of-type(odd) td {
+    --bs-table-bg: #f8fafc; background: #f8fafc;
+}
+.calculadora-ucp-page .ucp-tabla.table-hover tbody tr:hover td {
+    --bs-table-bg: #eef2f6; --bs-table-accent-bg: transparent;
+    background: #eef2f6; box-shadow: none;
+}
+.calculadora-ucp-page .ucp-tabla tfoot th,
+.calculadora-ucp-page .ucp-tabla tfoot td {
+    background: #eef1f5; color: var(--ucp-ink);
+    font-weight: 650; border-top: 1px solid #cfd8e3;
 }
 
-.calculadora-ucp-page .ucp-tabla.table-striped
-tbody tr:nth-of-type(odd) td {
-    --bs-table-bg: #f8fafc;
-    background-color: #f8fafc;
-}
-
-.calculadora-ucp-page .ucp-tabla.table-hover
-tbody tr:hover td {
-    --bs-table-bg: #eef2f6;
-    --bs-table-accent-bg: transparent;
-
-    background-color: #eef2f6;
-    box-shadow: none;
-}
-
-/* ==========================================
-   CAMPOS NUMERICOS Y SELECTORES
-========================================== */
-
+/* Campos */
 .calculadora-ucp-page .form-control,
 .calculadora-ucp-page .form-select {
-    border: 1px solid #cfd8e3;
-    border-radius: 7px;
-    background-color: #ffffff;
-    color: #263244;
-
-    min-height: 38px;
-    font-size: 0.88rem;
-    box-shadow: none;
+    min-height: 32px; border: 1px solid #cfd8e3; border-radius: 6px;
+    background-color: #fff; color: var(--ucp-ink);
+    font-size: .82rem; padding: 4px 9px; box-shadow: none;
 }
-
 .calculadora-ucp-page .form-control:focus,
 .calculadora-ucp-page .form-select:focus {
-    border-color: #7f95aa;
-    box-shadow: 0 0 0 0.15rem rgba(47,75,102,0.12);
+    border-color: #7f95aa; box-shadow: 0 0 0 .14rem rgba(47,75,102,.12);
 }
-
-.calculadora-ucp-page .ucp-tabla
-input[type="number"] {
-    width: 90px !important;
-    min-width: 75px;
-    text-align: center;
-}
-
-.calculadora-ucp-page .ucp-tabla .form-select {
-    width: 90px;
-    min-width: 75px;
-    padding-right: 25px;
-}
-
+.calculadora-ucp-page .form-control[readonly],
+.calculadora-ucp-page .form-select:disabled { background: #f3f5f8 !important; }
 .calculadora-ucp-page .form-label {
-    color: #374151;
-    font-size: 0.88rem;
-    font-weight: 600;
-    margin-bottom: 6px;
+    color: #374151; font-size: .81rem; font-weight: 600; margin-bottom: 5px;
+}
+/* Campos estrechos de las tablas UCP originales (no los de costos) */
+.calculadora-ucp-page .ucp-tabla:not(.ucp-cost-table) input[type="number"] {
+    width: 80px !important; min-width: 72px; text-align: center;
+}
+.calculadora-ucp-page .ucp-tabla:not(.ucp-cost-table) .form-select {
+    width: 80px; min-width: 72px; padding-right: 25px;
 }
 
-/* ==========================================
-   RECUADROS DE RESULTADOS
-========================================== */
-
-.calculadora-ucp-page .ucp-section-card
-.alert-secondary {
-    background-color: #e9edf3;
-    border: 1px solid #dce1e7;
-    border-radius: 8px;
-
-    color: #263244;
-    padding: 14px 16px;
-    font-size: 0.88rem;
+/* Bloques de resultados originales */
+.calculadora-ucp-page .ucp-section-card .alert-secondary {
+    background: #e9edf3; border: 1px solid #dce1e7;
+    border-radius: 7px; color: var(--ucp-ink);
+    padding: 10px 13px; font-size: .81rem; margin-bottom: 10px;
 }
-
-.calculadora-ucp-page .alert-secondary
-.fw-bold {
-    color: #263244;
-    font-weight: 600 !important;
+.calculadora-ucp-page .alert-secondary .fw-bold { font-weight: 600 !important; }
+.calculadora-ucp-page .alert-secondary .h3 {
+    color: #304b70 !important; font-size: 1.25rem; font-weight: 700; margin: 4px 0 0;
 }
-
-.calculadora-ucp-page .alert-secondary
-.h3 {
-    color: #304b70 !important;
-    font-size: 1.45rem;
-    font-weight: 700;
-    margin: 7px 0 0;
-}
-
-/* TEXTO DE INTERPRETACIONES */
-
 .calculadora-ucp-page #tcf-interpretation,
 .calculadora-ucp-page #ef-interpretation {
-    color: #526278;
-    font-size: 0.85rem;
-    font-weight: 500;
+    color: #526278; font-size: .79rem; font-weight: 500;
 }
-
-/* ==========================================
-   QUINTA SECCION: CALCULO CF
-========================================== */
-
-.calculadora-ucp-page .ucp-section-card
-.alert-secondary .alert-heading {
-    color: #263244;
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-bottom: 10px;
+.calculadora-ucp-page .ucp-section-card .alert-heading {
+    font-size: .88rem; font-weight: 600; margin-bottom: 6px;
 }
-
-.calculadora-ucp-page .ucp-section-card hr {
-    border-top: 1px solid #dce1e7;
-    opacity: 1;
-}
-
-/* ==========================================
-   SEXTA SECCION: RESULTADO FINAL
-========================================== */
-
-.calculadora-ucp-page #uucp-result,
-.calculadora-ucp-page #ucp-result,
-.calculadora-ucp-page #effort-result,
-.calculadora-ucp-page #duration-result {
-    color: #304b70 !important;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-/* INTERPRETACION DE RESULTADOS */
-
 .calculadora-ucp-page .alert-success {
-    background-color: #eef3ef;
-    border: 1px solid #cbded2;
-    border-left: 4px solid #688775;
-    border-radius: 8px;
-
-    color: #376e55;
-    padding: 16px;
+    background: #eef3ef; border: 1px solid #cbded2;
+    border-left: 4px solid #688775; border-radius: 7px;
+    color: #376e55; padding: 10px 13px;
 }
+.calculadora-ucp-page .alert-success .alert-heading { color: #376e55; margin-bottom: 4px; }
+.calculadora-ucp-page .alert-success p { font-size: .82rem; line-height: 1.5; margin: 0; }
 
-.calculadora-ucp-page .alert-success .alert-heading {
-    color: #376e55;
-    font-size: 0.95rem;
+/* =========================================================
+   FACTORES TCF / EF: cuadrícula independiente de tablas globales.
+   Evita columnas desplazadas y filas con alturas heredadas.
+   ========================================================= */
+.calculadora-ucp-page .ucp-factor-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 0 0 11px;
+    border: 1px solid #d9e1e7;
+    border-radius: 6px;
+}
+.calculadora-ucp-page .ucp-factor-grid {
+    width: 100%;
+    min-width: 680px;
+    display: block;
+    font-size: .81rem;
+    color: #263244;
+}
+.calculadora-ucp-page .ucp-factor-head,
+.calculadora-ucp-page .ucp-factor-row {
+    display: grid !important;
+    grid-template-columns: minmax(175px, 1.25fr) minmax(230px, 1.65fr) 76px 108px;
+    gap: 0 !important;
+    align-items: stretch;
+    width: 100%;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.calculadora-ucp-page .ucp-factor-head > div {
+    background: #120e38;
+    color: #fff;
+    font-size: .79rem;
     font-weight: 600;
+    padding: 10px 11px;
+    line-height: 1.3;
+}
+.calculadora-ucp-page .ucp-factor-head > div:nth-child(n+3) { text-align: center; }
+.calculadora-ucp-page .ucp-factor-row > div {
+    padding: 8px 11px !important;
+    display: flex !important;
+    align-items: center;
+    line-height: 1.4;
+    min-height: 43px !important;
+    height: auto !important;
+    background: #fff;
+    border-bottom: 1px solid #e4e9ef;
+    overflow-wrap: anywhere;
+}
+.calculadora-ucp-page .ucp-factor-row:nth-child(odd) > div { background: #f8fafc; }
+.calculadora-ucp-page .ucp-factor-row:hover > div { background: #eef2f6; }
+.calculadora-ucp-page .ucp-factor-row:last-child > div { border-bottom: 0; }
+.calculadora-ucp-page .ucp-factor-row .ucp-factor-weight,
+.calculadora-ucp-page .ucp-factor-row .ucp-factor-value { justify-content: center; text-align: center; }
+.calculadora-ucp-page .ucp-factor-row .form-select {
+    width: 76px !important;
+    min-width: 76px !important;
+    height: 33px;
+    min-height: 33px;
+    padding: 4px 25px 4px 9px;
+    font-size: .8rem;
+    margin: 0;
+}
+.calculadora-ucp-page .ucp-factor-head::before,
+.calculadora-ucp-page .ucp-factor-head::after,
+.calculadora-ucp-page .ucp-factor-row::before,
+.calculadora-ucp-page .ucp-factor-row::after {
+    content: none !important;
+    display: none !important;
 }
 
-.calculadora-ucp-page .alert-success p {
-    margin-bottom: 0;
-    font-size: 0.88rem;
-    line-height: 1.6;
+/* =========================================================
+   SECCIÓN 5: tablas del CF lado a lado
+   ========================================================= */
+.calculadora-ucp-page .ucp-cf-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.13fr) minmax(0, .87fr);
+    gap: 14px;
+    max-width: 910px;
+    margin: 2px auto 11px;
+    align-items: start;
+}
+.calculadora-ucp-page .ucp-cf-column { min-width: 0; width: 100%; padding: 0; margin: 0; }
+.calculadora-ucp-page .ucp-cf-column .ucp-tabla { margin-bottom: 0; }
+.calculadora-ucp-page .ucp-cf-details {
+    max-width: 910px; margin: 0 auto; display: grid; gap: 9px;
+}
+.calculadora-ucp-page .ucp-cf-details > .alert-secondary { margin: 0; padding: 10px 13px; }
+.calculadora-ucp-page .ucp-cf-details .alert-heading { margin: 0 0 6px; }
+.calculadora-ucp-page .ucp-cf-details .mb-1 { margin-bottom: 3px; }
+
+/* =========================================================
+   SECCIÓN 6: resultados en tres tarjetas horizontales
+   ========================================================= */
+.calculadora-ucp-page .ucp-results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 12px;
+}
+.calculadora-ucp-page .ucp-results-grid > .alert-secondary {
+    min-width: 0; min-height: 73px; padding: 10px 9px; margin: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center; gap: 4px;
+}
+.calculadora-ucp-page .ucp-results-grid .fw-bold { font-size: .78rem; line-height: 1.3; }
+.calculadora-ucp-page .ucp-results-grid .h3 { margin: 0 !important; line-height: 1.2; font-size: 1.23rem !important; }
+.calculadora-ucp-page .ucp-config-row { --bs-gutter-x: 12px; --bs-gutter-y: 9px; margin-bottom: 10px !important; }
+
+/* =========================================================
+   SECCIÓN 7: estimación monetaria
+   ========================================================= */
+.calculadora-ucp-page #ucp-cost-section {
+    background: #fff; border: 1px solid var(--ucp-line) !important;
+    border-radius: 8px; box-shadow: none; margin: 16px 0 13px !important;
+}
+.calculadora-ucp-page #ucp-cost-section > .card-body { padding: 13px 14px; }
+.calculadora-ucp-page #ucp-cost-section .row.g-3 {
+    --bs-gutter-x: 12px; --bs-gutter-y: 10px; margin-bottom: 12px !important;
+}
+.calculadora-ucp-page #ucp-cost-effort {
+    display: flex; align-items: center; background: #f3f5f8 !important;
+    font-weight: 600; color: #304b70;
+}
+.calculadora-ucp-page .ucp-cost-table { font-size: .78rem; min-width: 760px; margin-bottom: 10px; }
+.calculadora-ucp-page .ucp-cost-table th,
+.calculadora-ucp-page .ucp-cost-table td { padding: 7px 8px; }
+.calculadora-ucp-page .ucp-cost-table thead th { font-size: .77rem; }
+.calculadora-ucp-page .ucp-cost-table .ucp-cost-role {
+    width: 100% !important; min-width: 180px; text-overflow: ellipsis; padding-right: 26px;
+}
+.calculadora-ucp-page .ucp-cost-table .ucp-cost-hours,
+.calculadora-ucp-page .ucp-cost-table .ucp-cost-daily {
+    width: 95px !important; min-width: 84px; text-align: right;
+}
+.calculadora-ucp-page .ucp-cost-table .ucp-cost-hourly,
+.calculadora-ucp-page .ucp-cost-table .ucp-cost-subtotal {
+    white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.calculadora-ucp-page .ucp-cost-table .ucp-cost-subtotal,
+.calculadora-ucp-page #ucp-cost-total { color: #304b70; font-weight: 700; }
+.calculadora-ucp-page .ucp-cost-table .btn-outline-danger {
+    background: #fff; color: #9b4049; border: 1px solid #deb6bd;
+    font-size: .75rem; border-radius: 5px; padding: 5px 9px;
+}
+.calculadora-ucp-page .ucp-cost-table .btn-outline-danger:hover { background: #f9edef; color: #82323e; }
+.calculadora-ucp-page #ucp-cost-add,
+.calculadora-ucp-page #ucp-cost-distribute {
+    background: #f5f6f8; border: 1px solid #cfd8e3;
+    color: #34465b; border-radius: 6px; font-weight: 500;
+    font-size: .77rem; padding: 7px 11px;
+}
+.calculadora-ucp-page #ucp-cost-add:hover,
+.calculadora-ucp-page #ucp-cost-distribute:hover { background: #e9edf3; border-color: #b9c5d3; }
+.calculadora-ucp-page #ucp-cost-status {
+    font-size: .8rem; padding: 9px 12px; border-radius: 6px; margin: 0 !important;
+}
+.calculadora-ucp-page #ucp-cost-status.alert-success {
+    background: #eef3ef; border: 1px solid #cbded2; color: #376e55; border-left: 3px solid #688775;
+}
+.calculadora-ucp-page #ucp-cost-status.alert-warning {
+    background: #f8f4eb; border: 1px solid #e7dfc9; color: #77603c; border-left: 3px solid #baa16b;
+}
+.calculadora-ucp-page #ucp-cost-section .ucp-cost-note {
+    font-size: .76rem; line-height: 1.45; color: var(--ucp-muted) !important; margin-top: 9px !important;
 }
 
-/* ==========================================
-   BOTONES FINALES
-========================================== */
-
+/* Botones principales */
 .calculadora-ucp-page .ucp-btn-calcular,
 .calculadora-ucp-page .ucp-btn-reiniciar {
-    font-size: 0.88rem;
-    font-weight: 500;
-    padding: 10px 17px;
-    border-radius: 7px;
-    box-shadow: none;
-    transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+    border-radius: 6px; font-size: .82rem; font-weight: 500;
+    padding: 8px 14px; box-shadow: none; transition: background-color .2s, border-color .2s;
 }
+.calculadora-ucp-page .ucp-btn-calcular { background: #34465b; border: 1px solid #34465b; color: #fff; }
+.calculadora-ucp-page .ucp-btn-calcular:hover { background: #26374a; border-color: #26374a; color: #fff; }
+.calculadora-ucp-page .ucp-btn-reiniciar { background: #e5e7eb; border: 1px solid #d1d5db; color: #374151; }
+.calculadora-ucp-page .ucp-btn-reiniciar:hover { background: #d9dde3; border-color: #cbd0d7; color: #263244; }
+.calculadora-ucp-page button:focus-visible { outline: 2px solid #64748b; outline-offset: 2px; }
 
-/* CALCULAR */
-
-.calculadora-ucp-page .ucp-btn-calcular {
-    background-color: #34465b;
-    border: 1px solid #34465b;
-    color: #ffffff;
-}
-
-.calculadora-ucp-page .ucp-btn-calcular:hover {
-    background-color: #26374a;
-    border-color: #26374a;
-    color: #ffffff;
-}
-
-/* REINICIAR */
-
-.calculadora-ucp-page .ucp-btn-reiniciar {
-    background-color: #e5e7eb;
-    border: 1px solid #d1d5db;
-    color: #374151;
-}
-
-.calculadora-ucp-page .ucp-btn-reiniciar:hover {
-    background-color: #d9dde3;
-    border-color: #cbd0d7;
-    color: #263244;
-}
-
-/* ACCESIBILIDAD */
-
-.calculadora-ucp-page .ucp-btn-calcular:focus-visible,
-.calculadora-ucp-page .ucp-btn-reiniciar:focus-visible {
-    outline: 2px solid #64748b;
-    outline-offset: 3px;
-}
-
-/* ==========================================
-   RESPONSIVE
-========================================== */
-
+/* Responsive */
 @media (max-width: 767.98px) {
-
-    .calculadora-ucp-page .ucp-page-header h1 {
-        font-size: 1.55rem;
-    }
-
-    .calculadora-ucp-page .ucp-section-card
-    > .card-body {
-        padding: 14px;
-    }
-
-    .calculadora-ucp-page .ucp-section-title {
-        font-size: 0.92rem;
-        padding: 11px 12px;
-    }
-
-    .calculadora-ucp-page .ucp-tabla {
-        font-size: 0.8rem;
-    }
-
-    .calculadora-ucp-page .ucp-tabla th,
-    .calculadora-ucp-page .ucp-tabla td {
-        padding: 8px;
-    }
-
+    .calculadora-ucp-page { padding-left: 9px; padding-right: 9px; }
+    .calculadora-ucp-page .ucp-page-header h1 { font-size: 1.22rem; }
+    .calculadora-ucp-page .ucp-section-card > .card-body { padding: 11px; }
+    .calculadora-ucp-page .ucp-section-title,
+    .calculadora-ucp-page #ucp-cost-section .ucp-cost-heading { font-size: .88rem; padding: 9px 10px; }
+    .calculadora-ucp-page .ucp-tabla { font-size: .76rem; }
+    .calculadora-ucp-page .ucp-factor-grid { min-width: 680px; }
+    .calculadora-ucp-page .ucp-cf-grid { grid-template-columns: 1fr; gap: 9px; }
+    .calculadora-ucp-page .ucp-results-grid { grid-template-columns: 1fr; gap: 7px; }
+    .calculadora-ucp-page .ucp-results-grid > .alert-secondary { min-height: 60px; }
     .calculadora-ucp-page .ucp-btn-calcular,
-    .calculadora-ucp-page .ucp-btn-reiniciar {
-        margin: 5px 0 !important;
-    }
+    .calculadora-ucp-page .ucp-btn-reiniciar { margin: 4px 2px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .calculadora-ucp-page .ucp-btn-calcular,
+    .calculadora-ucp-page .ucp-btn-reiniciar { transition: none; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-
-    .calculadora-ucp-page .ucp-btn-calcular,
-    .calculadora-ucp-page .ucp-btn-reiniciar {
-        transition: none;
-    }
+/* =========================================================
+   CORRECCIÓN FINAL · SECCIÓN 5 CF
+   Dos tablas centradas, compactas y sin márgenes heredados.
+   ========================================================= */
+.calculadora-ucp-page .ucp-cf-tables {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 900px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 4px auto 12px !important;
+}
+.calculadora-ucp-page .ucp-cf-tables > .ucp-cf-table {
+    display: block !important;
+    float: none !important;
+    flex: 1 1 0 !important;
+    width: 0 !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+}
+.calculadora-ucp-page .ucp-cf-table .ucp-tabla {
+    display: table !important;
+    width: 100% !important;
+    table-layout: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.calculadora-ucp-page .ucp-cf-table .ucp-tabla tr { height: auto !important; min-height: 0 !important; }
+.calculadora-ucp-page .ucp-cf-table .ucp-tabla th,
+.calculadora-ucp-page .ucp-cf-table .ucp-tabla td {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 7px 9px !important;
+    vertical-align: middle !important;
+}
+.calculadora-ucp-page .ucp-cf-details {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    max-width: 900px !important;
+    gap: 8px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+}
+.calculadora-ucp-page .ucp-cf-details > .alert-secondary {
+    padding: 10px 13px !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+}
+@media (max-width: 680px) {
+    .calculadora-ucp-page .ucp-cf-tables { flex-direction: column !important; gap: 10px !important; }
+    .calculadora-ucp-page .ucp-cf-tables > .ucp-cf-table { width: 100% !important; flex: auto !important; }
 }

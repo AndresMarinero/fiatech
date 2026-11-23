@@ -16,48 +16,83 @@ def financiero(request):
 
 # --- SIN CAMBIOS EN ESTA VISTA ---
 def ajustes_contables(request):
-    # Obtener periodo CERRADO por defecto (para hacer ajustes)
-    periodo_cerrado = PeriodoContable.objects.filter(estado='CERRADO').first()
+
+    # Obtener el período ACTIVO por defecto
+    periodo_activo = PeriodoContable.objects.filter(
+        estado='ACTIVO'
+    ).first()
 
     # Obtener el período seleccionado
     periodo_id = request.GET.get('periodo_id')
-    if periodo_id:
-        periodo_seleccionado = get_object_or_404(PeriodoContable, id=periodo_id)
-    else:
-        periodo_seleccionado = periodo_cerrado
 
-    # Manejar el caso cuando no hay periodo seleccionado
+    if periodo_id:
+        periodo_seleccionado = get_object_or_404(
+            PeriodoContable,
+            id=periodo_id
+        )
+    else:
+        periodo_seleccionado = periodo_activo
+
+    # Obtener ajustes del período seleccionado
     if periodo_seleccionado:
-        # Obtener todos los ajustes del periodo seleccionado
+
         ajustes = Transaccion.objects.filter(
             periodo=periodo_seleccionado,
             es_ajuste=True
         ).select_related('cuenta').order_by('fecha', 'id')
 
-        # Calcular totales - esto funciona porque ajustes es un QuerySet
-        total_debe = ajustes.aggregate(total=Sum('debe'))['total'] or 0
-        total_haber = ajustes.aggregate(total=Sum('haber'))['total'] or 0
-    else:
-        # Cuando no hay periodo seleccionado, usar valores por defecto
-        ajustes = []
-        total_debe = 0
-        total_haber = 0
+        # Calcular totales
+        total_debe = ajustes.aggregate(
+            total=Sum('debe')
+        )['total'] or Decimal('0')
 
-    # Obtener todos los periodos para el selector
+        total_haber = ajustes.aggregate(
+            total=Sum('haber')
+        )['total'] or Decimal('0')
+
+    else:
+
+        ajustes = Transaccion.objects.none()
+        total_debe = Decimal('0')
+        total_haber = Decimal('0')
+
+    # Obtener todos los períodos para consultar
     periodos = PeriodoContable.objects.all().order_by('-año')
 
+    # Permitir ajustes únicamente en períodos ACTIVOS
+    puede_ajustar = (
+        periodo_seleccionado is not None
+        and periodo_seleccionado.estado == 'ACTIVO'
+    )
+
+    # Permitir generar estados definitivos en períodos CERRADOS
+    puede_generar_estados = (
+        periodo_seleccionado is not None
+        and periodo_seleccionado.estado == 'CERRADO'
+    )
+
     context = {
-        'periodo_cerrado': periodo_cerrado,
+        'periodo_activo': periodo_activo,
         'periodo_seleccionado': periodo_seleccionado,
         'ajustes': ajustes,
         'total_debe': total_debe,
         'total_haber': total_haber,
         'periodos': periodos,
-        'cuentas': Cuenta.objects.filter(activa=True, nivel__in=[3, 4]).order_by('codigo'),
-        'puede_ajustar': periodo_seleccionado and periodo_seleccionado.estado == 'CERRADO',
-        'puede_generar_estados': periodo_seleccionado and periodo_seleccionado.estado == 'CERRADO',
+
+        'cuentas': Cuenta.objects.filter(
+            activa=True,
+            nivel=3
+        ).order_by('codigo'),
+
+        'puede_ajustar': puede_ajustar,
+        'puede_generar_estados': puede_generar_estados,
     }
-    return render(request, 'EstadosFinancieros/ajustesContables.html', context)
+
+    return render(
+        request,
+        'EstadosFinancieros/ajustesContables.html',
+        context
+    )
 
 # --- SIN CAMBIOS EN ESTA VISTA ---
 # (Nota: La lógica de cuenta.saldo += / -= monto es simplista y fallará
@@ -72,6 +107,7 @@ def crear_ajuste(request):
             # Parsear JSON si viene como JSON
             if request.content_type == 'application/json':
                 data = json.loads(request.body)
+                periodo_id = data.get('periodo_id')
                 fecha = data.get('fecha')
                 descripcion = data.get('descripcion')
                 cuentas_afectadas = data.get('cuentas_afectadas', [])
@@ -86,31 +122,60 @@ def crear_ajuste(request):
             print(f"Fecha: {fecha}, Descripción: {descripcion}")
             print(f"Cuentas afectadas: {cuentas_afectadas}")
 
-            periodo_activo = PeriodoContable.objects.filter(
-                estado='CERRADO').first()
-            if not periodo_activo:
-                print("ERROR: No hay período cerrado")
-                return JsonResponse({
-                    'success': False,
-                    'message': 'No hay un período contable cerrado.'
-                })
+            # Obtener el período seleccionado desde el formulario
+            periodo_id = data.get('periodo_id')
 
-            # --- CORRECCIÓN LÓGICA: Debería ser 'ACTIVO', no 'CERRADO' ---
-            if periodo_activo.estado == 'ACTIVO':
-                print("ERROR: Período cerrado")
+            # Obtener el período seleccionado
+            if not periodo_id:
                 return JsonResponse({
                     'success': False,
-                    'message': 'No se pueden hacer ajustes en períodos activos.'
-                })
+                    'message': 'No se recibió el período contable.'
+                }, status=400)
+
+            try:
+                periodo_activo = PeriodoContable.objects.get(
+                    id=periodo_id
+                )
+            except (PeriodoContable.DoesNotExist, ValueError, TypeError):
+                return JsonResponse({
+                    'success': False,
+                    'message': 'El período seleccionado no existe.'
+                }, status=400)
+
+            # Verificar que permita realizar ajustes
+            if periodo_activo.estado != 'ACTIVO':
+                return JsonResponse({
+                    'success': False,
+                    'message': (
+                        'Solo se pueden registrar ajustes '
+                        'en períodos contables activos.'
+                    )
+                }, status=400)
             # --- FIN CORRECIÓN ---
             # (Lo dejo como estaba para no alterar tu flujo, pero la validación es extraña)
 
-            if not fecha or not descripcion:
-                print("ERROR: Campos obligatorios faltantes")
+            from datetime import date
+
+            try:
+                fecha_ajuste = date.fromisoformat(fecha)
+            except (ValueError, TypeError):
                 return JsonResponse({
                     'success': False,
-                    'message': 'Fecha y descripción son obligatorios.'
-                })
+                    'message': 'La fecha del ajuste no es válida.'
+                }, status=400)
+
+            if not (
+                periodo_activo.fecha_inicio
+                <= fecha_ajuste
+                <= periodo_activo.fecha_fin
+            ):
+                return JsonResponse({
+                    'success': False,
+                    'message': (
+                        'La fecha del ajuste debe estar dentro '
+                        'del período contable seleccionado.'
+                    )
+                }, status=400)
 
             if not cuentas_afectadas or len(cuentas_afectadas) < 2:
                 print("ERROR: Se requieren al menos 2 cuentas")
@@ -123,7 +188,7 @@ def crear_ajuste(request):
             total_debe = sum(Decimal(
                 str(cuenta['monto'])) for cuenta in cuentas_afectadas if cuenta['tipo'] == 'debe')
             total_haber = sum(Decimal(str(
-                cuenta['monto'])) for cuenta in cuentas_afectadas if cuenta['tipo'] == 'hnaber')
+                cuenta['monto'])) for cuenta in cuentas_afectadas if cuenta['tipo'] == 'haber')
 
             if total_debe != total_haber:
                 print("ERROR: Ajuste desbalanceado")

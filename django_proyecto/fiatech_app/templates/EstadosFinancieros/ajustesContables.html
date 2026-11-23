@@ -5,7 +5,10 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css2/ajustesContables.css' %}">
+<link rel="stylesheet" href="{% static 'css2/periodoContable.css' %}">
+
 {% endblock %}
+
 
 {% block content %}
 <div class="container-fluid py-4 ajustes-contables-page">
@@ -28,7 +31,7 @@
                 </div>
                 <div class="d-flex gap-2">
                     <!-- Botón Agregar Ajuste - Solo disponible si el periodo está CERRADO -->
-                    {% if periodo_seleccionado and periodo_seleccionado.estado == 'CERRADO' %}
+                    {% if puede_ajustar %}
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarAjusteModal">
                         <i class="bi bi-plus-circle me-2"></i>Agregar Ajuste
                     </button>
@@ -465,10 +468,11 @@
                 });
 
                 const data = {
+                    periodo_id: "{{ periodo_seleccionado.id|default:'' }}",
                     fecha: fecha,
                     descripcion: descripcion,
                     cuentas_afectadas: cuentasAfectadas,
-                    es_ajuste: true  // Marcar como ajuste
+                    es_ajuste: true
                 };
 
                 fetch('{% url "crear_ajuste" %}', {
@@ -486,12 +490,20 @@
                         submitBtn.disabled = false;
 
                         if (data.success) {
-                            // Cerrar modal y recargar
-                            const modal = bootstrap.Modal.getInstance(document.getElementById('agregarAjusteModal'));
-                            modal.hide();
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 500);
+
+                            console.log("Ajuste guardado correctamente");
+
+                            const periodoId = "{{ periodo_seleccionado.id|default:'' }}";
+
+                            const url = new URL(
+                                "{% url 'ajustes_contables' %}",
+                                window.location.origin
+                            );
+
+                            url.searchParams.set("periodo_id", periodoId);
+
+                            window.location.href = url.toString();
+
                         } else {
                             alert('Error: ' + data.message);
                         }

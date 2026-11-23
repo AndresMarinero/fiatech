@@ -1,0 +1,273 @@
+/* =========================================================
+   FIA-TECH | NAVEGACIÓN Y RESUMEN DEL PERÍODO CONTABLE
+   Diseño formal, sobrio y compacto
+   Archivo: static/css2/periodoContable.css
+   ========================================================= */
+
+/* Resumen / contenedor del período */
+.periodo-resumen {
+    color: #263244;
+    background: #ffffff;
+    border: 1px solid #d9e1e7;
+    border-radius: 9px;
+    box-shadow: 0 2px 7px rgba(15, 23, 42, .04);
+    overflow: hidden;
+    margin-bottom: 16px;
+    font-size: .87rem;
+}
+
+.periodo-resumen-header,
+.periodo-resumen .periodo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #f3f4f6;
+    color: #263244;
+    border-bottom: 1px solid #dce1e7;
+    padding: 11px 15px;
+}
+
+.periodo-resumen-header h2,
+.periodo-resumen-header h3,
+.periodo-resumen-header h4,
+.periodo-resumen-header h5,
+.periodo-resumen .periodo-header h2,
+.periodo-resumen .periodo-header h3,
+.periodo-resumen .periodo-header h4,
+.periodo-resumen .periodo-header h5 {
+    margin: 0;
+    color: #263244;
+    font-size: .98rem;
+    line-height: 1.35;
+    font-weight: 650;
+}
+
+.periodo-resumen-body,
+.periodo-resumen .periodo-body {
+    padding: 14px 16px;
+    background: #ffffff;
+}
+
+.periodo-resumen p,
+.periodo-resumen .text-muted {
+    color: #64748b !important;
+    line-height: 1.5;
+}
+
+.periodo-resumen strong {
+    color: #263244;
+    font-weight: 650;
+}
+
+/* Datos y metadatos del período */
+.periodo-resumen .periodo-datos,
+.periodo-resumen .periodo-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+}
+
+.periodo-resumen .periodo-dato,
+.periodo-resumen .periodo-info-item {
+    font-size: .85rem;
+    color: #374151;
+}
+
+.periodo-resumen .periodo-etiqueta,
+.periodo-resumen .periodo-label {
+    font-size: .8rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Estados: discretos y legibles */
+.periodo-resumen .badge,
+.periodo-resumen .periodo-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 9px;
+    font-size: .74rem;
+    font-weight: 600;
+    border-radius: 5px;
+    border: 1px solid #d9e1e7;
+    background: #eef1f5;
+    color: #34465b;
+}
+
+.periodo-resumen .badge.bg-success,
+.periodo-resumen .periodo-estado.activo,
+.periodo-resumen .periodo-estado.ACTIVO {
+    background: #edf4ee !important;
+    border-color: #cbded2;
+    color: #376e55 !important;
+}
+
+.periodo-resumen .badge.bg-warning,
+.periodo-resumen .periodo-estado.cerrado,
+.periodo-resumen .periodo-estado.CERRADO {
+    background: #f7f3ea !important;
+    border-color: #e7dfc9;
+    color: #77603c !important;
+}
+
+.periodo-resumen .badge.bg-secondary,
+.periodo-resumen .periodo-estado.finalizado,
+.periodo-resumen .periodo-estado.FINALIZADO {
+    background: #edf0f3 !important;
+    border-color: #d9e1e7;
+    color: #526278 !important;
+}
+
+/* Barra de acciones y navegación */
+.periodo-resumen .periodo-acciones,
+.periodo-resumen .periodo-navegacion,
+.periodo-resumen .periodo-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.periodo-btn,
+.periodo-resumen .periodo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 7px 12px;
+    background: #34465b;
+    border: 1px solid #34465b;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: .83rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-decoration: none;
+    box-shadow: none;
+    transition: background .18s ease, border-color .18s ease;
+    cursor: pointer;
+}
+
+.periodo-btn:hover,
+.periodo-btn:focus,
+.periodo-resumen .periodo-btn:hover {
+    background: #26374a;
+    border-color: #26374a;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.periodo-btn-volver,
+.periodo-resumen .periodo-btn-volver {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 7px 12px;
+    background: #f5f6f8;
+    color: #34465b;
+    border: 1px solid #cfd8e3;
+    border-radius: 6px;
+    font-size: .83rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-decoration: none;
+    transition: background .18s ease, border-color .18s ease;
+}
+
+.periodo-btn-volver:hover,
+.periodo-resumen .periodo-btn-volver:hover {
+    background: #e9edf3;
+    border-color: #b9c5d3;
+    color: #263244;
+    text-decoration: none;
+}
+
+.periodo-btn:disabled,
+.periodo-btn.disabled,
+.periodo-btn-volver.disabled {
+    opacity: .55;
+    pointer-events: none;
+}
+
+.periodo-btn:focus-visible,
+.periodo-btn-volver:focus-visible {
+    outline: 2px solid #64748b;
+    outline-offset: 2px;
+}
+
+/* Avisos informativos */
+.periodo-aviso,
+.periodo-resumen .periodo-aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 10px 12px;
+    margin: 10px 0 0;
+    color: #526278;
+    background: #f3f5f8;
+    border: 1px solid #d9e1e7;
+    border-left: 3px solid #607d9b;
+    border-radius: 6px;
+    font-size: .82rem;
+    line-height: 1.5;
+}
+
+.periodo-aviso p,
+.periodo-aviso:last-child { margin-bottom: 0; }
+
+.periodo-aviso.alert-success {
+    color: #376e55;
+    background: #eef3ef;
+    border-color: #cbded2;
+    border-left-color: #688775;
+}
+
+.periodo-aviso.alert-warning {
+    color: #77603c;
+    background: #f8f4eb;
+    border-color: #e7dfc9;
+    border-left-color: #baa16b;
+}
+
+/* Compatibilidad con selectores y enlaces de la navegación */
+.periodo-resumen .form-select,
+.periodo-resumen .form-control {
+    min-height: 34px;
+    border: 1px solid #cfd8e3;
+    background: #ffffff;
+    color: #263244;
+    border-radius: 6px;
+    font-size: .84rem;
+    box-shadow: none;
+}
+
+.periodo-resumen .form-select:focus,
+.periodo-resumen .form-control:focus {
+    border-color: #7f95aa;
+    box-shadow: 0 0 0 .14rem rgba(47, 75, 102, .12);
+}
+
+@media (max-width: 767.98px) {
+    .periodo-resumen { font-size: .83rem; }
+    .periodo-resumen-header,
+    .periodo-resumen .periodo-header { padding: 10px 12px; }
+    .periodo-resumen-body,
+    .periodo-resumen .periodo-body { padding: 11px 12px; }
+    .periodo-resumen .periodo-acciones,
+    .periodo-resumen .periodo-navegacion,
+    .periodo-resumen .periodo-nav { width: 100%; }
+    .periodo-btn,
+    .periodo-btn-volver { font-size: .8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .periodo-btn,
+    .periodo-btn-volver { transition: none; }
+}
