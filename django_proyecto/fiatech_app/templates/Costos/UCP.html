@@ -44,7 +44,7 @@
 
 
 
-    <div class="section card mb-4 ucp-section-card">
+    <div class="ucp-step card ucp-section-card">
 
         <div class="card-body">
 
@@ -130,7 +130,7 @@
 
 
 
-    <div class="section card mb-4 ucp-section-card">
+    <div class="ucp-step card ucp-section-card">
 
         <div class="card-body">
 
@@ -216,7 +216,7 @@
 
 
 
-    <div class="section card mb-4 ucp-section-card">
+    <div class="ucp-step card ucp-section-card">
 
         <div class="card-body">
 
@@ -256,7 +256,7 @@
 
 
 
-    <div class="section card mb-4 ucp-section-card">
+    <div class="ucp-step card ucp-section-card">
 
         <div class="card-body">
 
@@ -296,7 +296,7 @@
 
 
 
-    <div class="section card mb-4 ucp-section-card">
+    <div class="ucp-step card ucp-section-card">
 
         <div class="card-body">
 
@@ -431,7 +431,7 @@
 
 
 
-    <div class="section card mb-4 ucp-section-card">
+    <div class="ucp-step card ucp-section-card">
 
         <div class="card-body">
 
@@ -550,6 +550,55 @@
 
 
 
+
+
+            <!-- 8. Presupuesto complementario: NO modifica el cálculo UCP -->
+            <div class="card ucp-budget-card" id="ucp-budget-section">
+                <div class="card-body">
+                    <h3 class="ucp-cost-heading">8. Presupuesto de costo total estimado</h3>
+                    <p class="ucp-cost-desc">Registre los CIF <strong>presupuestados y ya asignados a la Unidad de Desarrollo de Software</strong> por la calculadora CIF. No introduzca el total de toda la empresa. Las cifras y horas de la base deben corresponder al mismo período (por ejemplo, un año).</p>
+                    <div class="ucp-budget-fields">
+                        <div>
+                            <label for="ucp-budget-annual-hours" class="form-label">Horas-persona productivas presupuestadas del departamento (mismo período)</label>
+                            <input id="ucp-budget-annual-hours" class="form-control ucp-budget-input" type="number" min="0.01" step="0.01" value="29744">
+                        </div>
+                        <div>
+                            <label for="ucp-budget-moi" class="form-label">Mano de obra indirecta asignada a Desarrollo ($/período)</label>
+                            <input id="ucp-budget-moi" class="form-control ucp-budget-input" type="number" min="0" step="0.01" value="0">
+                        </div>
+                        <div>
+                            <label for="ucp-budget-services" class="form-label">Servicios y suministros indirectos asignados ($/período)</label>
+                            <input id="ucp-budget-services" class="form-control ucp-budget-input" type="number" min="0" step="0.01" value="0">
+                        </div>
+                        <div>
+                            <label for="ucp-budget-depreciation" class="form-label">Depreciación y amortización indirecta asignada ($/período)</label>
+                            <input id="ucp-budget-depreciation" class="form-control ucp-budget-input" type="number" min="0" step="0.01" value="0">
+                        </div>
+                        <div>
+                            <label for="ucp-budget-burden" class="form-label">Otros CIF asignados a Desarrollo ($/período)</label>
+                            <input id="ucp-budget-burden" class="form-control ucp-budget-input" type="number" min="0" step="0.01" value="0">
+                        </div>
+                        <div>
+                            <label for="ucp-budget-fixed" class="form-label">CIF específicos del proyecto no incluidos arriba ($)</label>
+                            <input id="ucp-budget-fixed" class="form-control ucp-budget-input" type="number" min="0" step="0.01" value="0">
+                        </div>
+                        <div>
+                            <label for="ucp-budget-direct" class="form-label">Otros costos directos del proyecto ($)</label>
+                            <input id="ucp-budget-direct" class="form-control ucp-budget-input" type="number" min="0" step="0.01" value="0">
+                        </div>
+                    </div>
+                    <div class="ucp-budget-summary" aria-live="polite">
+                        <div><span>Horas-persona estimadas</span><strong id="ucp-budget-hours">0.00 h</strong></div>
+                        <div><span>Mano de obra directa estimada</span><strong id="ucp-budget-labor">—</strong></div>
+                        <div><span>Tasa CIF presupuestada / hora-persona</span><strong id="ucp-budget-rate">$0.00/h</strong></div>
+                        <div><span>CIF del proyecto (horas × tasa + específicos)</span><strong id="ucp-budget-cif">$0.00</strong></div>
+                        <div><span>Otros costos directos estimados</span><strong id="ucp-budget-other">$0.00</strong></div>
+                        <div class="ucp-budget-total"><span>Costo total de producción estimado</span><strong id="ucp-budget-total">—</strong></div>
+                    </div>
+                    <p class="ucp-budget-warning" id="ucp-budget-message" role="status">Complete la estimación UCP y las tasas presupuestadas para calcular un costo total comparable.</p>
+                    <p class="ucp-cost-note">No incluya gastos de ventas, administración u otros costos ajenos a la producción. No duplique prestaciones de la mano de obra directa ni CIF ya incluidos en otra categoría.</p>
+                </div>
+            </div>
 
             <div class="text-center mt-4">
 
@@ -1057,6 +1106,45 @@
         updateCostEstimator();
     }
 
+
+    // Complemento presupuestario: nunca cambia los factores ni la fórmula UCP.
+    let ucpBudgetLabor = NaN;
+    let ucpBudgetValidLabor = false;
+    let ucpBudgetHoursAssigned = false;
+    function updateUcpBudget() {
+        const ids = [
+            'ucp-budget-annual-hours', 'ucp-budget-moi', 'ucp-budget-services',
+            'ucp-budget-depreciation', 'ucp-budget-burden',
+            'ucp-budget-fixed', 'ucp-budget-direct'
+        ];
+        const fields = ids.map(id => document.getElementById(id));
+        const valid = fields.every(field => field.value.trim() !== '' &&
+            Number.isFinite(Number(field.value)) && Number(field.value) >= 0);
+        const vals = fields.map(field => Number(field.value));
+        const baseHours = vals[0];
+        const cifDepartamento = vals.slice(1, 5).reduce((a,b) => a + b, 0);
+        const validBase = valid && baseHours > 0;
+        const rate = validBase ? cifDepartamento / baseHours : NaN;
+        const cifProyecto = validBase ? ucpCostEffort * rate + vals[5] : NaN;
+        document.getElementById('ucp-budget-hours').textContent = ucpCostEffort.toFixed(2) + ' h';
+        document.getElementById('ucp-budget-labor').textContent = ucpBudgetValidLabor ? ucpCostCurrency(ucpBudgetLabor) : '—';
+        document.getElementById('ucp-budget-rate').textContent = validBase ? ucpCostCurrency(rate) + '/h' : '—';
+        document.getElementById('ucp-budget-cif').textContent = validBase ? ucpCostCurrency(cifProyecto) : '—';
+        document.getElementById('ucp-budget-other').textContent = valid ? ucpCostCurrency(vals[6]) : '—';
+        const canTotal = validBase && ucpBudgetValidLabor && ucpBudgetHoursAssigned && ucpCostEffort > 0;
+        document.getElementById('ucp-budget-total').textContent = canTotal ? ucpCostCurrency(ucpBudgetLabor + cifProyecto + vals[6]) : '—';
+        const message = document.getElementById('ucp-budget-message');
+        if (!valid) message.textContent = 'Introduzca importes y horas válidos (los importes no pueden ser negativos).';
+        else if (!validBase) message.textContent = 'Las horas productivas presupuestadas deben ser mayores que cero.';
+        else if (!ucpBudgetValidLabor || !ucpBudgetHoursAssigned) message.textContent = 'Revise las tarifas y distribuya todas las horas-persona en el apartado de mano de obra.';
+        else if (ucpCostEffort <= 0) message.textContent = 'Registre actores y casos de uso para obtener un esfuerzo UCP mayor que cero.';
+        else if (cifDepartamento === 0 && vals[5] === 0) message.textContent = 'Aún no se han introducido CIF asignables a Desarrollo; el costo mostrado no incluye indirectos.';
+        else message.textContent = 'Costo estimado calculado con MOD UCP + CIF presupuestados asignados a Desarrollo + otros costos directos.';
+    }
+    document.querySelectorAll('#ucp-budget-section .ucp-budget-input').forEach(input => {
+        input.addEventListener('input', updateUcpBudget);
+    });
+
     function updateCostEstimator(effort) {
         if (typeof effort === 'number') ucpCostEffort = Number.isFinite(effort) ? Math.max(0, effort) : 0;
         const dayHours = Number(ucpCostDayHours.value);
@@ -1079,6 +1167,10 @@
         document.getElementById('ucp-cost-effort').textContent = ucpCostEffort.toFixed(2) + ' horas';
         document.getElementById('ucp-cost-total-hours').textContent = totalHours.toFixed(2) + ' h';
         document.getElementById('ucp-cost-total').textContent = invalid ? '—' : ucpCostCurrency(totalCost);
+        ucpBudgetLabor = totalCost;
+        ucpBudgetValidLabor = !invalid && ucpCostMembers.children.length > 0;
+        ucpBudgetHoursAssigned = Math.abs(diff) <= 0.01;
+        updateUcpBudget();
         if (!ucpCostMembers.children.length) {
             status.className = 'alert alert-warning mb-0';
             status.textContent = 'Agregue al menos un integrante.';
@@ -1198,7 +1290,7 @@
 
         document.querySelectorAll('input[type="number"]').forEach(input => {
 
-            if (!input.closest('#ucp-cost-section') && input.id !== 'team-size' && input.id !== 'hours-per-day') {
+            if (!input.closest('#ucp-cost-section') && !input.closest('#ucp-budget-section') && input.id !== 'team-size' && input.id !== 'hours-per-day') {
 
                 input.value = 0;
 
@@ -1227,7 +1319,7 @@
 
     document.querySelectorAll('.form-control').forEach(input => {
 
-        if (!input.closest('#ucp-cost-section')) input.addEventListener('input', calculateEstimation);
+        if (!input.closest('#ucp-cost-section') && !input.closest('#ucp-budget-section')) input.addEventListener('input', calculateEstimation);
 
     });
 
@@ -1249,7 +1341,7 @@
 
     // ---- CONTROL DE VISIBILIDAD DE SECCIONES ---- //
 
-    const sections = document.querySelectorAll('.section');
+    const sections = document.querySelectorAll('.calculadora-ucp-page .ucp-step');
 
     sections.forEach((sec, i) => {
 
