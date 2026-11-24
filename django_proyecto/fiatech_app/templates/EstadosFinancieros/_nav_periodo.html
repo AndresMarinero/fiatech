@@ -1,92 +1,27 @@
-
 {% if periodo_actual %}
-
 <div class="periodo-resumen">
-
-    <!-- ENCABEZADO DEL PERÍODO -->
     <div class="periodo-resumen-header">
-
         <div class="periodo-resumen-info">
             <i class="bi bi-calendar-check"></i>
-
-            <span class="periodo-resumen-titulo">
-                Período contable
-            </span>
-
-            <span class="periodo-estado
-                {% if periodo_actual.estado == 'ACTIVO' %}
-                    periodo-activo
-                {% else %}
-                    periodo-inactivo
-                {% endif %}">
-
-                {{ periodo_actual.año }} · {{ periodo_actual.estado_visible }}
-
+            <span class="periodo-resumen-titulo">Período contable</span>
+            <span class="periodo-estado {% if periodo_actual.estado == 'ACTIVO' %}periodo-activo{% else %}periodo-inactivo{% endif %}">
+                {{ periodo_actual.año }} · {{ periodo_actual.get_estado_display }}
             </span>
         </div>
-
     </div>
-
-    <!-- ENLACES A ESTADOS FINANCIEROS -->
-    <div class="periodo-resumen-body">
-
-        <div class="periodo-enlaces">
-
-            <a href="{% url 'balance_comprobacion' %}?periodo_id={{ periodo_actual.id }}"
-               class="btn periodo-btn">
-                <i class="bi bi-clipboard-data"></i>
-                Balance de comprobación
-            </a>
-
-            <a href="{% url 'estado_resultados' %}?periodo_id={{ periodo_actual.id }}"
-               class="btn periodo-btn">
-                <i class="bi bi-graph-up-arrow"></i>
-                Estado de resultados
-            </a>
-
-            <a href="{% url 'estado_capital' %}?periodo_id={{ periodo_actual.id }}"
-               class="btn periodo-btn">
-                <i class="bi bi-wallet2"></i>
-                Estado de capital
-            </a>
-
-            <a href="{% url 'balance_general' %}?periodo_id={{ periodo_actual.id }}"
-               class="btn periodo-btn">
-                <i class="bi bi-file-earmark-bar-graph"></i>
-                Balance general
-            </a>
-
-            {% if periodo_actual.estado == 'ACTIVO' %}
-
-            <a href="{% url 'libro_mayor' %}?periodo_id={{ periodo_actual.id }}"
-               class="btn periodo-btn-volver">
-                <i class="bi bi-arrow-left"></i>
-                Volver al Libro Mayor
-            </a>
-
-            {% endif %}
-
-        </div>
-
-    </div>
-
-    <!-- AVISO DE PERÍODO ACTIVO -->
+    <div class="periodo-resumen-body"><div class="periodo-enlaces">
+        <a href="{% url 'balance_comprobacion' %}?periodo_id={{ periodo_actual.id }}" class="btn periodo-btn"><i class="bi bi-clipboard-data"></i> Balance de comprobación</a>
+        <a href="{% url 'estado_resultados' %}?periodo_id={{ periodo_actual.id }}" class="btn periodo-btn"><i class="bi bi-graph-up-arrow"></i> Estado de resultados</a>
+        <a href="{% url 'estado_capital' %}?periodo_id={{ periodo_actual.id }}" class="btn periodo-btn"><i class="bi bi-wallet2"></i> Estado de capital</a>
+        <a href="{% url 'balance_general' %}?periodo_id={{ periodo_actual.id }}" class="btn periodo-btn"><i class="bi bi-file-earmark-bar-graph"></i> Balance general</a>
+        <a href="{% url 'libro_mayor' %}?periodo_id={{ periodo_actual.id }}" class="btn periodo-btn-volver"><i class="bi bi-arrow-left"></i> Volver al Libro Mayor</a>
+    </div></div>
     {% if periodo_actual.estado == 'ACTIVO' %}
-
-    <div class="periodo-aviso">
-
-        <i class="bi bi-info-circle"></i>
-
-        <span>
-            <strong>Período en proceso:</strong>
-            las cifras son provisionales y pueden cambiar
-            si se registran nuevas transacciones.
-        </span>
-
-    </div>
-
+    <div class="periodo-aviso"><i class="bi bi-info-circle"></i><span><strong>Período activo:</strong> los estados financieros son provisionales y pueden cambiar al registrar transacciones o ajustes.</span></div>
+    {% elif periodo_actual.estado == 'CERRADO' %}
+    <div class="periodo-aviso"><i class="bi bi-info-circle"></i><span><strong>Período cerrado:</strong> ya no admite movimientos. Los estados financieros definitivos están pendientes de generación.</span></div>
+    {% else %}
+    <div class="periodo-aviso"><i class="bi bi-check-circle"></i><span><strong>Período finalizado:</strong> se han generado los estados financieros definitivos.</span></div>
     {% endif %}
-
 </div>
-
 {% endif %}

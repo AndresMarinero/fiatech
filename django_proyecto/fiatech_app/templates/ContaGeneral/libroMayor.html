@@ -51,7 +51,7 @@
                         <i class="bi bi-plus-circle me-2"></i>Nueva Transacción
                     </button>
                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmarCierreModal">
-                        <i class="bi bi-check-circle me-2"></i>Finalizar Período
+                        <i class="bi bi-check-circle me-2"></i>Cerrar Período
                     </button>
                     {% endif %}
                 </div>
@@ -180,7 +180,7 @@
                         <i class="bi bi-journal-x display-1 text-muted"></i>
                         <h4 class="text-muted mt-3">No hay transacciones</h4>
                         <p class="text-muted">No se han registrado transacciones para el periodo seleccionado.</p>
-                        {% if periodo_activo %}
+                        {% if periodo_seleccionado and periodo_seleccionado.estado == 'ACTIVO' %}
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaTransaccionModal">
                             <i class="bi bi-plus-circle me-2"></i>Crear Primera Transacción
                         </button>
@@ -452,7 +452,7 @@
 
                 <h5 class="modal-title" id="confirmarCierreModalLabel">
                     <i class="bi bi-exclamation-triangle me-2"></i>
-                    Finalizar Período Contable
+                    Cerrar Período Contable
                 </h5>
 
                 <button type="button"
@@ -465,7 +465,8 @@
 
             <!-- FORMULARIO ORIGINAL -->
             <form method="post" action="{% url 'cerrar_periodo' %}">
-                {% csrf_token %}
+                 {% csrf_token %}
+                 <input type="hidden" name="periodo_id" value="{{ periodo_seleccionado.id }}">
 
                 <div class="modal-body">
 
@@ -480,7 +481,7 @@
 
                     <!-- MENSAJE PRINCIPAL -->
                     <p class="cierre-pregunta text-center">
-                        ¿Está seguro de finalizar el período contable actual?
+                        ¿Está seguro de cerrar el período contable actual?
                     </p>
 
                     <!-- ADVERTENCIA -->
@@ -489,13 +490,13 @@
                         <div class="cierre-advertencia-titulo">
                             <i class="bi bi-info-circle me-1"></i>
                             <strong>Esta acción es irreversible.</strong>
-                            Después de finalizar:
+                            Después del cierre:
                         </div>
 
                         <ul class="mt-2 mb-0">
                             <li>No se podrán realizar más transacciones ni ajustes</li>
-                            <li>Se generará el Balance de Comprobación final</li>
-                            <li>Será redirigido automáticamente al Balance de Comprobación</li>
+                            <li>Podrá generar posteriormente los estados financieros definitivos</li>
+                            <li>Será redirigido a la pantalla de ajustes contables</li>
                         </ul>
 
                     </div>
@@ -508,7 +509,7 @@
                         <div class="card-body">
 
                             <small class="cierre-periodo-label">
-                                Período a finalizar:
+                                Período a cerrar:
                             </small>
 
                             <div class="cierre-periodo-datos">
@@ -547,7 +548,7 @@
                             class="btn btn-warning">
 
                         <i class="bi bi-lock me-1"></i>
-                        Finalizar Período
+                        Cerrar Período
 
                     </button>
 
@@ -634,8 +635,27 @@
         const cuentasContainer = document.getElementById('cuentasContainer');
         const formTransaccion = document.getElementById('formTransaccion');
 
-        // Establecer fecha actual por defecto
-        document.getElementById('fechaTransaccion').valueAsDate = new Date();
+        // Fecha predeterminada dentro del período seleccionado.
+        const fechaTrans = document.getElementById('fechaTransaccion');
+        if (fechaTrans) {
+            fechaTrans.value = '{{ periodo_seleccionado.fecha_inicio|date:"Y-m-d" }}';
+            fechaTrans.min = '{{ periodo_seleccionado.fecha_inicio|date:"Y-m-d" }}';
+            fechaTrans.max = '{{ periodo_seleccionado.fecha_fin|date:"Y-m-d" }}';
+        }
+        const anioInput = document.getElementById('año');
+        if (anioInput) {
+            const inicio = document.getElementById('fecha_inicio');
+            const fin = document.getElementById('fecha_fin');
+            const sincronizar = () => {
+                const anio = anioInput.value;
+                if (/^\d{4}$/.test(anio)) {
+                    inicio.value = `${anio}-01-01`;
+                    fin.value = `${anio}-12-31`;
+                }
+            };
+            anioInput.addEventListener('change', sincronizar);
+            sincronizar();
+        }
 
         if (agregarCuentaBtn && cuentasContainer) {
             agregarCuentaBtn.addEventListener('click', function () {
@@ -723,6 +743,7 @@
                 const data = {
                     fecha: fecha,
                     descripcion: descripcion,
+                    periodo_id: '{{ periodo_seleccionado.id|default:"" }}',
                     cuentas_afectadas: cuentasAfectadas
                 };
 

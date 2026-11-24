@@ -113,6 +113,19 @@ def crear_periodo_contable(request):
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin')
         
+        # Validar que el año seleccionado coincida con las fechas ingresadas.
+        try:
+            año = int(año)
+            inicio = date.fromisoformat(fecha_inicio)
+            fin = date.fromisoformat(fecha_fin)
+        except (TypeError, ValueError):
+            messages.error(request, 'Debe indicar un año y fechas válidas.')
+            return redirect('libro_mayor')
+
+        if inicio > fin or inicio.year != año or fin.year != año:
+            messages.error(request, 'Las fechas deben corresponder al año seleccionado y estar ordenadas.')
+            return redirect('libro_mayor')
+
         # Verificar que no hay periodo activo
         if PeriodoContable.objects.filter(estado='ACTIVO').exists():
             messages.error(request, 'Ya existe un periodo contable activo. Debe cerrarlo antes de crear uno nuevo.')
@@ -126,8 +139,8 @@ def crear_periodo_contable(request):
         try:
             periodo = PeriodoContable.objects.create(
                 año=año,
-                fecha_inicio=fecha_inicio,
-                fecha_fin=fecha_fin,
+                fecha_inicio=inicio,
+                fecha_fin=fin,
                 estado='ACTIVO'
             )
             messages.success(request, f'Periodo contable {año} creado exitosamente.')
@@ -154,6 +167,11 @@ def crear_transaccion(request):
                     'message': 'No hay un periodo contable activo.'
                 })
             
+            # Evitar registrar movimientos en un período distinto al seleccionado.
+            periodo_solicitado = data.get('periodo_id')
+            if periodo_solicitado and str(periodo_activo.pk) != str(periodo_solicitado):
+                return JsonResponse({'success': False, 'message': 'El período seleccionado no está activo.'}, status=400)
+
             # Verificar que la fecha está dentro del periodo
             fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
             if not (periodo_activo.fecha_inicio <= fecha_obj <= periodo_activo.fecha_fin):

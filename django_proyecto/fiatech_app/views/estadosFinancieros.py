@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views import View
 # Asumo que tus modelos están en esta ruta
 from fiatech_app.models.contaGeneral import *
@@ -113,9 +114,10 @@ def crear_ajuste(request):
                 cuentas_afectadas = data.get('cuentas_afectadas', [])
             else:
                 # Mantener compatibilidad con FormData
+                periodo_id = request.POST.get('periodo_id')
                 fecha = request.POST.get('fecha')
                 descripcion = request.POST.get('descripcion')
-                cuentas_afectadas = []  # No disponible en FormData tradicional
+                cuentas_afectadas = []  # El formulario actual utiliza JSON
 
             print("=== INICIANDO CREAR AJUSTE ===")
             print(f"Usuario: {request.user}")
@@ -123,8 +125,6 @@ def crear_ajuste(request):
             print(f"Cuentas afectadas: {cuentas_afectadas}")
 
             # Obtener el período seleccionado desde el formulario
-            periodo_id = data.get('periodo_id')
-
             # Obtener el período seleccionado
             if not periodo_id:
                 return JsonResponse({
@@ -197,8 +197,11 @@ def crear_ajuste(request):
                     'message': f'El ajuste no está balanceado. DEBE: {total_debe}, HABER: {total_haber}'
                 })
 
-            # Crear el ajuste con todas las cuentas
+            # Crear el ajuste con todas las cuentas; todas las líneas comparten número.
             with transaction.atomic():
+                ultimo = (Transaccion.objects.filter(periodo=periodo_activo)
+                          .order_by('-numero_transaccion').first())
+                numero = ultimo.numero_transaccion + 1 if ultimo else 1
                 for cuenta_data in cuentas_afectadas:
                     cuenta = get_object_or_404(
                         Cuenta, id=cuenta_data['cuenta_id'])
@@ -217,7 +220,8 @@ def crear_ajuste(request):
                         haber=monto if tipo == 'haber' else Decimal('0'),
                         es_ajuste=True,
                         periodo=periodo_activo,
-                        usuario=request.user if request.user.is_authenticated else None
+                        usuario=request.user if request.user.is_authenticated and isinstance(request.user, Usuario) else None,
+                        numero_transaccion=numero
                     )
 
                     # Actualizar saldo de la cuenta
@@ -249,10 +253,11 @@ def crear_ajuste(request):
 def cerrar_periodo(request):
     if request.method == 'POST':
         try:
-            periodo_activo = PeriodoContable.objects.filter(
-                estado='ACTIVO').first()
-            if not periodo_activo:
-                messages.error(request, 'No hay un período contable activo.')
+            periodo_id = request.POST.get('periodo_id')
+            periodo_activo = (get_object_or_404(PeriodoContable, pk=periodo_id)
+                              if periodo_id else PeriodoContable.objects.filter(estado='ACTIVO').first())
+            if not periodo_activo or periodo_activo.estado != 'ACTIVO':
+                messages.error(request, 'El período seleccionado no está activo.')
                 return redirect('libro_mayor')  # Redirigir al libro mayor
 
             # Verificar que el periodo esté balanceado
@@ -266,8 +271,8 @@ def cerrar_periodo(request):
             periodo_activo.save()
 
             messages.success(
-                request, f'Período {periodo_activo.año} cerrado exitosamente. Ahora puede realizar ajustes contables.')
-            return redirect('ajustes_contables')  # Redirigir a ajustes
+                request, f'Período {periodo_activo.año} cerrado exitosamente. Ya puede generar los estados financieros definitivos.')
+            return redirect('ajustes_contables')
 
         except Exception as e:
             messages.error(request, f'Error al cerrar el período: {str(e)}')
@@ -276,84 +281,105 @@ def cerrar_periodo(request):
     return redirect('libro_mayor')
 
 # --- MODIFICADO PARA USAR LA LÓGICA CORRECTA DE CÁLCULO ---
-def generar_estados_financieros(request):
-    if request.method == 'POST':
-        try:
-            periodo_id = request.POST.get('periodo_id')
-            periodo = get_object_or_404(PeriodoContable, id=periodo_id)
+def calcular_totales_balance_general(periodo):
+    """Saldos netos por tipo, incluyendo el resultado del ejercicio."""
+    movimientos = (Transaccion.objects.filter(periodo=periodo)
+                   .values('cuenta__tipo')
+                   .annotate(debe_total=Sum('debe'), haber_total=Sum('haber')))
+    acumulados = {tipo: Decimal('0') for tipo in ('ACTIVO', 'PASIVO', 'PATRIMONIO')}
+    for item in movimientos:
+        tipo = item['cuenta__tipo']
+        debe = item['debe_total'] or Decimal('0')
+        haber = item['haber_total'] or Decimal('0')
+        if tipo == 'ACTIVO':
+            acumulados['ACTIVO'] += debe - haber
+        elif tipo in ('PASIVO', 'PATRIMONIO'):
+            acumulados[tipo] += haber - debe
+    utilidad = (calcular_ventas_totales(periodo, incluir_ajustes=True) -
+               calcular_gastos_totales(periodo, incluir_ajustes=True))
+    patrimonio = acumulados['PATRIMONIO'] + utilidad
+    return {'activos': acumulados['ACTIVO'], 'pasivos': acumulados['PASIVO'],
+            'patrimonio': patrimonio,
+            'cuadra': abs(acumulados['ACTIVO'] - acumulados['PASIVO'] - patrimonio) <= Decimal('0.01')}
 
-            # Verificar que el período esté CERRADO (no ACTIVO)
+
+def generar_estados_financieros(request):
+    """Genera los registros definitivos solo después del cierre del período."""
+    if request.method != 'POST':
+        return redirect('ajustes_contables')
+
+    periodo_id = request.POST.get('periodo_id')
+    if not periodo_id:
+        messages.error(request, 'Seleccione un período para generar los estados.')
+        return redirect('ajustes_contables')
+
+    try:
+        with transaction.atomic():
+            periodo = get_object_or_404(
+                PeriodoContable.objects.select_for_update(), pk=periodo_id
+            )
             if periodo.estado != 'CERRADO':
-                messages.error(
-                    request, 'Solo se pueden generar estados financieros para períodos CERRADOS.')
+                messages.error(request, 'Solo pueden generarse estados definitivos de períodos CERRADOS.')
                 return redirect('ajustes_contables')
 
-            # --- INICIO DE MODIFICACIÓN: Usar cálculos corregidos ---
-            # Calcular totales para estados financieros (usando toda la data, incl. ajustes)
-            ventas_totales = calcular_ventas_totales(periodo, incluir_ajustes=True)
-            gastos_totales = calcular_gastos_totales(periodo, incluir_ajustes=True)
-            utilidad_neta = ventas_totales - gastos_totales
-            # --- FIN DE MODIFICACIÓN ---
+            if not periodo.puede_cerrar:
+                messages.error(request, 'Los movimientos del período no están balanceados.')
+                return redirect('ajustes_contables')
 
-            # Finalizar el periodo (CERRADO → FINALIZADO)
+            if (BalanceComprobacion.objects.filter(año=periodo.año).exists() or
+                    EstadoResultados.objects.filter(año=periodo.año).exists() or
+                    BalanceGeneral.objects.filter(año=periodo.año).exists()):
+                messages.error(request, 'Ya existen registros financieros definitivos para este año. Revise antes de continuar.')
+                return redirect('ajustes_contables')
+
+            ingresos = calcular_ventas_totales(periodo, incluir_ajustes=True)
+            gastos = calcular_gastos_totales(periodo, incluir_ajustes=True)
+            utilidad = ingresos - gastos
+            usuario = None
+            # El modelo Usuario del proyecto podría ser independiente del auth.User.
+            # Evitar asignar un tipo de usuario incompatible.
+            if request.user.is_authenticated and isinstance(request.user, Usuario):
+                usuario = request.user
+
+            # Validar el balance antes de crear cualquier registro definitivo.
+            resumen = calcular_totales_balance_general(periodo)
+            if not resumen['cuadra']:
+                messages.error(request, 'No se puede finalizar: el balance general no cuadra.')
+                return redirect('ajustes_contables')
+
+            BalanceComprobacion.objects.create(año=periodo.año, usuario=usuario)
+            EstadoResultados.objects.create(
+                año=periodo.año, usuario=usuario,
+                ingresos_totales=ingresos, gastos_totales=gastos, utilidad_neta=utilidad
+            )
+            BalanceGeneral.objects.create(
+                año=periodo.año, usuario=usuario,
+                activos_totales=resumen['activos'],
+                pasivos_totales=resumen['pasivos'],
+                patrimonio_total=resumen['patrimonio']
+            )
             periodo.estado = 'FINALIZADO'
-            periodo.save()
+            periodo.save(update_fields=['estado'])
 
-            # Crear registros en todos los estados financieros
-            balance_comprobacion = BalanceComprobacion.objects.create(
-                año=periodo.año,
-                usuario=request.user if request.user.is_authenticated else None
-            )
+        messages.success(request, f'Estados definitivos del período {periodo.año} generados correctamente.')
+        return redirect(f"{reverse('balance_comprobacion')}?periodo_id={periodo.pk}")
+    except Exception as exc:
+        messages.error(request, f'No se pudieron generar los estados definitivos: {exc}')
+        return redirect('ajustes_contables')
 
-            estado_resultados = EstadoResultados.objects.create(
-                año=periodo.año,
-                usuario=request.user if request.user.is_authenticated else None,
-                ingresos_totales=ventas_totales,
-                gastos_totales=gastos_totales,
-                utilidad_neta=utilidad_neta
-            )
 
-            messages.success(
-                request, f'Estados financieros generados exitosamente para el período {periodo.año}')
-            return redirect('balance_comprobacion')
 
-        except Exception as e:
-            messages.error(
-                request, f'Error al generar estados financieros: {str(e)}')
-            return redirect('ajustes_contables')
-
-    return redirect('ajustes_contables')
-
-# --- SIN CAMBIOS EN ESTA VISTA, LA LÓGICA ERA CORRECTA ---
 def balance_comprobacion(request):
-    # Obtener el período seleccionado
-    periodo_id = request.POST.get(
-        'periodo_id') or request.GET.get('periodo_id')
-
+    periodo_id = request.POST.get('periodo_id') or request.GET.get('periodo_id')
     if periodo_id:
-        try:
-            periodo_actual = PeriodoContable.objects.get(id=periodo_id)
-        except PeriodoContable.DoesNotExist:
-            # Si no existe, usar el último período FINALIZADO
-            periodo_actual = PeriodoContable.objects.filter(
-                estado='FINALIZADO').first()
-            messages.warning(
-                request, "El período seleccionado no existe. Se mostró el último período finalizado.")
+        periodo_actual = get_object_or_404(PeriodoContable, pk=periodo_id)
     else:
-        # Por defecto mostrar el último período FINALIZADO
-        periodo_actual = PeriodoContable.objects.filter(
-            estado='FINALIZADO').first()
-
-    # Si no hay período finalizado, mostrar cerrado como fallback
-    if not periodo_actual:
-        periodo_actual = PeriodoContable.objects.filter(
-            estado='CERRADO').first()
-        if periodo_actual:
-            messages.info(
-                request, "No hay períodos finalizados. Mostrando período cerrado.")
+        periodo_actual = (PeriodoContable.objects.filter(estado='ACTIVO').first()
+                          or PeriodoContable.objects.filter(estado='CERRADO').first()
+                          or PeriodoContable.objects.filter(estado='FINALIZADO').first())
 
     # Obtener TODAS las cuentas activas (no solo nivel 3)
-    todas_cuentas = Cuenta.objects.filter(activa=True).order_by('codigo')
+    todas_cuentas = Cuenta.objects.all().order_by('codigo')
 
     # Preparar datos para la tabla
     datos_cuentas = []
@@ -571,20 +597,13 @@ def calcular_gastos_totales(periodo, incluir_ajustes=False):
 
 # --- MODIFICADO PARA CALCULAR SALDOS NETOS (CORRIGE ERROR 4311) ---
 def estado_resultados(request):
-    # Obtener el período seleccionado
-    periodo_id = request.POST.get(
-        'periodo_id') or request.GET.get('periodo_id')
-
+    periodo_id = request.POST.get('periodo_id') or request.GET.get('periodo_id')
     if periodo_id:
-        try:
-            periodo_actual = PeriodoContable.objects.get(id=periodo_id)
-        except PeriodoContable.DoesNotExist:
-            periodo_actual = PeriodoContable.objects.filter(
-                estado='FINALIZADO').first()
-            messages.warning(request, "El período seleccionado no existe.")
+        periodo_actual = get_object_or_404(PeriodoContable, pk=periodo_id)
     else:
-        periodo_actual = PeriodoContable.objects.filter(
-            estado='FINALIZADO').first()
+        periodo_actual = (PeriodoContable.objects.filter(estado='ACTIVO').first()
+                          or PeriodoContable.objects.filter(estado='CERRADO').first()
+                          or PeriodoContable.objects.filter(estado='FINALIZADO').first())
 
     # Inicializar datos
     ingresos = []
@@ -684,20 +703,13 @@ def estado_resultados(request):
 
 # --- MODIFICADO PARA CALCULAR SALDOS NETOS (CORRIGE ERROR 4311) ---
 def estado_capital(request):
-    # Obtener el período seleccionado (igual que en estado_resultados)
-    periodo_id = request.POST.get(
-        'periodo_id') or request.GET.get('periodo_id')
-
+    periodo_id = request.POST.get('periodo_id') or request.GET.get('periodo_id')
     if periodo_id:
-        try:
-            periodo_actual = PeriodoContable.objects.get(id=periodo_id)
-        except PeriodoContable.DoesNotExist:
-            periodo_actual = PeriodoContable.objects.filter(
-                estado='FINALIZADO').first()
-            messages.warning(request, "El período seleccionado no existe.")
+        periodo_actual = get_object_or_404(PeriodoContable, pk=periodo_id)
     else:
-        periodo_actual = PeriodoContable.objects.filter(
-            estado='FINALIZADO').first()
+        periodo_actual = (PeriodoContable.objects.filter(estado='ACTIVO').first()
+                          or PeriodoContable.objects.filter(estado='CERRADO').first()
+                          or PeriodoContable.objects.filter(estado='FINALIZADO').first())
 
     # Inicializar datos
     capital_inicial = Decimal('0')
@@ -815,17 +827,13 @@ def estado_capital(request):
 
 # --- VISTA COMPLETAMENTE MODIFICADA ---
 def balance_general(request):
-    # Obtener el período seleccionado
     periodo_id = request.POST.get('periodo_id') or request.GET.get('periodo_id')
-
     if periodo_id:
-        try:
-            periodo_actual = PeriodoContable.objects.get(id=periodo_id)
-        except PeriodoContable.DoesNotExist:
-            periodo_actual = PeriodoContable.objects.filter(estado='FINALIZADO').first()
-            messages.warning(request, "El período seleccionado no existe.")
+        periodo_actual = get_object_or_404(PeriodoContable, pk=periodo_id)
     else:
-        periodo_actual = PeriodoContable.objects.filter(estado='FINALIZADO').first()
+        periodo_actual = (PeriodoContable.objects.filter(estado='ACTIVO').first()
+                          or PeriodoContable.objects.filter(estado='CERRADO').first()
+                          or PeriodoContable.objects.filter(estado='FINALIZADO').first())
 
     # Inicializar datos
     activos = []
