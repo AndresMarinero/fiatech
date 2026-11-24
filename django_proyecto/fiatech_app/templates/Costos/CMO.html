@@ -41,29 +41,29 @@
                 
                 <div class="col-md-6 col-lg-3">
                     <label for="daily-salary" class="form-label">Salario Diario ($):</label>
-                    <input type="number" id="daily-salary" class="form-control" min="0" step="0.01" value="0" readonly>
+                    <input type="number" id="daily-salary" class="form-control" min="0.01" step="0.01" value="0" readonly>
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
                     <label for="worked-days" class="form-label">Días Laborados (Semana):</label>
-                    <input type="number" id="worked-days" class="form-control" min="0" max="7" step="0.1" value="0">
+                    <input type="number" id="worked-days" class="form-control" min="0.1" max="7" step="0.1" value="5">
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
                     <label for="daily-hours" class="form-label">Horas Diarias:</label>
-                    <input type="number" id="daily-hours" class="form-control" min="0" max="24" value="8">
+                    <input type="number" id="daily-hours" class="form-control" min="1" max="24" step="0.5" value="8">
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
                     <label for="efficiency" class="form-label">Eficiencia (%):</label>
-                    <input type="number" id="efficiency" class="form-control" min="0" max="100" value="100">
+                    <input type="number" id="efficiency" class="form-control" min="1" max="100" value="100">
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <label for="afp-type" class="form-label">Tipo AFP:</label>
+                    <label for="afp-type" class="form-label">Tipo AFP (Patronal 8.75%):</label>
                     <select id="afp-type" class="form-select">
-                        <option value="afiliado">Afiliado</option>
-                        <option value="empleador">Empleador</option>
+                        <option value="afiliado">Afiliado (Confía / Crecer)</option>
+                        <option value="empleador">Empleador (8.75%)</option>
                     </select>
                 </div>
                 
@@ -100,7 +100,7 @@
                 <div class="col-md-9">
                     <label for="team-checkbox-list" class="form-label">Seleccionar Miembros del Equipo:</label>
                     <div id="team-checkbox-list">
-                        </div>
+                    </div>
                 </div>
                 <div class="col-md-3 d-flex flex-column justify-content-between">
                     <div>
@@ -121,11 +121,12 @@
                     <thead class="table-dark">
                         <tr>
                             <th>Empleado</th>
-                            <th>Séptimo Día</th>
+                            <th>Salario bruto<br/> semanal</th>
                             <th>Vacaciones</th>
                             <th>Aguinaldo</th>
-                            <th>ISSS</th>
-                            <th>AFP</th>
+                            <th>ISSS (7.50%)</th>
+                            <th>AFP (8.75%)</th>
+                            <th>INCAF (1.00%)</th>
                             <th>Costo Real</th>
                             <th>Acciones</th>
                         </tr>
@@ -150,7 +151,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Total Séptimo Día</td>
+                            <td>Salario bruto<br/> semanal</td>
                             <td id="total-septimo">$0.00</td>
                         </tr>
                         <tr>
@@ -162,12 +163,16 @@
                             <td id="total-aguinaldo">$0.00</td>
                         </tr>
                         <tr>
-                            <td>Total ISSS</td>
+                            <td>Total ISSS Patronal (7.50%)</td>
                             <td id="total-isss">$0.00</td>
                         </tr>
                         <tr>
-                            <td>Total AFP</td>
+                            <td>Total AFP Patronal (8.75%)</td>
                             <td id="total-afp">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Total INCAF (1.00%)</td>
+                            <td id="total-INCAF">$0.00</td>
                         </tr>
                         <tr class="cmo-grand-total fw-bold">
                             <td>Costo Total Mano de Obra</td>
@@ -189,10 +194,20 @@
 {% block footer_scripts %}
 {{ block.super }}
 <script>
+    // Constantes legales El Salvador (Aportes Patronales)
+    const ISSS_PATRONAL_RATE = 0.075;          // 7.50%
+    const ISSS_TECHO_MENSUAL = 1000.00;        // $1,000.00 mensual
+    const ISSS_MAX_APORTE_MENSUAL = 75.00;     // $75.00 mensual máximo
+    const ISSS_TECHO_SEMANAL = (ISSS_TECHO_MENSUAL * 7) / 30;       // $233.3333... semanal
+    const ISSS_MAX_APORTE_SEMANAL = (ISSS_MAX_APORTE_MENSUAL * 7) / 30; // $17.50 semanal
+
+    const AFP_PATRONAL_RATE = 0.0875;          // 8.75% sobre salario bruto cotizable
+    const INCAF_RATE = 0.01;                // 1.00% Formación profesional
+
     // Array para almacenar la MASTER LIST de empleados
     let employees = [];
     
-    // Empleados predeterminados (Sin cambios)
+    // Empleados predeterminados
     const defaultEmployees = [
         { id: -1, name: "Víctor Sanchez", dailySalary: 66.67, workedDays: 5, dailyHours: 8, efficiency: 80, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", puesto: "Jefe de Desarrollo", isDefault: true },
         { id: -2, name: "Dolores Tobar", dailySalary: 60.00, workedDays: 5, dailyHours: 6, efficiency: 75, afpType: "afiliado", salaryBase: "cancelado", yearsCompany: "10+", puesto: "Jefe de Desarrollo", isDefault: true },
@@ -222,8 +237,8 @@
     const employeePositionInput = document.getElementById('employee-position');
     const dailySalaryInput = document.getElementById('daily-salary');
 
-    // Elementos del DOM (Sección 2 - CAMBIO)
-    const teamCheckboxList = document.getElementById('team-checkbox-list'); // CAMBIO
+    // Elementos del DOM (Sección 2)
+    const teamCheckboxList = document.getElementById('team-checkbox-list');
     const selectAllTeamBtn = document.getElementById('select-all-team-btn');
     const deselectAllTeamBtn = document.getElementById('deselect-all-team-btn');
     const calculateTeamBtn = document.getElementById('calculate-team-btn');
@@ -238,24 +253,51 @@
     
     function initializeDefaultEmployees() {
         employees = [...defaultEmployees];
-        updateTeamCheckboxList(); // CAMBIO: Llama a la nueva función de checkboxes
+        updateTeamCheckboxList();
     }
     
-    // --- LÓGICA DE SECCIÓN 1 (Agregar Empleado) ---
+    // --- LÓGICA DE SECCIÓN 1 (Agregar Empleado con Validaciones) ---
     
     function addEmployee() {
         const name = document.getElementById('employee-name').value.trim();
         const position = employeePositionInput.value; 
-        const dailySalary = parseFloat(dailySalaryInput.value) || 0;
-        const workedDays = parseFloat(document.getElementById('worked-days').value) || 0;
-        const dailyHours = parseInt(document.getElementById('daily-hours').value) || 8;
-        const efficiency = parseInt(document.getElementById('efficiency').value) || 100;
+        const dailySalary = parseFloat(dailySalaryInput.value);
+        const workedDays = parseFloat(document.getElementById('worked-days').value);
+        const dailyHours = parseFloat(document.getElementById('daily-hours').value);
+        const efficiency = parseFloat(document.getElementById('efficiency').value);
         const afpType = document.getElementById('afp-type').value;
         const salaryBase = document.getElementById('salary-base').value;
         const yearsCompany = document.getElementById('years-company').value;
         
-        if (!name || !position || dailySalary <= 0) {
-            alert('Por favor complete el nombre, puesto y salario (>0) del empleado.');
+        // Validaciones de campos obligatorios y rangos válidos
+        if (!name) {
+            alert('Por favor ingrese el nombre completo del empleado.');
+            document.getElementById('employee-name').focus();
+            return;
+        }
+        if (!position) {
+            alert('Por favor seleccione un puesto para el empleado.');
+            employeePositionInput.focus();
+            return;
+        }
+        if (isNaN(dailySalary) || dailySalary <= 0) {
+            alert('El salario diario debe ser un valor numérico mayor a $0.00.');
+            dailySalaryInput.focus();
+            return;
+        }
+        if (isNaN(workedDays) || workedDays <= 0 || workedDays > 7) {
+            alert('Los días laborados por semana deben estar entre 0.1 y 7 días.');
+            document.getElementById('worked-days').focus();
+            return;
+        }
+        if (isNaN(dailyHours) || dailyHours <= 0 || dailyHours > 24) {
+            alert('Las horas diarias deben estar entre 1 y 24 horas.');
+            document.getElementById('daily-hours').focus();
+            return;
+        }
+        if (isNaN(efficiency) || efficiency <= 0 || efficiency > 100) {
+            alert('La eficiencia debe estar entre 1% y 100%.');
+            document.getElementById('efficiency').focus();
             return;
         }
         
@@ -274,7 +316,7 @@
         };
         
         employees.push(employee); 
-        updateTeamCheckboxList(); // CAMBIO: Actualiza la lista de checkboxes
+        updateTeamCheckboxList();
         clearForm();
     }
 
@@ -283,7 +325,7 @@
         employeePositionInput.value = ''; 
         dailySalaryInput.value = '0'; 
         dailySalaryInput.setAttribute('readonly', true); 
-        document.getElementById('worked-days').value = '0';
+        document.getElementById('worked-days').value = '5';
         document.getElementById('daily-hours').value = '8';
         document.getElementById('efficiency').value = '100';
         document.getElementById('afp-type').value = 'afiliado';
@@ -293,10 +335,10 @@
 
     function updateSalaryFromPosition() {
         const selectedOption = employeePositionInput.options[employeePositionInput.selectedIndex];
-        const salary = selectedOption.getAttribute('data-salary');
+        const salary = parseFloat(selectedOption.getAttribute('data-salary')) || 0;
         const positionValue = selectedOption.value;
 
-        dailySalaryInput.value = parseFloat(salary).toFixed(2);
+        dailySalaryInput.value = salary.toFixed(2);
 
         if (positionValue === 'Otros') {
             dailySalaryInput.removeAttribute('readonly');
@@ -308,12 +350,10 @@
 
     // --- LÓGICA DE SECCIÓN 2 (Armar Equipo) ---
 
-    // CAMBIO: NUEVA FUNCIÓN para poblar la lista de Checkboxes
     function updateTeamCheckboxList() {
-        teamCheckboxList.innerHTML = ''; // Limpiar lista
+        teamCheckboxList.innerHTML = '';
         
         employees.forEach(employee => {
-            // Crear el HTML para un form-check de Bootstrap
             const checkDiv = document.createElement('div');
             checkDiv.className = 'form-check';
             checkDiv.innerHTML = `
@@ -326,7 +366,6 @@
         });
     }
 
-    // CAMBIO: NUEVA FUNCIÓN para el botón "Seleccionar Todos"
     function selectAllTeamMembers(event) {
         event.preventDefault(); 
         const checkboxes = document.querySelectorAll('.employee-team-checkbox');
@@ -335,7 +374,6 @@
         });
     }
 
-    // CAMBIO: NUEVA FUNCIÓN para el botón "Deseleccionar Todos"
     function deselectAllTeamMembers(event) {
         event.preventDefault();
         const checkboxes = document.querySelectorAll('.employee-team-checkbox');
@@ -344,96 +382,95 @@
         });
     }
 
-    // --- LÓGICA DE SECCIÓN 3 y 4 (Cálculos) ---
+    // --- LÓGICA DE SECCIÓN 3 y 4 (Cálculos Patronales) ---
 
-    // CAMBIO: Función de cálculo actualizada para leer checkboxes
     function calculateSelectedTeam() {
         calculationsList.innerHTML = '';
         
-        // 1. Obtener IDs seleccionados de los checkboxes
         const selectedCheckboxes = document.querySelectorAll('.employee-team-checkbox:checked');
         const selectedIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
 
-        // 2. Filtrar el array 'employees' (master list)
+        if (selectedIds.length === 0) {
+            alert('Por favor seleccione al menos un empleado del equipo para calcular.');
+            updateTotals();
+            return;
+        }
+
         const selectedEmployees = employees.filter(emp => selectedIds.includes(String(emp.id)));
         
-        // 3. Calcular costos solo para esos empleados
         selectedEmployees.forEach(employee => {
             const calculations = calculateEmployeeCosts(employee);
             displayEmployeeCalculation(employee, calculations);
         });
         
-        // 4. Actualizar totales
         updateTotals();
     }
     
-    // Función para calcular los costos de UN empleado (sin cambios)
     function calculateEmployeeCosts(employee) {
-        const septimoDia = employee.dailySalary * 7;
-        const vacaciones = ((employee.dailySalary * 15) * 1.30) / 52;
+        const dailySalary = Math.max(0, Number(employee.dailySalary) || 0);
+        if (dailySalary <= 0) {
+            return { septimoDia: 0, vacaciones: 0, aguinaldo: 0, isss: 0, afp: 0, INCAF: 0, costoReal: 0 };
+        }
+
+        const septimoDia = dailySalary * 7;
+        const vacaciones = ((dailySalary * 15) * 1.30) / 52;
+
         let aguinaldo;
-        switch(employee.yearsCompany) {
-            case '1-3': aguinaldo = (employee.dailySalary * 15) / 52; break;
-            case '3-10': aguinaldo = (employee.dailySalary * 19) / 52; break;
-            case '10+': aguinaldo = (employee.dailySalary * 21) / 52; break;
+        switch (employee.yearsCompany) {
+            case '1-3': aguinaldo = (dailySalary * 15) / 52; break;
+            case '3-10': aguinaldo = (dailySalary * 19) / 52; break;
+            case '10+': aguinaldo = (dailySalary * 21) / 52; break;
             default: aguinaldo = 0;
         }
-        let baseSalarial;
-        if (employee.salaryBase === 'nominal') {
-            baseSalarial = septimoDia;
-        } else {
-            baseSalarial = septimoDia + vacaciones + aguinaldo;
-        }
-        const isss = baseSalarial * 0.075;
-        let afpPercentage;
-        if (employee.afpType === 'afiliado') {
-            afpPercentage = 0.0725;
-        } else {
-            afpPercentage = 0.0875;
-        }
-        const afp = baseSalarial * afpPercentage;
-        const costoReal = septimoDia + vacaciones + aguinaldo + isss + afp;
+
+        // Salario bruto cotizable semanal
+        const baseSalarial = (employee.salaryBase === 'nominal')
+            ? septimoDia
+            : (septimoDia + vacaciones + aguinaldo);
+
+        // 1. ISSS Patronal (7.50%) con validación de techo cotizable de $1,000.00/mes ($233.33/sem)
+        // Aporte máximo de $75.00/mes ($17.50/sem)
+        const baseCotizableIsss = Math.min(Math.max(0, baseSalarial), ISSS_TECHO_SEMANAL);
+        const isss = Math.min(baseCotizableIsss * ISSS_PATRONAL_RATE, ISSS_MAX_APORTE_SEMANAL);
+
+        // 2. AFP Patronal (8.75%) sobre el salario bruto cotizable (sin techo)
+        const afp = Math.max(0, baseSalarial) * AFP_PATRONAL_RATE;
+
+        // 3. INCAF / Formación profesional (1.00%) sobre el salario bruto cotizable
+        const INCAF = Math.max(0, baseSalarial) * INCAF_RATE;
+
+        const costoReal = septimoDia + vacaciones + aguinaldo + isss + afp + INCAF;
         
-        return { septimoDia, vacaciones, aguinaldo, isss, afp, costoReal };
+        return { septimoDia, vacaciones, aguinaldo, isss, afp, INCAF, costoReal };
     }
     
-    // Función para mostrar el cálculo de un empleado (sin cambios)
     function displayEmployeeCalculation(employee, calculations) {
+        const rowHtml = `
+            <td>${employee.name}</td>
+            <td>$${calculations.septimoDia.toFixed(2)}</td>
+            <td>$${calculations.vacaciones.toFixed(2)}</td>
+            <td>$${calculations.aguinaldo.toFixed(2)}</td>
+            <td>$${calculations.isss.toFixed(2)}</td>
+            <td>$${calculations.afp.toFixed(2)}</td>
+            <td>$${calculations.INCAF.toFixed(2)}</td>
+            <td>$${calculations.costoReal.toFixed(2)}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="removeCalculation(${employee.id})">Eliminar</button>
+            </td>
+        `;
+
         let existingRow = document.querySelector(`tr[data-employee-id="${employee.id}"]`);
         
         if (existingRow) {
-            existingRow.innerHTML = `
-                <td>${employee.name}</td>
-                <td>$${calculations.septimoDia.toFixed(2)}</td>
-                <td>$${calculations.vacaciones.toFixed(2)}</td>
-                <td>$${calculations.aguinaldo.toFixed(2)}</td>
-                <td>$${calculations.isss.toFixed(2)}</td>
-                <td>$${calculations.afp.toFixed(2)}</td>
-                <td>$${calculations.costoReal.toFixed(2)}</td>
-                <td>
-                    <button class="btn btn-danger btn-sm" onclick="removeCalculation(${employee.id})">Eliminar</button>
-                </td>
-            `;
+            existingRow.innerHTML = rowHtml;
         } else {
             const row = document.createElement('tr');
             row.setAttribute('data-employee-id', employee.id);
-            row.innerHTML = `
-                <td>${employee.name}</td>
-                <td>$${calculations.septimoDia.toFixed(2)}</td>
-                <td>$${calculations.vacaciones.toFixed(2)}</td>
-                <td>$${calculations.aguinaldo.toFixed(2)}</td>
-                <td>$${calculations.isss.toFixed(2)}</td>
-                <td>$${calculations.afp.toFixed(2)}</td>
-                <td>$${calculations.costoReal.toFixed(2)}</td>
-                <td>
-                    <button class="btn btn-danger btn-sm" onclick="removeCalculation(${employee.id})">Eliminar</button>
-                </td>
-            `;
+            row.innerHTML = rowHtml;
             calculationsList.appendChild(row);
         }
     }
     
-    // Función para eliminar un cálculo (botón en Sección 3) (sin cambios)
     function removeCalculation(employeeId) {
         const calculationRow = document.querySelector(`tr[data-employee-id="${employeeId}"]`);
         if (calculationRow) {
@@ -442,20 +479,26 @@
         }
     }
     
-    // Función para actualizar los totales (sin cambios)
     function updateTotals() {
-        let totalSeptimo = 0, totalVacaciones = 0, totalAguinaldo = 0, totalIsss = 0, totalAfp = 0, totalCosto = 0;
+        let totalSeptimo = 0,
+            totalVacaciones = 0,
+            totalAguinaldo = 0,
+            totalIsss = 0,
+            totalAfp = 0,
+            totalINCAF = 0,
+            totalCosto = 0;
         
         const calculationRows = document.querySelectorAll('#calculations-list tr');
         calculationRows.forEach(row => {
             const cells = row.querySelectorAll('td');
-            if (cells.length >= 7) {
-                totalSeptimo += parseFloat(cells[1].textContent.replace('$', ''));
-                totalVacaciones += parseFloat(cells[2].textContent.replace('$', ''));
-                totalAguinaldo += parseFloat(cells[3].textContent.replace('$', ''));
-                totalIsss += parseFloat(cells[4].textContent.replace('$', ''));
-                totalAfp += parseFloat(cells[5].textContent.replace('$', ''));
-                totalCosto += parseFloat(cells[6].textContent.replace('$', ''));
+            if (cells.length >= 8) {
+                totalSeptimo += parseFloat(cells[1].textContent.replace('$', '')) || 0;
+                totalVacaciones += parseFloat(cells[2].textContent.replace('$', '')) || 0;
+                totalAguinaldo += parseFloat(cells[3].textContent.replace('$', '')) || 0;
+                totalIsss += parseFloat(cells[4].textContent.replace('$', '')) || 0;
+                totalAfp += parseFloat(cells[5].textContent.replace('$', '')) || 0;
+                totalINCAF += parseFloat(cells[6].textContent.replace('$', '')) || 0;
+                totalCosto += parseFloat(cells[7].textContent.replace('$', '')) || 0;
             }
         });
         
@@ -464,15 +507,15 @@
         document.getElementById('total-aguinaldo').textContent = `$${totalAguinaldo.toFixed(2)}`;
         document.getElementById('total-isss').textContent = `$${totalIsss.toFixed(2)}`;
         document.getElementById('total-afp').textContent = `$${totalAfp.toFixed(2)}`;
+        document.getElementById('total-INCAF').textContent = `$${totalINCAF.toFixed(2)}`;
         document.getElementById('total-costo').textContent = `$${totalCosto.toFixed(2)}`;
     }
     
     // --- LÓGICA DE BOTONES GLOBALES ---
     
-    // CAMBIO: Función para limpiar solo los empleados agregados por el usuario
     function clearUserEmployees() {
         employees = employees.filter(emp => emp.isDefault); 
-        updateTeamCheckboxList(); // CAMBIO: Actualiza la lista de checkboxes
+        updateTeamCheckboxList();
         calculationsList.innerHTML = ''; 
         clearForm();
         updateTotals();
@@ -485,7 +528,7 @@
     clearFormBtn.addEventListener('click', clearForm);
     employeePositionInput.addEventListener('change', updateSalaryFromPosition);
     
-    // Sección 2 (CAMBIO)
+    // Sección 2
     selectAllTeamBtn.addEventListener('click', selectAllTeamMembers);
     deselectAllTeamBtn.addEventListener('click', deselectAllTeamMembers);
     calculateTeamBtn.addEventListener('click', calculateSelectedTeam); 
@@ -494,7 +537,7 @@
     calculateAllBtn.addEventListener('click', calculateSelectedTeam); 
     clearAllBtn.addEventListener('click', clearUserEmployees);
     
-    // Permitir agregar empleado con Enter (sin cambios)
+    // Permitir agregar empleado con Enter
     document.getElementById('employee-name').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             addEmployee();
