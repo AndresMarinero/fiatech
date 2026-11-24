@@ -87,7 +87,7 @@
         <div class="col-md-7">
             <span class="text-muted">
                 <i class="bi bi-arrow-return-right me-2"></i>
-                Reinversión en el negocio (60%)
+                Reinversión contabilizada
             </span>
         </div>
         <div class="col-md-5 text-end">
@@ -100,7 +100,7 @@
         <div class="col-md-7">
             <span class="text-muted">
                 <i class="bi bi-shield-check me-2"></i>
-                Aporte a reservas (40%)
+                Aporte a reservas contabilizado
             </span>
         </div>
         <div class="col-md-5 text-end">
@@ -112,7 +112,7 @@
 <!-- Mensaje cuando hay pérdida -->
 <div class="alert alert-warning mb-4">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    <strong>Pérdida del período:</strong> No hay distribución de utilidades. La pérdida se deduce del capital social.
+    <strong>Pérdida del período:</strong> No hay distribución de utilidades. La pérdida disminuye el patrimonio total sin modificar directamente el capital social registrado.
 </div>
 {% endif %}
 
@@ -194,7 +194,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="fw-semibold">3101</td>
+                                    <td class="fw-semibold">301</td>
                                     <td>Capital Social</td>
                                     <td class="text-end fw-bold text-success">$ {{ capital_final|floatformat:2 }}</td>
                                 </tr>
@@ -203,11 +203,25 @@
                                     <td>Reservas</td>
                                     <td class="text-end fw-bold text-primary">$ {{ reservas_totales|floatformat:2 }}</td>
                                 </tr>
+                                <!-- Utilidad o pérdida del ejercicio -->
+                                    <tr>
+                                        <td class="fw-semibold">—</td>
+                                        <td>
+                                            {% if hay_perdida %}
+                                                Pérdida del Ejercicio
+                                            {% else %}
+                                                Utilidad del Ejercicio
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end fw-bold {% if hay_perdida %}text-danger{% else %}text-success{% endif %}">
+                                            $ {{ resultado_ejercicio|floatformat:2 }}
+                                        </td>
+                                    </tr>
                                 <tr class="estado-capital-total">
                                     <td class="fw-bold">Total Patrimonio</td>
                                     <td></td>
                                     <td class="text-end fw-bolder fs-5 text-dark">
-                                        $ {{ capital_final|add:reservas_totales|floatformat:2 }}
+                                        $ {{ patrimonio_final|floatformat:2 }}
                                     </td>
                                 </tr>
                             </tbody>
